@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>User Profile</title>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link
+	href='https://fonts.googleapis.com/css?family=Roboto:400,500,400italic,300italic,300,500italic,700,700italic,900,900italic'
+	rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet"
+	href="../assets/plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<link rel="stylesheet"
+	href="../assets/plugins/font-awesome/css/font-awesome.css">
+
+<link id="theme-style" rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="input-group searchbar">
+			<input type="text" class="form-control"
+				placeholder="Please enter movie name or actor names..." ng-model="#">
+			<span class="input-group-btn"> <a class="btn btn-default"
+				type="button" ng-click="#" style="margin-top: 0px"> <span
+					class="glyphicon glyphicon-search"></span>
+			</a>
+			</span>
+		</div>
+	</div>
+
+	<div class="bottom"></div>
+
+	<div class="wrapper">
+		<div class="sidebar-wrapper">
+			<div class="profile-container">
+				<img class="photo" src="../assets/images/user-photo.png" alt="" />
+				<h1 class="name">User Name</h1>
+				<ul class="list-unstyled contact-list">
+					<li class="email"><i class="fa fa-envelope"></i><a
+						href="mailto: example@email.com">example@email.com</a></li>
+					<li class="phone"><i class="fa fa-phone"></i><a
+						href="tel:(000) 000-0000">(000) 000-0000</a></li>
+				</ul>
+				<ul class="list-unstyled follow-list">
+					<li class="following"><i class="material-icons">people</i><a
+						href="#">Following (120)</a></li>
+					<li class="follower"><i class="material-icons">people_outline</i><a
+						href="#">Follower (300)</a></li>
+				</ul>
+			</div>
+			<!--//profile-container-->
+
+			<ul class="option-menu">
+				<li class="block"><input type="checkbox" name="item" id="item1" />
+					<label for="item1"><i aria-hidden="true"></i> Manage My
+						Profile </label>
+					<ul class="options">
+						<li><a href="#"><i aria-hidden="true"></i> My Address </a></li>
+						<li><a href="#"><i aria-hidden="true"></i> Change
+								Passwords </a></li>
+					</ul></li>
+				<li class="block"><input type="checkbox" name="item" id="item2" />
+					<label for="item2"><i aria-hidden="true"></i> My Movie
+						Lists </label>
+					<ul class="options">
+						<li><a href="#"><i aria-hidden="true"></i> My Favorite
+								Movies </a></li>
+						<li><a href="#"><i aria-hidden="true"></i> Want to See
+								Movies </a></li>
+						<li><a href="#"><i aria-hidden="true"></i> Action Movies
+						</a></li>
+					</ul></li>
+			</ul>
+		</div>
+		<!--//side-wrapper-->
+
+		<div class="main-wrapper">
+			<section class="movie-section">
+				<a href="">
+					<h2 class="section-title">
+						<i class="glyphicon glyphicon-film"></i> My Favorite Movies
+					</h2>
+				</a>
+
+				<ul class="movies">
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+				</ul>
+			</section>
+			<!--//section-->
+
+			<div class="bottom"></div>
+
+			<section class="movie-section">
+				<a href="">
+					<h2 class="section-title">
+						<i class="glyphicon glyphicon-film"></i> Want to See Movies
+					</h2>
+				</a>
+				<ul class="movies">
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+				</ul>
+			</section>
+
+			<div class="bottom"></div>
+
+			<section class="movie-section">
+				<a href="">
+					<h2 class="section-title">
+						<i class="glyphicon glyphicon-film"></i> Recommended Movies
+					</h2>
+				</a>
+				<ul class="movies">
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+				</ul>
+			</section>
+
+			<div class="bottom"></div>
+
+			<section class="movie-section">
+				<a href="">
+					<h2 class="section-title">
+						<i class="glyphicon glyphicon-film"></i> Friends' Suggestions
+					</h2>
+				</a>
+				<ul class="movies">
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+				</ul>
+			</section>
+		</div>
+		<!--//main-body-->
+
+	</div>
+
+	<!-- Javascript -->
+	<script type="text/javascript"
+		src="../assets/plugins/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<!-- custom js -->
+	<script type="text/javascript" src="../assets/js/main.js"></script>
+</body>
+</html>
