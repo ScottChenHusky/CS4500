@@ -11,7 +11,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.min.js"></script>
   <script src="app.js"></script>
   <script src="config.js"></script>
-  <script src="indexcontroller.js"></script>
+  <script src="views/user/user.controller.client.js"></script>
 
 </head>
 <body>
@@ -33,16 +33,14 @@
       <li><a href="index.html">Regular Page Placeholder</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="sign_up.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a href="#!/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
     </ul>
   </div>
 </nav>
   
 <div class="container">
-  <h3>....</h3>
   <div ng-view></div>
-  <p>..................</p>
 </div>
 
 <nav class="navbar navbar-inverse navbar-fixed-bottom"></nav>
