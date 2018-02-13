@@ -8,7 +8,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js">
 </head>
 <body>
 
@@ -29,39 +28,62 @@
       <li><a href="index.html">Regular Page Placeholder</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="sign_up.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li class="active"><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li class="active"><a href="sign_up.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
     </ul>
   </div>
 </nav>
   
 <div class="container">
-    <h1>Login</h1>
-    <form name="loginForm" id="loginForm" novalidate>
+
+    <h1>Register</h1>
+
+    <form name="registerForm" id="registerForm" novalidate>
+
         <div class="form-group">
             <input ng-model="username"
-                   name="username"
                    class="form-control"
                    placeholder="username"
                    type="text"
                    required/>
         </div>
+        
+		<div class="form-group">
+            <input ng-model="email"
+                   class="form-control"
+                   placeholder="email"
+                   type="email"
+                   required/>
+        </div>
 
         <div class="form-group">
-            <input ng-model="password"
-                   name="password"
+            <input ng-model="password1"
                    class="form-control"
                    placeholder="password"
                    type="password"
                    required/>
         </div>
-        <button ng-click="model.login(username, password)"
-                class="btn btn-primary btn-block"
-                type="submit">Login
-        </button>
 
-        <a class="btn btn-success btn-block"
-           href="register.html">Register</a>
+        <div class="form-group">
+            <input ng-model="password2"
+                   class="form-control"
+                   placeholder="verify password"
+                   type="password"
+                   required/>
+        </div>
+        
+
+
+        <div class="form-group">
+            <label>Wanna be an admin? <input ng-model="admin" type="checkbox" value=""></label>
+        </div>
+
+        <button ng-click="model.register(username, password1, password2, admin)"
+                type="submit"
+                class="btn btn-primary btn-block">Register</button>
+
+        <a class="btn btn-danger btn-block"
+           href="#/login">Cancel</a>
     </form>
 </div>
 
