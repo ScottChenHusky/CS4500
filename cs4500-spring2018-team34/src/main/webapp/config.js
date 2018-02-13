@@ -5,10 +5,9 @@
         
     function Config ($routeProvider) {
         $routeProvider
-                //User pages
                 .when('/', {
-                    templateUrl: 'homepage.html',
-                    controller: 'indexcontroller',
+                    templateUrl: 'views/user/homepage.html',
+                    controller: 'HomeController',
                     controllerAs: 'model'
                 })
     }
