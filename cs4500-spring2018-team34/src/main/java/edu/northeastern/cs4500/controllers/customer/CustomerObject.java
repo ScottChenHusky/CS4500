@@ -1,7 +1,14 @@
 package edu.northeastern.cs4500.controllers.customer;
 
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "customer")
@@ -113,4 +120,5 @@ public class CustomerObject {
     public void setPrivacyLevel(Integer privacyLevel) {
         this.privacyLevel = privacyLevel;
     }
+
 }

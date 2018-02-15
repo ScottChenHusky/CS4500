@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class CustomerController{
 
@@ -13,22 +15,19 @@ public class CustomerController{
     CustomerRepository customerRepository;
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
-    public String login(@RequestBody LoginJSON login) {
-
-
+    public List<CustomerObject> login(@RequestBody LoginJSON login) {
         // This version shows how a param can go in an be returned from a stored procedure
-        String inParam = null;
+        String inParam = login.getUsername();
         System.out.println(inParam);
-        String result = customerRepository.customer_info(inParam);
-
-        System.out.println(result);
-        return null;
+        List<CustomerObject> hellos = (List<CustomerObject>)customerRepository.findAll();
+        System.out.println(hellos);
+        return hellos;
     }
 
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
     public String register(@RequestBody RegisterJSON register) {
 
-        return null;
+        return "123";
     }
 
 }
