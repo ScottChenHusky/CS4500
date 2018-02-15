@@ -5,6 +5,7 @@
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
         .controller('SearchController', SearchController)
+        .controller('userProfileController', userProfileController)
         
     function HomeController () {
         var vm = this;
@@ -110,3 +111,9 @@
 		}
 	}
 })();
+
+function userProfileController($routeParams) {
+	var vm = this;
+	vm.userId = $routeParams['uid'];
+	
+}
