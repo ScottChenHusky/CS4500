@@ -22,6 +22,12 @@
         				controller: 'RegisterController',
         				controllerAs: 'model'
         			})
+        			
+        			.when('/user/:uid', {
+        				templateUrl: 'views/user/userProfile.view.client.html',
+            			controller: 'userProfileController',
+            			controllerAs: 'model'
+        			})
     }
 
 })();
