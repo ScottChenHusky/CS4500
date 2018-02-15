@@ -4,7 +4,6 @@
         .controller('HomeController', HomeController)
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
-        .controller('SearchController', SearchController)
         
     function HomeController () {
         var vm = this;
@@ -92,21 +91,5 @@
     			
     			return $http.post(url, user);
     		}
-    		
-    		
     }
-    function SearchController($http) {
-		var vm = this;
-		vm.defaultView = true;
-		//placeholder data
-		vm.movies = [{name: 'Movie1',image: 'Movie1.png'},
-			{name: 'Movie2', image: 'Movie2.png'},
-			{name: 'Movie3', image: 'Movie3.png'}];
-		vm.search = search;
-		
-		function search(searchTerm) {
-			vm.defaultView = false;
-			vm.movies = [{name: searchTerm, image: searchTerm + '.png'}];
-		}
-	}
 })();

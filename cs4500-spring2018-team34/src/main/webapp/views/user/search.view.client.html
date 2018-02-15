@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Search</title>
+<style>
+	.section {
+		border-bottom:1px solid black;
+	}
+	.movieBox {
+		float: left; 
+		border:1px solid black;
+	}
+</style>
+</head>
+<body>
+	<div id='searchBar'>
+		<div class="section">
+			<h1>Search</h1>
+			<div class="search-container">
+			    <form>
+			      <input type="text" placeholder="Search.." name="search" ng-model="searchTerm">
+			      <button type="submit" ng-click="model.search(searchTerm)">Submit</button>
+			    </form>
+			</div>
+		</div>	
+	</div>
+	<div id='default' ng-show="model.defaultView">		
+		
+		<div id='new'>
+			<div class="section">
+				<h1>New</h1>
+				<div ng-repeat="x in model.movies" class='movieBox'>
+					{{x.name }} <br />{{ x.image }}
+				</div>
+			</div>	
+		</div>
+		<br/>
+		<br/>
+		<div id='topRated'>
+			<div class="section">
+				<h1>Top Rated</h1>
+				<div ng-repeat="x in model.movies" class='movieBox'>
+					{{x.name }} <br />{{ x.image }}
+				</div>
+			</div>	
+		</div>
+		<br/>
+		<br/>
+		<div id='hot'>
+			<div class="section">
+				<h1>Hot</h1>
+				<div ng-repeat="x in model.movies" class='movieBox'>
+					{{x.name }} <br />{{ x.image }}
+				</div>
+			</div>	
+		</div>
+		
+	</div>
+	<div id='results' ng-show="!model.defaultView">
+		<div id='movieResults'>
+			<div class="section">
+				<h1>Movies</h1>
+				<div ng-repeat="x in model.movies" class='movieBox'>
+					{{x.name }} <br />{{ x.image }}
+				</div>
+			</div>	
+		</div>
+		<br/>
+		<br/>
+		<div id='userResults'>
+			<div class="section">
+				<h1>Users</h1>
+				<div ng-repeat="x in model.movies" class='movieBox'>
+					{{x.name }} <br />{{ x.image }}
+				</div>
+			</div>	
+		</div>
+	</div>
+</body>
+</html>
