@@ -1,10 +1,8 @@
 package edu.northeastern.cs4500.controllers.customer;
 
-public class RegisterJSON {
+public class LoginRequestJSON {
     private String username;
     private String password;
-    private String email;
-    private String phone;
 
     public String getUsername() {
         return username;
@@ -12,6 +10,11 @@ public class RegisterJSON {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public LoginRequestJSON withUsername(String username) {
+        this.setUsername(username);
+        return this;
     }
 
     public String getPassword() {
@@ -22,19 +25,8 @@ public class RegisterJSON {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public LoginRequestJSON withPassword(String password) {
+        this.setPassword(password);
+        return this;
     }
 }
