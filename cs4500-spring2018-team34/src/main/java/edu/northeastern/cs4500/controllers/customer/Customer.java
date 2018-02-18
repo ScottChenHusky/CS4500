@@ -1,26 +1,14 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedStoredProcedureQueries;
-import javax.persistence.NamedStoredProcedureQuery;
-import javax.persistence.ParameterMode;
-import javax.persistence.StoredProcedureParameter;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "customer")
-@NamedStoredProcedureQueries({
-        @NamedStoredProcedureQuery(name = "customer_info",
-                procedureName = "customer_info",
-                parameters = {
-                        @StoredProcedureParameter(mode = ParameterMode.IN, name = "username", type = String.class)
-                })
-})
-public class CustomerObject {
+@Entity(name = "customer")
+public class Customer {
     @Id
+    @GeneratedValue
     private Integer id;
     private String username;
     private String password;
@@ -49,12 +37,22 @@ public class CustomerObject {
         this.username = username;
     }
 
+    public Customer withUsername(String username) {
+        this.setUsername(username);
+        return this;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Customer withPassword(String password) {
+        this.setPassword(password);
+        return this;
     }
 
     public String getEmail() {
@@ -65,12 +63,22 @@ public class CustomerObject {
         this.email = email;
     }
 
+    public Customer withEmail(String email) {
+        this.setEmail(email);
+        return this;
+    }
+
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Customer withPhone(String phone) {
+        this.setPhone(phone);
+        return this;
     }
 
     public Integer getScore() {
@@ -81,12 +89,22 @@ public class CustomerObject {
         this.score = score;
     }
 
+    public Customer withScore(Integer score) {
+        this.setScore(score);
+        return this;
+    }
+
     public Date getDob() {
         return dob;
     }
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public Customer withDob(Date dob) {
+        this.setDob(dob);
+        return this;
     }
 
     public Date getCreateDate() {
@@ -97,12 +115,22 @@ public class CustomerObject {
         this.createDate = createDate;
     }
 
+    public Customer withCreateDate(Date createDate) {
+        this.setCreateDate(createDate);
+        return this;
+    }
+
     public Date getLastLogin() {
         return lastLogin;
     }
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Customer withLastLogin(Date lastLogin) {
+        this.setLastLogin(lastLogin);
+        return this;
     }
 
     public Integer getLevel() {
@@ -113,12 +141,22 @@ public class CustomerObject {
         this.level = level;
     }
 
+    public Customer withLevel(Integer level) {
+        this.setLevel(level);
+        return this;
+    }
+
     public Integer getPrivacyLevel() {
         return privacyLevel;
     }
 
     public void setPrivacyLevel(Integer privacyLevel) {
         this.privacyLevel = privacyLevel;
+    }
+
+    public Customer withPrivacyLevel(Integer privacyLevel) {
+        this.setPrivacyLevel(privacyLevel);
+        return this;
     }
 
 }
