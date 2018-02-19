@@ -5,13 +5,14 @@
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
         .controller('userProfileController', userProfileController)
+        .controller('userProfileController', userProfileController)
         
     function HomeController () {
         var vm = this;
         vm.name = "Test model!!!!";
     }
     
-    function LoginController($http) {
+    function LoginController($http, $location) {
     		var vm = this;
     		vm.login = login;
     		
@@ -26,11 +27,21 @@
     				username: username,
     				password: password
     			};
-    			return $http.post(url, user);		
+    			return $http.post(url, user)
+    				.then(response)
+    			function response (res) {
+    				if (res.data.id === -1) {
+    					vm.error = "Can't find user or password is not correct!";
+    				} else {
+    					$location.url("/user/" + res.data.id);
+    				}			
+                return;
+            }
     		}
+    		return;
     }
     
-    function RegisterController($http) {
+    function RegisterController($http, $location) {
     		var vm = this;
     		vm.register = register;
 //    		vm.phoneNumberValidation = phoneNumberValidation;
@@ -90,13 +101,40 @@
     				password: password1
     			};
     			
-    			return $http.post(url, user);
+    			return $http.post(url, user)
+    				.then(response)
+    			function response (res) {
+    				if (res.data.id === -1) {
+    					vm.error = "username already exists";
+    				} else {
+    					$location.url("/user/" + res.data.id);
+    				}			
+                return;
+            }
     		}
+    		return;
+    }
+    
+    function userProfileController($routeParams) {
+    		var vm = this;
+    		vm.userId = $routeParams.userId;
+    		vm.initProfile = initProfile;
+    		
+    		function initProfile() {
+                var url = '/api/getUserById';
+                var userId = {
+                    userId: vm.userId
+                };
+                return $http.post(url, userId)
+                    .then(response)
+                function response(res) {
+                		//...
+                		//...
+                	    //...
+                }
+            return;
+        }
+        initProfile();
+    	
     }
 })();
-
-function userProfileController($routeParams) {
-	var vm = this;
-	vm.userId = $routeParams['uid'];
-	
-}
