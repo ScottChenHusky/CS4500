@@ -1,11 +1,12 @@
 package edu.northeastern.cs4500.controllers.customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 public class CustomerController{
@@ -14,38 +15,61 @@ public class CustomerController{
     private CustomerRepository customerRepository;
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
-    public @ResponseBody LoginResponseJSON login(@RequestBody LoginRequestJSON login) {
-        Optional<Customer> result = customerRepository.findByUsernameAndPassword(
-                login.getUsername(), login.getPassword()
+    public ResponseEntity<LoginResponseJSON> login(@RequestBody LoginRequestJSON request) {
+        List<Customer> result = customerRepository.findByUsernameAndPassword(
+                request.getUsername(), request.getPassword()
         );
-        if (result.isPresent()) {
-            return new LoginResponseJSON()
-                    .withId(result.get().getId())
-                    .withMessage("user successfully retrieved");
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new LoginResponseJSON()
+                            .withMessage("credential not found")
+            );
         } else {
-            return new LoginResponseJSON()
-                    .withId(-1)
-                    .withMessage("username password pair not found");
+            return ResponseEntity.ok().body(
+                   new LoginResponseJSON()
+                            .withId(result.get(0).getId())
+                            .withMessage("credential found")
+            );
         }
     }
 
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
-    public @ResponseBody RegisterResponseJSON register(@RequestBody RegisterRequestJSON register) {
-        if (customerRepository.existsByUsername(register.getUsername())) {
-            return new RegisterResponseJSON()
-                    .withId(-1)
-                    .withMessage("username already exists");
+    public ResponseEntity<RegisterResponseJSON> register(@RequestBody RegisterRequestJSON request) {
+        if (customerRepository.existsByUsername(request.getUsername())) {
+            return ResponseEntity.badRequest().body(
+                    new RegisterResponseJSON()
+                            .withMessage("username already exists")
+            );
         }
         Customer customer = new Customer()
-                .withUsername(register.getUsername())
-                .withPassword(register.getPassword())
-                .withEmail(register.getEmail())
-                .withPhone(register.getPhone())
+                .withUsername(request.getUsername())
+                .withPassword(request.getPassword())
+                .withEmail(request.getEmail())
+                .withPhone(request.getPhone())
                 .withCreateDate(new Date());
         customerRepository.save(customer);
-        return new RegisterResponseJSON()
-                .withId(customer.getId())
-                .withMessage("user successfully created");
+        return ResponseEntity.ok().body(
+                new RegisterResponseJSON()
+                        .withId(customer.getId())
+                        .withMessage("user created")
+        );
+    }
+
+    @RequestMapping(path = "/api/get-user", method = RequestMethod.POST)
+    public ResponseEntity<GetCustomerResponseJSON> getCustomer(@RequestBody GetCustomerRequestJSON request) {
+        Customer customer = customerRepository.findById(request.getId());
+        if (customer == null) {
+            return ResponseEntity.badRequest().body(
+                    new GetCustomerResponseJSON()
+                            .withMessage("user not found")
+            );
+        } else {
+            return ResponseEntity.ok().body(
+                    new GetCustomerResponseJSON()
+                            .withCustomer(customer)
+                            .withMessage("user found")
+            );
+        }
     }
 
 }
