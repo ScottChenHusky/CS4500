@@ -7,17 +7,20 @@
         .controller('userProfileController', userProfileController)
         .controller('userProfileController', userProfileController)
         
-    function HomeController () {
+    function HomeController ($http) {
         var vm = this;
         vm.name = "Test model!!!!";
         vm.addMovieToDB = addMovieToDB;
         
         function addMovieToDB() {
-        		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5', function(data) {
-                console.log(data.Title); // This should print out "The Avengers"
-            });
-        		return $http.post("/api/movie/addMovieFromOMDB", data)
+        		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5',
+						  function(data) {
+                              return $http.post("/api/movie/addMovieFromOMDB", data)
+						  });
+
         }
+
+        addMovieToDB();
     }
     
     function LoginController($http, $location) {
