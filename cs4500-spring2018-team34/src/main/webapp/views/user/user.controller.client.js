@@ -28,15 +28,16 @@
     				password: password
     			};
     			return $http.post(url, user)
-    				.then(response)
+    				.then(response, error)
     			function response (res) {
-    				if (res.data.id === -1) {
-    					vm.error = "Can't find user or password is not correct!";
-    				} else {
-    					$location.url("/user/" + res.data.id);
-    				}			
+    				$location.url("/user/" + res.data.id);			
                 return;
             }
+    			
+    			function error(err) {
+    				vm.error = err.data.message;
+    				return;
+    			}
     		}
     		return;
     }
@@ -102,15 +103,17 @@
     			};
     			
     			return $http.post(url, user)
-    				.then(response)
+    				.then(response, error)
     			function response (res) {
-    				if (res.data.id === -1) {
-    					vm.error = "username already exists";
-    				} else {
-    					$location.url("/user/" + res.data.id);
-    				}			
+    				console.log(res);
+    				$location.url("/user/" + res.data.id);
                 return;
             }
+    				
+    			function error(err) {
+    				vm.error = err.data.message;
+    				return;
+    			}	
     		}
     		return;
     }
