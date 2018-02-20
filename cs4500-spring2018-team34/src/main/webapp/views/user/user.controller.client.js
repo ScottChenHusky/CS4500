@@ -95,8 +95,24 @@
     }
 })();
 
-function userProfileController($routeParams) {
-	var vm = this;
-	vm.userId = $routeParams['uid'];
+function userProfileController($http, $routeParams) {
+	var model = this;
+	model.userId = $routeParams['uid'];
+	
+	var url='/api/get-user?id=' + model.userId;
+	
+	$http.get(url).then(function(res){
+		var user = res.data.customer;
+		model.name = user.username;
+		model.email = user.email;
+		model.phone = user.phone;
+	});
+	
+	
+	
+
+	
+	
+	
 	
 }

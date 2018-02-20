@@ -1,7 +1,7 @@
 <div class="wrapper">
 	<div class="input-group searchbar">
-		<input type="text" class="form-control"
-			placeholder="Please enter movie name or actor names..." ng-model="#">
+		<input type="text" class="form-control">
+			<!-- placeholder="Please enter movie name or actor names..." ng-model="#"> -->
 		<span class="input-group-btn"> <a class="btn btn-default"
 			type="button" ng-click="#" style="margin-top: 0px"> <span
 				class="glyphicon glyphicon-search"></span>
@@ -16,18 +16,18 @@
 	<div class="sidebar-wrapper">
 		<div class="profile-container">
 			<img class="photo" src="../../assets/images/user-photo.png" alt="" />
-			<h1 class="name">User Name</h1>
+			<h1 class="name">{{model.name}}</h1>
 			<ul class="list-unstyled contact-list">
 				<li class="email"><i class="fa fa-envelope"></i><a
-					href="mailto: example@email.com">example@email.com</a></li>
+					href="mailto: {{model.email}}">{{model.email}}</a></li>
 				<li class="phone"><i class="fa fa-phone"></i><a
-					href="tel:(000) 000-0000">(000) 000-0000</a></li>
+					href="tel:{{model.email}}">{{model.phone}}</a></li>
 			</ul>
 			<ul class="list-unstyled follow-list">
 				<li class="following"><i class="material-icons">people</i><a
 					href="#">Following (120)</a></li>
 				<li class="follower"><i class="material-icons">people_outline</i><a
-					href="#">Follower (300)</a></li>
+					href="#">Follower (200)</a></li>
 			</ul>
 		</div>
 		<!--//profile-container-->
