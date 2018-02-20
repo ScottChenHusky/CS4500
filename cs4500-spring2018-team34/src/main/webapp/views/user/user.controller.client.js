@@ -100,14 +100,22 @@
 		var vm = this;
 		vm.defaultView = true;
 		//placeholder data
-		vm.movies = [{name: 'Movie1',image: 'Movie1.png'},
-			{name: 'Movie2', image: 'Movie2.png'},
-			{name: 'Movie3', image: 'Movie3.png'}];
+		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie3', image: "../../assets/images/Death_Note.jpg"}];
 		vm.search = search;
 		
+		//$http.get("api/new/").then(function(response) {
+		//	vm.movies = response.data;
+		//});
+		
 		function search(searchTerm) {
+			var url = "placeholder/url"
 			vm.defaultView = false;
-			vm.movies = [{name: searchTerm, image: searchTerm + '.png'}];
+			vm.movies = [{name: searchTerm, image: "../../assets/images/Death_Note.jpg"}];
+			//$http.get("url/" + searchTerm).then(function(response) {
+			//	vm.movies = response.data;
+			//});
 		}
 	}
 })();
