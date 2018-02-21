@@ -67,7 +67,7 @@ public class CustomerController{
         }
         return ResponseEntity.ok().body(
                 new GetCustomerResponseJSON()
-                        .withCustomer(result)
+                        .withResult(result)
                         .withMessage("fetched result")
         );
     }
