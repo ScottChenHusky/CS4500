@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,21 +55,21 @@ public class CustomerController{
         );
     }
 
-    @RequestMapping(path = "/api/get-user", method = RequestMethod.POST)
-    public ResponseEntity<GetCustomerResponseJSON> getCustomer(@RequestBody GetCustomerRequestJSON request) {
-        Customer customer = customerRepository.findById(request.getId());
-        if (customer == null) {
-            return ResponseEntity.badRequest().body(
-                    new GetCustomerResponseJSON()
-                            .withMessage("user not found")
-            );
-        } else {
-            return ResponseEntity.ok().body(
-                    new GetCustomerResponseJSON()
-                            .withCustomer(customer)
-                            .withMessage("user found")
-            );
+    @RequestMapping(path = "/api/user", method = RequestMethod.GET)
+    public ResponseEntity<GetCustomerResponseJSON> getCustomer(
+            @RequestParam(name = "id", required = false) String id,
+            @RequestParam(name = "username", required = false) String username) {
+        List<Customer> result = new ArrayList<>();
+        if (id != null) {
+            result.add(customerRepository.findById(Integer.parseInt(id)));
+        } else if (username != null) {
+            result.addAll(customerRepository.findByUsernameLike(username));
         }
+        return ResponseEntity.ok().body(
+                new GetCustomerResponseJSON()
+                        .withResult(result)
+                        .withMessage("fetched result")
+        );
     }
 
 }
