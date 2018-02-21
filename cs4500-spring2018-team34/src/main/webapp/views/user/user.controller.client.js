@@ -6,6 +6,7 @@
         .controller('RegisterController', RegisterController)
         .controller('SearchController', SearchController)
         .controller('userProfileController', userProfileController)
+        .controller('userProfileController', userProfileController)
         
     function HomeController () {
         var vm = this;
@@ -15,9 +16,17 @@
         	console.log("test");
 			SearchController.search(searchTerm);
 		}
+        vm.addMovieToDB = addMovieToDB;
+        
+        function addMovieToDB() {
+        		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5', function(data) {
+                console.log(data.Title); // This should print out "The Avengers"
+            });
+        		return $http.post("/api/movie/addMovieFromOMDB", data)
+        }
     }
     
-    function LoginController($http) {
+    function LoginController($http, $location) {
     		var vm = this;
     		vm.login = login;
     		
@@ -32,11 +41,22 @@
     				username: username,
     				password: password
     			};
-    			return $http.post(url, user);		
+    			return $http.post(url, user)
+    				.then(response, error)
+    			function response (res) {
+    				$location.url("/user/" + res.data.id);			
+                return;
+            }
+    			
+    			function error(err) {
+    				vm.error = err.data.message;
+    				return;
+    			}
     		}
+    		return;
     }
     
-    function RegisterController($http) {
+    function RegisterController($http, $location) {
     		var vm = this;
     		vm.register = register;
 //    		vm.phoneNumberValidation = phoneNumberValidation;
@@ -96,10 +116,43 @@
     				password: password1
     			};
     			
-    			return $http.post(url, user);
+    			return $http.post(url, user)
+    				.then(response, error)
+    			function response (res) {
+    				console.log(res);
+    				$location.url("/user/" + res.data.id);
+                return;
+            }
+    				
+    			function error(err) {
+    				vm.error = err.data.message;
+    				return;
+    			}	
     		}
+    		return;
+    }
+    
+    function userProfileController($routeParams) {
+    		var vm = this;
+    		vm.userId = $routeParams.userId;
+    		vm.initProfile = initProfile;
     		
-    		
+    		function initProfile() {
+                var url = '/api/getUserById';
+                var userId = {
+                    userId: vm.userId
+                };
+                return $http.post(url, userId)
+                    .then(response)
+                function response(res) {
+                		//...
+                		//...
+                	    //...
+                }
+            return;
+        }
+        initProfile();
+    	
     }
     function SearchController($http, $routeParams) {
 		var vm = this;
@@ -146,9 +199,3 @@
 		}
 	}
 })();
-
-function userProfileController($routeParams) {
-	var vm = this;
-	vm.userId = $routeParams['uid'];
-	
-}
