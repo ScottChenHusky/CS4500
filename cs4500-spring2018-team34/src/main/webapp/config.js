@@ -28,6 +28,7 @@
             			controller: 'userProfileController',
             			controllerAs: 'model'
         			})
+        			
         			.when('/movie/:mid', {
         				templateUrl: 'views/movie/movieDetails.view.client.html',
             			controller: 'movieDetailsController',

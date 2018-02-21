@@ -8,36 +8,36 @@ import java.util.List;
 
 @RestController
 public class HelloController {
-	
+
 	@Autowired
 	HelloRepository helloRepository;
-	
+
 	@RequestMapping("/api/hello/insert")
 	public HelloObject insertHelloObject() {
 		HelloObject obj = new HelloObject("Hello Team34!");
 		helloRepository.save(obj);
 		return obj;
 	}
-	
+
 	@RequestMapping("/api/hello/insert/{msg}")
 	public HelloObject insertMessage(@PathVariable("msg") String message) {
 		HelloObject obj = new HelloObject(message);
 		helloRepository.save(obj);
 		return obj;
 	}
-	
+
 	@RequestMapping("/api/hello/select/all")
 	public List<HelloObject> selectAllHelloObjects() {
 		List<HelloObject> hellos =
 				(List<HelloObject>)helloRepository.findAll();
 		return hellos;
 	}
-	
+
 	@RequestMapping("/api/hello/string")
 	public String sayHello() {
 		return "Hello Team34!";
 	}
-	
+
 	@RequestMapping("/api/hello/object")
 	public HelloObject sayHelloObject() {
 		HelloObject obj = new HelloObject("Hello Team34!");
