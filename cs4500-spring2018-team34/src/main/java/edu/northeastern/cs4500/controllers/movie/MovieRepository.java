@@ -7,4 +7,8 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
   List<Movie> findByName(String name);
   Movie findById(Integer id);
+  List<Movie> findByLanguageLike(String language);
+  List<Movie> findByActorsLike(String actors);
+  List<Movie> findByNameLike(String searchby);
+  List<Movie> findByCountryLike(String country);
 }

@@ -6,8 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +22,36 @@ import java.util.Map;
 public class MovieController {
   @Autowired
   private MovieRepository movieRepository;
+  public Map<String, String> createMap(String type,  List<Movie> input){
+    Map<String, String> map = new HashMap();
+    for(int i = 0; i < input.size(); i++){
+      Map<String, String> temp = input.get(i).toMap();
+      JSONObject tempJson = new JSONObject(temp);
+      map.put(type + Integer.toString(i), tempJson.toString());
 
-  @RequestMapping(path = "/api/movie/search", method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> searchMovies(@RequestBody JSONObject request) {
-    List<Movie> movie = movieRepository.findByName(request.get("name").toString());
+    }
+    return map;
+  }
+  @RequestMapping(path = "/api/movie/search", method = RequestMethod.GET)
+  public ResponseEntity<JSONObject> searchMovies(@RequestParam(name="name") String searchby) {
+    List<Movie> movie = movieRepository.findByName(searchby);
+    List<Movie> moviesName = movieRepository.findByNameLike(searchby);
+    List<Movie> moviesLanguage = movieRepository.findByLanguageLike(searchby);
+    List<Movie> moviesActors = movieRepository.findByActorsLike(searchby);
+    List<Movie> moviesCountry = movieRepository.findByCountryLike(searchby);
     if (movie == null) {
+
+      try {
+        String url = "http://www.omdbapi.com/";
+        String charset = "UTF-8";
+        String query = String.format("t=%s&season=%s&episode=%s",
+                URLEncoder.encode(searchby, charset));
+        URLConnection connection = new URL(url + "?" + query).openConnection();
+        connection.setRequestProperty("Accept-Charset", charset);
+        InputStream response = connection.getInputStream();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       Map<String, String> map = new HashMap();
       map.put("message","movie not found");
       JSONObject json = new JSONObject(map);
@@ -28,12 +59,11 @@ public class MovieController {
     } else {
       Map<String, String> map = new HashMap();
       map.put("message","movie found");
-      map.put("length",Integer.toString(movie.size()));
-      for(int i = 0; i < movie.size(); i++){
-        Map<String, String> temp = movie.get(i).toMap();
-        JSONObject tempJson = new JSONObject(temp);
-        map.put(Integer.toString(i), tempJson.toString());
-      }
+      map.putAll(createMap("Movie",movie));
+      map.putAll(createMap("Name",moviesName));
+      map.putAll(createMap("Actor",moviesActors));
+      map.putAll(createMap("Language",moviesLanguage));
+      map.putAll(createMap("Country", moviesCountry));
       JSONObject json = new JSONObject(map);
       return ResponseEntity.ok().body(json);
     }
@@ -63,7 +93,7 @@ public class MovieController {
 
   }
   @RequestMapping(path = "/api/movie/get", method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> getCustomer(@RequestBody JSONObject request) {
+  public ResponseEntity<JSONObject> getMovie(@RequestBody JSONObject request) {
     Movie movie = movieRepository.findById(Integer.parseInt(request.get("Id").toString()));
     if (movie == null) {
       Map<String, String> map = new HashMap();

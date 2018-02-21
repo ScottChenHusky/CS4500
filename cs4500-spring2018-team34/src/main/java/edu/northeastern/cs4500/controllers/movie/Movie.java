@@ -20,7 +20,7 @@ public class Movie {
   private Float score;
   private String description;
   private String level;
-  private String Language;
+  private String language;
   private String time;
   private String omdbreference;
   private String rtreference;
@@ -67,11 +67,11 @@ public class Movie {
     this.setLevel(level);
     return this;
   }
-  public void setLanguage(String language) {
-    Language = language;
+  public void setlanguage(String language) {
+    language = language;
   }
   public Movie withLanguage(String language){
-    this.setLanguage(language);
+    this.setlanguage(language);
     return this;
   }
   public void setTime(String time) {
@@ -158,8 +158,8 @@ public class Movie {
     return level;
   }
 
-  public String getLanguage() {
-    return Language;
+  public String getlanguage() {
+    return language;
   }
 
   public String getTime() {
@@ -192,5 +192,9 @@ public class Movie {
     map.remove("id");
     return map;
 
+  }
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof Movie && this.id == ((Movie) obj).id;
   }
 }
