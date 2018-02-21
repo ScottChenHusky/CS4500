@@ -13,8 +13,7 @@
         
         function addMovieToDB() {
         		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5', function(data) {
-                console.log(data.Title); // This should print out "The
-											// Avengers"
+                console.log(data.Title); // This should print out "The Avengers"
             });
         		return $http.post("/api/movie/addMovieFromOMDB", data)
         }
@@ -53,36 +52,36 @@
     function RegisterController($http, $location) {
     		var vm = this;
     		vm.register = register;
-// vm.phoneNumberValidation = phoneNumberValidation;
+//    		vm.phoneNumberValidation = phoneNumberValidation;
 //    		
-// function phoneNumberValidation(phone) {
-// console.log("...........");
-// if (phone === "") {
-// return true;
-// }
+//    		function phoneNumberValidation(phone) {
+//    			console.log("...........");
+//    			if (phone === "") {
+//    				return true;
+//    			}
 //    			
-// if (phone.length !== 12) {
-// console.log("!!!");
-// return false;
-// }
+//    			if (phone.length !== 12) {
+//    				console.log("!!!");
+//    				return false;
+//    			}
 //
-// var front = phone.substr(0, 3);
-// var middle = phone.substring(4, 7);
-// var rear = phone.substring(8, 12);
+//    			var front = phone.substr(0, 3);
+//    			var middle = phone.substring(4, 7);
+//    			var rear = phone.substring(8, 12);
 //    			
-// console.log((!isNaN(parseInt(front, 10)))
-// && (!isNaN(parseInt(middle, 10)))
-// && (!isNaN(parseInt(rear, 10)))
-// && (phone.charAt(3) === "-")
-// && (phone.charAt(7) === "-"));
+//    			console.log((!isNaN(parseInt(front, 10))) 
+//    			&& (!isNaN(parseInt(middle, 10))) 
+//    			&& (!isNaN(parseInt(rear, 10))) 
+//    			&& (phone.charAt(3) === "-")
+//    			&& (phone.charAt(7) === "-"));
 //    			
-// return (!isNaN(parseInt(front, 10)))
-// && (!isNaN(parseInt(middle, 10)))
-// && (!isNaN(parseInt(rear, 10)))
-// && (phone.charAt(3) === "-")
-// && (phone.charAt(7) === "-");
+//    			return (!isNaN(parseInt(front, 10))) 
+//    			&& (!isNaN(parseInt(middle, 10))) 
+//    			&& (!isNaN(parseInt(rear, 10))) 
+//    			&& (phone.charAt(3) === "-")
+//    			&& (phone.charAt(7) === "-");
 //    			
-// }
+//    		}
     		
     		function register(username, email, phone, password1, password2, admin) {
     			if (!username) {
@@ -117,11 +116,14 @@
     				$location.url("/user/" + res.data.id);
                 return;
             }
-            
-        return;
+    				
+    			function error(err) {
+    				vm.error = err.data.message;
+    				return;
+    			}	
+    		}
+    		return;
     }
-    initProfile();
-	}
     
     function userProfileController($http, $routeParams) {
 		var vm = this;
@@ -137,5 +139,9 @@
             		console.log(vm);
             		console.log("customer: " + res.data.customer);
             }
-		}
+            
+        return;
+    }
+    initProfile();
+	}
 })();
