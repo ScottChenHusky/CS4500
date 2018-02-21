@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @RestController
 public class MovieController {
   @Autowired
@@ -33,8 +34,18 @@ public class MovieController {
 
     @RequestMapping(path = "/api/movie/addMovieFromOMDB", method = RequestMethod.POST)
   public void addMovies(@RequestBody JSONObject source){
-      System.out.println(source.get("Title")  );
-
+      Movie movie = new Movie()
+              .withLanguage(source.get("Language").toString())
+              .withDate(source.get("Released").toString())
+              .withDescription(source.get("Plot").toString())
+              .withLevel(source.get("Rated").toString())
+              .withName(source.get("Title").toString())
+              .withScore(Float.valueOf(source.get("imdbRating").toString()))
+              .withTime(source.get("Runtime").toString())
+              .withOmdbreference(source.get("imdbID").toString())
+              .withRtreference("")
+              .withTmdbreference("");
+      movieRepository.save(movie);
 
   }
 }
