@@ -10,6 +10,11 @@
     function HomeController () {
         var vm = this;
         vm.name = "Test model!!!!";
+        vm.search = search;
+        function search(searchTerm) {
+        	console.log("test");
+			SearchController.search(searchTerm);
+		}
     }
     
     function LoginController($http) {
@@ -96,26 +101,48 @@
     		
     		
     }
-    function SearchController($http) {
+    function SearchController($http, $routeParams) {
 		var vm = this;
 		vm.defaultView = true;
+		vm.term = $routeParams['term'];
+		console.log(vm.term);
 		//placeholder data
 		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
 			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
 			{name: 'Movie3', image: "../../assets/images/Death_Note.jpg"}];
 		vm.search = search;
+		if(vm.term !== undefined && vm.term != '') {
+			search(vm.term);
+		}
 		
-		//$http.get("api/new/").then(function(response) {
-		//	vm.movies = response.data;
-		//});
+		
 		
 		function search(searchTerm) {
-			var url = "placeholder/url"
+			var mUrl = "api/movie/search?" + searchTerm;
+			var uUrl = "api/" + searchTerm;	
 			vm.defaultView = false;
-			vm.movies = [{name: searchTerm, image: "../../assets/images/Death_Note.jpg"}];
-			//$http.get("url/" + searchTerm).then(function(response) {
-			//	vm.movies = response.data;
+			vm.hasMResults = false;
+			vm.hasUResults = false;
+			vm.movies = [{name: "No Results Found", image: "../../assets/images/Death_Note.jpg"}];
+			vm.users = [{name: "No Results Found", image: "../../assets/images/user-photo.png"}]
+			//$http.get(mUrl).then(function(response) {
+			//	if(response.data != undefined) {
+			//		vm.movies = response.data;
+			//		vm.hasMResults = true;
+			//	} 
 			//});
+			//$http.get(uUrl).then(function(response) {
+			//	if(response.data != undefined) {
+			//		vm.users = response.data;
+			//		vm.hasUResults = true;
+			//	} 
+			//});
+			
+			//FOR TESTING
+			vm.hasMResults = true;
+			//vm.hasUResults = true;
+			vm.movies[0].name = searchTerm;
+			vm.users[0].name = searchTerm;
 		}
 	}
 })();

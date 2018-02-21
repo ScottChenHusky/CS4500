@@ -6,24 +6,7 @@
 <link rel="stylesheet" type="text/css" href="../../assets/css/search.css">
 </head>
 <body>
-	<div id='searchBar'>
-		
-			<h1>Search</h1>
-			<div class="input-group search-container">
-			    <!-- <form>
-			      <input type="text" placeholder="Search.." name="search" ng-model="searchTerm">
-			      <button type="submit" ng-click="model.search(searchTerm)">Submit</button>
-			    </form> -->
-			    <input type="text" class="form-control"
-					placeholder="Please enter movie name or actor names..." ng-model="searchTerm">
-				<span class="input-group-btn"> <a class="btn btn-default"
-					type="button" ng-click="model.search(searchTerm)" style="margin-top: 0px"> <span
-						class="glyphicon glyphicon-search"></span>
-				</a>
-				</span>
-			</div>
-			
-	</div>
+
 	<div id='default' ng-show="model.defaultView">		
 		
 		<div id='new'>
@@ -72,12 +55,16 @@
 				<h2 class="section-title">
 					<i class="glyphicon glyphicon-film"></i>Movies
 				</h2>
-				<div ng-repeat="x in model.movies" class='movieBox'>
+				<div ng-show="model.hasMResults" ng-repeat="x in model.movies" class='movieBox'>
 					<img class="cover" src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
+				<div ng-show="!model.hasMResults">
+					<h3>No Results Found</h3>
+				</div>
 			</div>	
 		</div>
+		
 		<br/>
 		<br/>
 		<div id='userResults'>
@@ -85,9 +72,12 @@
 				<h2 class="section-title">
 					<i class="material-icons">people</i>Users
 				</h2>
-				<div ng-repeat="x in model.movies" class='movieBox'>
+				<div ng-show="model.hasUResults" ng-repeat="x in model.users" class='movieBox'>
 					<img class="cover" src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
+				</div>
+				<div ng-show="!model.hasUResults">
+					<h3>No Results Found</h3>
 				</div>
 			</div>	
 		</div>

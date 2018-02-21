@@ -22,7 +22,12 @@
         				controller: 'RegisterController',
         				controllerAs: 'model'
         			})
-        			.when('/search', {
+        			.when('/search/:term', {
+        				templateUrl: 'views/user/search.view.client.html',
+        				controller: 'SearchController',
+        				controllerAs: 'model'
+        			})
+        			.when('/search/', {
         				templateUrl: 'views/user/search.view.client.html',
         				controller: 'SearchController',
         				controllerAs: 'model'
