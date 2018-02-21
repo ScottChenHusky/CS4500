@@ -1,5 +1,9 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,7 +14,7 @@ import javax.persistence.Table;
 public class Movie {
   @Id
   @GeneratedValue
-  private Integer Id;
+  private Integer id;
   private String name;
   private String date;
   private Float score;
@@ -21,6 +25,12 @@ public class Movie {
   private String omdbreference;
   private String rtreference;
   private String tmdbreference;
+  private String director;
+  private String actors;
+  private String country;
+  private String awards;
+  private String poster;
+  private String boxoffice;
 
   public void setName(String name) {
     this.name = name;
@@ -88,8 +98,44 @@ public class Movie {
     this.setTmdbreference(tm);
     return this;
   }
+  public void setDirector(String director){this.director = director;}
+  public Movie withDirector(String director){
+    this.setDirector(director);
+    return this;
+  }
+
+  public void setActors(String actors){ this.actors = actors;}
+  public Movie withActors(String actors){
+    this.setActors(actors);
+    return this;
+  }
+
+  public void setCountry(String country) {this.country = country; }
+  public Movie withCountry(String country) {
+    this.country = country;
+    return this;
+  }
+
+  public void setAwards(String awards){ this.awards = awards; }
+  public Movie withAwards(String awards){
+    this.setAwards(awards);
+    return this;
+  }
+
+  public void setPoster(String poster) {this.poster = poster;}
+  public Movie withPoster(String poster) {
+    this.setPoster(poster);
+    return this;
+  }
+
+  public void setBoxoffice(String boxoffice){this.boxoffice = boxoffice;}
+  public Movie withBoxOffice(String boxoffice){
+    this.setBoxoffice(boxoffice);
+    return this;
+  }
+
   public Integer getId() {
-    return Id;
+    return this.id;
   }
 
   public String getName() {
@@ -118,5 +164,33 @@ public class Movie {
 
   public String getTime() {
     return time;
+  }
+
+  public String getDirector() {return director; }
+
+  public String getActors(){ return actors; }
+
+  public String getCountry(){
+    return this.country;
+  }
+
+  public String getAwards(){return this.awards;}
+
+  public String getPoster(){return this.poster;}
+
+  public String getBoxoffice(){return this.boxoffice;}
+  public Map<String, String> toMap(){
+    Map<String, String> map = new HashMap<>();
+    Field[] fields = this.getClass().getFields();
+    for(int i = 0; i < fields.length; i++){
+      try {
+        map.put(fields[i].getName(), (String) fields[i].get(this));
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+    }
+    map.remove("id");
+    return map;
+
   }
 }

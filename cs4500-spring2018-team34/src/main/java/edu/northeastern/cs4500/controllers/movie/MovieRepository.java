@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
   List<Movie> findByName(String name);
-
+  Movie findById(Integer id);
 }

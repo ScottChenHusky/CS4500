@@ -46,7 +46,11 @@ public class CustomerController{
                 .withPassword(request.getPassword())
                 .withEmail(request.getEmail())
                 .withPhone(request.getPhone())
-                .withCreateDate(new Date());
+                .withCreateDate(new Date())
+                .withPrivacyLevel(1)
+                .withLastLogin(new Date())
+                .withLevel(1)
+                .withScore(0);
         customerRepository.save(customer);
         return ResponseEntity.ok().body(
                 new RegisterResponseJSON()
@@ -64,6 +68,7 @@ public class CustomerController{
                             .withMessage("user not found")
             );
         } else {
+            System.out.println(customer.getEmail());
             return ResponseEntity.ok().body(
                     new GetCustomerResponseJSON()
                             .withCustomer(customer)
