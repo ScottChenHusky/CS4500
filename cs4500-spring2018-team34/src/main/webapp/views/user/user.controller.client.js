@@ -4,12 +4,18 @@
         .controller('HomeController', HomeController)
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
+        .controller('SearchController', SearchController)
         .controller('userProfileController', userProfileController)
         .controller('userProfileController', userProfileController)
         
     function HomeController ($http) {
         var vm = this;
         vm.name = "Test model!!!!";
+        vm.search = search;
+        function search(searchTerm) {
+        	console.log("test");
+			SearchController.search(searchTerm);
+		}
         vm.addMovieToDB = addMovieToDB;
 
         // var id_prefix = "tt0";
@@ -164,4 +170,50 @@
         initProfile();
     	
     }
+    function SearchController($http, $routeParams) {
+		var vm = this;
+		vm.defaultView = true;
+		vm.term = $routeParams['term'];
+		console.log(vm.term);
+		//placeholder data
+		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie3', image: "../../assets/images/Death_Note.jpg"}];
+		vm.search = search;
+		if(vm.term !== undefined && vm.term != '') {
+			search(vm.term);
+		}
+		
+		
+		
+		function search(searchTerm) {
+			var mUrl = "api/movie/search?name=" + searchTerm;
+			//var uUrl = "api/" + searchTerm;	
+			vm.defaultView = false;
+			vm.hasMResults = false;
+			vm.hasUResults = false;
+			vm.movies = [];
+			vm.users = [];
+			console.log(mUrl);
+			$http.get(mUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.movies = response.data;
+					console.log(response.data);
+					vm.hasMResults = true;
+				} 
+			});
+			/*$http.get(uUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.users = response.data;
+					vm.hasUResults = true;
+				} 
+			});*/
+			
+			//FOR TESTING
+			//vm.hasMResults = true;
+			//vm.hasUResults = true;
+			//vm.movies[0].name = searchTerm;
+			//vm.users[0].name = searchTerm;
+		}
+	}
 })();
