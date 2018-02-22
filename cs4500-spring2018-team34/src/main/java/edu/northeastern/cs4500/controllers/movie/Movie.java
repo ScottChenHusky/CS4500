@@ -14,23 +14,23 @@ import javax.persistence.Table;
 public class Movie {
   @Id
   @GeneratedValue
-  private Integer id;
-  private String name;
-  private String date;
-  private String score;
-  private String description;
-  private String level;
-  private String language;
-  private String time;
-  private String omdbreference;
-  private String rtreference;
-  private String tmdbreference;
-  private String director;
-  private String actors;
-  private String country;
-  private String awards;
-  private String poster;
-  private String boxoffice;
+  public Integer id;
+  public String name;
+  public String date;
+  public String score;
+  public String description;
+  public String level;
+  public String language;
+  public String time;
+  public String omdbreference;
+  public String rtreference;
+  public String tmdbreference;
+  public String director;
+  public String actors;
+  public String country;
+  public String awards;
+  public String poster;
+  public String boxoffice;
 
   public void setName(String name) {
     this.name = name;
@@ -181,15 +181,17 @@ public class Movie {
   public String getBoxoffice(){return this.boxoffice;}
   public Map<String, String> toMap(){
     Map<String, String> map = new HashMap<>();
+
+
     Field[] fields = this.getClass().getFields();
+
     for(int i = 0; i < fields.length; i++){
       try {
-        map.put(fields[i].getName(), (String) fields[i].get(this));
+        map.put(fields[i].getName(), fields[i].get(this).toString());
       } catch (IllegalAccessException e) {
         e.printStackTrace();
       }
     }
-    map.remove("id");
     return map;
 
   }
