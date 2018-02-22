@@ -8,12 +8,9 @@
 		vm.initMovie = initMovie;
 
 		function initMovie() {
-			var url = '/api/movie/get';
-			var movieId = {
-					Id: vm.movieId
-			};
-			console.log("movieId: " + movieId);
-			return $http.post(url, movieId).then(response, error)
+            var url = '/api/movie/get?id=' + vm.movieId;
+            return $http.get(url, vm.movieId)
+				.then(response, error)
 			function response(res) {
 				console.log(res);
 				vm.movie = res;
