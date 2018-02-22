@@ -18,14 +18,13 @@ public class MovieController {
   @Autowired
   private MovieRepository movieRepository;
 
-  public Map<String, String> createMap(String type, List<Movie> input) {
-    Map<String, String> map = new HashMap();
+  public Map<String, JSONObject> createMap(String type, List<Movie> input) {
+    Map<String, JSONObject> map = new HashMap();
     for (int i = 0; i < input.size(); i++) {
-      Map<String, String> temp = input.get(i).toMap();
-      JSONObject tempJson = new JSONObject(temp);
-      map.put(type + Integer.toString(i), tempJson.toString());
-
+      Movie m = input.get(i);
+      map.put(type + i, new JSONObject(m.toMap()));
     }
+
     return map;
   }
 
@@ -36,7 +35,8 @@ public class MovieController {
     List<Movie> moviesLanguage = movieRepository.findByLanguageLike(searchby);
     List<Movie> moviesActors = movieRepository.findByActorsLike(searchby);
     List<Movie> moviesCountry = movieRepository.findByCountryLike(searchby);
-    Map<String, String> map = new HashMap();
+    Map<String, JSONObject> map = new HashMap();
+    JSONObject status = new JSONObject();
     if (movie == null) {
 
 //      try {
@@ -50,9 +50,9 @@ public class MovieController {
 //      } catch (IOException e) {
 //        e.printStackTrace();
 //      }
-      map.put("message", "movie not found");
+      status.put("Status", "not found");
     } else {
-      map.put("message", "movie found");
+      status.put("Status", "found");
     }
 
 
