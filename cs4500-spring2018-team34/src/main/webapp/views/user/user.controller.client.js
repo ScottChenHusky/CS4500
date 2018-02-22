@@ -200,7 +200,7 @@
 					vm.movies = response.data;
 					console.log(response.data);
 					if(vm.movies.Movie0 != null) {
-						console.log(vm.movies.length);
+						//console.log(vm.movies[0]);
 						vm.hasMResults = true;
 					}
 					
