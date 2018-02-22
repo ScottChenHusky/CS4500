@@ -1,6 +1,3 @@
-{{model.movie}}
-{{model}}
-
 <!-- NAVIGATION SECTION -->
 <div class="wraper">
 	<div class="container">
@@ -18,7 +15,7 @@
 
 	<div class="movie-section">
 		<h2 class="section-title">
-			<i class="glyphicon glyphicon-film"></i> {{model.movie.username}} <i
+			<i class="glyphicon glyphicon-film"></i> {{model.movie.name}} <i
 				class="material-icons">favorite_border</i> <i class="material-icons">star_border</i>
 			Rate this
 
@@ -49,10 +46,10 @@
 				More</span>
 		</h2>
 
-		<ul class="movies" ng-repeat="res in model.movie.result">
+		<ul class="movies" ng-repeat="actor in model.movie.actors">
 			<li class="item"><img class="actor-photo img-responsive"
 				src="../../assets/images/Nat_Wolff.png" alt="">
-				<h5 class="movie-title">{{res.username}}</h5></li>
+				<h5 class="movie-title">{{actor.name}}</h5></li>
 		</ul>
 	</section>
 </div>
