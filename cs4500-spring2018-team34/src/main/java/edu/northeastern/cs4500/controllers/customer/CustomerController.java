@@ -41,12 +41,17 @@ public class CustomerController{
                             .withMessage("username already exists")
             );
         }
+        Date now = new Date();
         Customer customer = new Customer()
                 .withUsername(request.getUsername())
                 .withPassword(request.getPassword())
                 .withEmail(request.getEmail())
                 .withPhone(request.getPhone())
-                .withCreateDate(new Date());
+                .withCreateDate(now)
+                .withLastLogin(now)
+                .withPrivacyLevel(1)
+                .withLevel(1)
+                .withScore(0);
         customerRepository.save(customer);
         return ResponseEntity.ok().body(
                 new RegisterResponseJSON()
