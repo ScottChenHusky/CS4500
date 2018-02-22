@@ -1,19 +1,21 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import java.util.List;
+
 public class GetCustomerResponseJSON {
-    private Customer customer;
+    private List<Customer> result;
     private String message;
 
-    public Customer getCustomer() {
-        return customer;
+    public List<Customer> getCustomer() {
+        return result;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setResult(List<Customer> result) {
+        this.result = result;
     }
 
-    public GetCustomerResponseJSON withCustomer(Customer customer) {
-        this.setCustomer(customer);
+    public GetCustomerResponseJSON withResult(List<Customer> result) {
+        this.setResult(result);
         return this;
     }
 
