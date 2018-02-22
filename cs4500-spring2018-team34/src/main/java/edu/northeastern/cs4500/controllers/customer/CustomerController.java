@@ -68,12 +68,12 @@ public class CustomerController{
         if (id != null) {
             result.add(customerRepository.findById(Integer.parseInt(id)));
         } else if (username != null) {
-            result.addAll(customerRepository.findByUsernameLike(username));
+            result.addAll(customerRepository.findByUsernameLike("%" + username + "%"));
         }
         return ResponseEntity.ok().body(
                 new GetCustomerResponseJSON()
                         .withResult(result)
-                        .withMessage("fetched result")
+                        .withMessage("results fetched")
         );
     }
 
