@@ -8,7 +8,7 @@
         .controller('userProfileController', userProfileController)
         .controller('userProfileController', userProfileController)
         
-    function HomeController () {
+    function HomeController ($http) {
         var vm = this;
         vm.name = "Test model!!!!";
         vm.search = search;
@@ -17,13 +17,29 @@
 			SearchController.search(searchTerm);
 		}
         vm.addMovieToDB = addMovieToDB;
-        
-        function addMovieToDB() {
-        		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5', function(data) {
-                console.log(data.Title); // This should print out "The Avengers"
-            });
-        		return $http.post("/api/movie/addMovieFromOMDB", data)
-        }
+
+        // var id_prefix = "tt0";
+        // var id_end = 848228;
+        //
+        // function addMovieToDB() {
+        // 	for(var i =6; i < 100; i++){
+        // 		id_end += 1;
+        // 		var id = id_prefix + id_end;
+        // 		var url_front = "http://www.omdbapi.com/?i=";
+        // 		var url_end = "&apikey=a65196c5";
+        // 		var url = url_front + id + url_end;
+        //
+        //
+        //         $.getJSON(url ,
+        //                   function(data) {
+        //                       return $http.post("/api/movie/addMovieFromOMDB", data)
+        //                   });
+			// }
+        //
+        //
+        // }
+        //
+        // addMovieToDB();
     }
     
     function LoginController($http, $location) {

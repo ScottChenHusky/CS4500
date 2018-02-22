@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,12 +41,17 @@ public class CustomerController{
                             .withMessage("username already exists")
             );
         }
+        Date now = new Date();
         Customer customer = new Customer()
                 .withUsername(request.getUsername())
                 .withPassword(request.getPassword())
                 .withEmail(request.getEmail())
                 .withPhone(request.getPhone())
-                .withCreateDate(new Date());
+                .withCreateDate(now)
+                .withLastLogin(now)
+                .withPrivacyLevel(1)
+                .withLevel(1)
+                .withScore(0);
         customerRepository.save(customer);
         return ResponseEntity.ok().body(
                 new RegisterResponseJSON()
@@ -55,21 +60,21 @@ public class CustomerController{
         );
     }
 
-    @RequestMapping(path = "/api/get-user", method = RequestMethod.POST)
-    public ResponseEntity<GetCustomerResponseJSON> getCustomer(@RequestBody GetCustomerRequestJSON request) {
-        Customer customer = customerRepository.findById(request.getId());
-        if (customer == null) {
-            return ResponseEntity.badRequest().body(
-                    new GetCustomerResponseJSON()
-                            .withMessage("user not found")
-            );
-        } else {
-            return ResponseEntity.ok().body(
-                    new GetCustomerResponseJSON()
-                            .withCustomer(customer)
-                            .withMessage("user found")
-            );
+    @RequestMapping(path = "/api/user", method = RequestMethod.GET)
+    public ResponseEntity<GetCustomerResponseJSON> getCustomer(
+            @RequestParam(name = "id", required = false) String id,
+            @RequestParam(name = "username", required = false) String username) {
+        List<Customer> result = new ArrayList<>();
+        if (id != null) {
+            result.add(customerRepository.findById(Integer.parseInt(id)));
+        } else if (username != null) {
+            result.addAll(customerRepository.findByUsernameLike(username));
         }
+        return ResponseEntity.ok().body(
+                new GetCustomerResponseJSON()
+                        .withResult(result)
+                        .withMessage("fetched result")
+        );
     }
 
 }
