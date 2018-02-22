@@ -339,6 +339,11 @@
 	width: 140px;
 }
 
+.detail {
+	height: 340px;
+	width: 240px;
+}
+
 .main-wrapper .movie-section ul, li {
 	padding: 0;
 	margin: 0;

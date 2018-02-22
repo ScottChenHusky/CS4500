@@ -104,8 +104,9 @@ public class MovieController {
 
     }
 
-    JSONObject json = new JSONObject(map);
-    return ResponseEntity.ok().body(json);
+
+      JSONObject json = new JSONObject(map);
+      return ResponseEntity.ok().body(json);
 
   }
 }

@@ -36,7 +36,11 @@
         				templateUrl: 'views/user/userProfile.view.client.html',
             			controller: 'userProfileController',
             			controllerAs: 'model'
+        			})
+        			.when('/movie/:mid', {
+        				templateUrl: 'views/movie/movieDetails.view.client.html',
+            			controller: 'movieDetailsController',
+            			controllerAs: 'model'
         			});
     }
-
 })();
