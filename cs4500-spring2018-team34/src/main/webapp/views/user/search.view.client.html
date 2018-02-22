@@ -56,7 +56,7 @@
 					<i class="glyphicon glyphicon-film"></i>Movies
 				</h2>
 				<div ng-show="model.hasMResults" ng-repeat="x in model.movies" class='movieBox'>
-					<img class="cover" src={{x.image}} alt="" />
+					<img class="cover" src={{x.poster}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
 				<div ng-show="!model.hasMResults">

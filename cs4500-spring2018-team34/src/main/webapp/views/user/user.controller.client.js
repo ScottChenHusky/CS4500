@@ -197,9 +197,10 @@
 			console.log(mUrl);
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {
-					vm.movies = response.data.result;
+					vm.movies = response.data;
 					console.log(response.data);
-					if(vm.movies != undefined) {
+					if(vm.movies.Movie0 != null) {
+						console.log(vm.movies.length);
 						vm.hasMResults = true;
 					}
 					
