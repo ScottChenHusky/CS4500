@@ -187,31 +187,33 @@
 		
 		
 		function search(searchTerm) {
-			var mUrl = "api/movie/search?" + searchTerm;
-			var uUrl = "api/" + searchTerm;	
+			var mUrl = "api/movie/search?name=" + searchTerm;
+			//var uUrl = "api/" + searchTerm;	
 			vm.defaultView = false;
 			vm.hasMResults = false;
 			vm.hasUResults = false;
-			vm.movies = [{name: "No Results Found", image: "../../assets/images/Death_Note.jpg"}];
-			vm.users = [{name: "No Results Found", image: "../../assets/images/user-photo.png"}]
-			//$http.get(mUrl).then(function(response) {
-			//	if(response.data != undefined) {
-			//		vm.movies = response.data;
-			//		vm.hasMResults = true;
-			//	} 
-			//});
-			//$http.get(uUrl).then(function(response) {
-			//	if(response.data != undefined) {
-			//		vm.users = response.data;
-			//		vm.hasUResults = true;
-			//	} 
-			//});
+			vm.movies = [];
+			vm.users = [];
+			console.log(mUrl);
+			$http.get(mUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.movies = response.data;
+					console.log(response.data);
+					vm.hasMResults = true;
+				} 
+			});
+			/*$http.get(uUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.users = response.data;
+					vm.hasUResults = true;
+				} 
+			});*/
 			
 			//FOR TESTING
-			vm.hasMResults = true;
+			//vm.hasMResults = true;
 			//vm.hasUResults = true;
-			vm.movies[0].name = searchTerm;
-			vm.users[0].name = searchTerm;
+			//vm.movies[0].name = searchTerm;
+			//vm.users[0].name = searchTerm;
 		}
 	}
 })();
