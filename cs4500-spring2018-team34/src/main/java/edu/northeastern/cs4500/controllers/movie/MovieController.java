@@ -31,10 +31,10 @@ public class MovieController {
   @RequestMapping(path = "/api/movie/search", method = RequestMethod.GET)
   public ResponseEntity<JSONObject> searchMovies(@RequestParam(name = "name") String searchby) {
     List<Movie> movie = movieRepository.findByName(searchby);
-    List<Movie> moviesName = movieRepository.findByNameLike(searchby);
-    List<Movie> moviesLanguage = movieRepository.findByLanguageLike(searchby);
-    List<Movie> moviesActors = movieRepository.findByActorsLike(searchby);
-    List<Movie> moviesCountry = movieRepository.findByCountryLike(searchby);
+    List<Movie> moviesName = movieRepository.findByNameContaining(searchby);
+    List<Movie> moviesLanguage = movieRepository.findByLanguageContaining(searchby);
+    List<Movie> moviesActors = movieRepository.findByActorsContaining(searchby);
+    List<Movie> moviesCountry = movieRepository.findByCountryContaining(searchby);
     Map<String, JSONObject> map = new HashMap();
     JSONObject status = new JSONObject();
     if (movie == null) {
@@ -90,20 +90,22 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/get", method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> getMovie(@RequestBody JSONObject request) {
-    Movie movie = movieRepository.findById(Integer.parseInt(request.get("Id").toString()));
+  @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
+  public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
+    Movie movie = movieRepository.findById(Integer.parseInt(searchId));
+    Map<String, JSONObject> map = new HashMap();
+    JSONObject status = new JSONObject();
     if (movie == null) {
-      Map<String, String> map = new HashMap();
-      map.put("message", "movie not found");
-      JSONObject json = new JSONObject(map);
-      return ResponseEntity.badRequest().body(json);
+      status.put("message", "not found");
+
     } else {
-      Map<String, String> map = new HashMap();
-      map.put("message", "movie found");
-      map.put("movie", movie.toMap().toString());
-      JSONObject json = new JSONObject(map);
-      return ResponseEntity.ok().body(json);
+      status.put("message", "found");
+      map.put("movie", new JSONObject(movie.toMap()));
+
     }
+
+    JSONObject json = new JSONObject(map);
+    return ResponseEntity.ok().body(json);
+
   }
 }
