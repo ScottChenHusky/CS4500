@@ -17,7 +17,7 @@ public class Movie {
   private Integer id;
   private String name;
   private String date;
-  private Float score;
+  private String score;
   private String description;
   private String level;
   private String language;
@@ -46,10 +46,10 @@ public class Movie {
     this.setDate(date);
     return this;
   }
-  public void setScore(Float score) {
+  public void setScore(String score) {
     this.score = score;
   }
-  public Movie withScore(Float score){
+  public Movie withScore(String score){
     this.setScore(score);
     return this;
   }
@@ -68,7 +68,7 @@ public class Movie {
     return this;
   }
   public void setlanguage(String language) {
-    language = language;
+    this.language = language;
   }
   public Movie withLanguage(String language){
     this.setlanguage(language);
@@ -93,7 +93,7 @@ public class Movie {
     this.setRtreference(rtreference);
     return this;
   }
-  public void setTmdbreference(String tm){ this.tmdbreference = tmdbreference; }
+  public void setTmdbreference(String tm){ this.tmdbreference = tm; }
   public Movie withTmdbreference(String tm){
     this.setTmdbreference(tm);
     return this;
@@ -146,7 +146,7 @@ public class Movie {
     return date;
   }
 
-  public Float getScore() {
+  public String getScore() {
     return score;
   }
 
