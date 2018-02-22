@@ -14,7 +14,7 @@
         function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
-        vm.addMovieToDB = addMovieToDB;
+//        vm.addMovieToDB = addMovieToDB;
 
         // var id_prefix = "tt0";
         // var id_end = 848228;
