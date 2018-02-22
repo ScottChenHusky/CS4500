@@ -74,7 +74,7 @@ public class MovieController {
             .withDescription(source.get("Plot").toString())
             .withLevel(source.get("Rated").toString())
             .withName(source.get("Title").toString())
-            .withScore(Float.valueOf(source.get("imdbRating").toString()))
+            .withScore(source.get("imdbRating").toString())
             .withTime(source.get("Runtime").toString())
             .withOmdbreference(source.get("imdbID").toString())
             .withRtreference("")
