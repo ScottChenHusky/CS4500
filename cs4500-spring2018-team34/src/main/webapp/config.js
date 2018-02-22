@@ -22,18 +22,25 @@
         				controller: 'RegisterController',
         				controllerAs: 'model'
         			})
-        			
+        			.when('/search/:term', {
+        				templateUrl: 'views/user/search.view.client.html',
+        				controller: 'SearchController',
+        				controllerAs: 'model'
+        			})
+        			.when('/search/', {
+        				templateUrl: 'views/user/search.view.client.html',
+        				controller: 'SearchController',
+        				controllerAs: 'model'
+        			})
         			.when('/user/:uid', {
         				templateUrl: 'views/user/userProfile.view.client.html',
             			controller: 'userProfileController',
             			controllerAs: 'model'
         			})
-        			
         			.when('/movie/:mid', {
         				templateUrl: 'views/movie/movieDetails.view.client.html',
             			controller: 'movieDetailsController',
             			controllerAs: 'model'
-        			})
+        			});
     }
-
 })();

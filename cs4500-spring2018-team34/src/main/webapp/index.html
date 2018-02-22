@@ -39,7 +39,6 @@
 <link rel="stylesheet" href="assets/css/movieDetails.css">
 </head>
 <body>
-
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -65,10 +64,30 @@
 			</ul>
 		</div>
 	</nav>
+	<div id='searchBar'>
+
+		<h1>Search</h1>
+		<div class="input-group search-container">
+			<!-- <form>
+		      <input type="text" placeholder="Search.." name="search" ng-model="searchTerm">
+		      <button type="submit" ng-click="model.search(searchTerm)">Submit</button>
+		    </form> -->
+			<input type="text" class="form-control"
+				placeholder="Please enter movie name or actor names..."
+				ng-model="searchTerm"> <span class="input-group-btn">
+				<a class="btn btn-default" type="button"
+				href='#!/search/{{searchTerm}}' style="margin-top: 0px"> <span
+					class="glyphicon glyphicon-search"></span>
+			</a>
+			</span>
+		</div>
+
+	</div>
 
 	<div class="container">
 		<div ng-view></div>
 	</div>
+
 
 	<nav class="navbar navbar-inverse navbar-fixed-bottom"></nav>
 

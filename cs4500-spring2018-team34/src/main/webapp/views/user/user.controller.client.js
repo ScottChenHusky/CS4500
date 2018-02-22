@@ -4,19 +4,41 @@
         .controller('HomeController', HomeController)
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
+        .controller('SearchController', SearchController)
         .controller('userProfileController', userProfileController)
         
-    function HomeController () {
+    function HomeController ($http) {
         var vm = this;
         vm.name = "Test model!!!!";
+        vm.search = search;
+        function search(searchTerm) {
+        	console.log("test");
+			SearchController.search(searchTerm);
+		}
         vm.addMovieToDB = addMovieToDB;
-        
-        function addMovieToDB() {
-        		$.getJSON('http://www.omdbapi.com/?i=tt0848228&apikey=a65196c5', function(data) {
-                console.log(data.Title); // This should print out "The Avengers"
-            });
-        		return $http.post("/api/movie/addMovieFromOMDB", data)
-        }
+
+        // var id_prefix = "tt0";
+        // var id_end = 848228;
+        //
+        // function addMovieToDB() {
+        // 	for(var i =6; i < 100; i++){
+        // 		id_end += 1;
+        // 		var id = id_prefix + id_end;
+        // 		var url_front = "http://www.omdbapi.com/?i=";
+        // 		var url_end = "&apikey=a65196c5";
+        // 		var url = url_front + id + url_end;
+        //
+        //
+        //         $.getJSON(url ,
+        //                   function(data) {
+        //                       return $http.post("/api/movie/addMovieFromOMDB", data)
+        //                   });
+			// }
+        //
+        //
+        // }
+        //
+        // addMovieToDB();
     }
     
     function LoginController($http, $location) {
@@ -131,17 +153,61 @@
 		vm.initProfile = initProfile;
 
 		function initProfile() {
-            var url = '/api/get-user/' + vm.userId;
+            var url = '/api/user?id=' + vm.userId;
             return $http.get(url, vm.userId)
                 .then(response)
             function response(res) {
-            		vm.user = res.data.customer;
-            		console.log(vm);
-            		console.log("customer: " + res.data.customer);
-            }
-            
+            		vm.user = res.data.result[0];
+            }            
         return;
     }
     initProfile();
+	}
+
+    function SearchController($http, $routeParams) {
+		var vm = this;
+		vm.defaultView = true;
+		vm.term = $routeParams['term'];
+		console.log(vm.term);
+		//placeholder data
+		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
+			{name: 'Movie3', image: "../../assets/images/Death_Note.jpg"}];
+		vm.search = search;
+		if(vm.term !== undefined && vm.term != '') {
+			search(vm.term);
+		}
+		
+		
+		
+		function search(searchTerm) {
+			var mUrl = "api/movie/search?name=" + searchTerm;
+			//var uUrl = "api/" + searchTerm;	
+			vm.defaultView = false;
+			vm.hasMResults = false;
+			vm.hasUResults = false;
+			vm.movies = [];
+			vm.users = [];
+			console.log(mUrl);
+			$http.get(mUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.movies = response.data;
+					console.log(response.data);
+					vm.hasMResults = true;
+				} 
+			});
+			/*$http.get(uUrl).then(function(response) {
+				if(response.data != undefined) {
+					vm.users = response.data;
+					vm.hasUResults = true;
+				} 
+			});*/
+			
+			//FOR TESTING
+			//vm.hasMResults = true;
+			//vm.hasUResults = true;
+			//vm.movies[0].name = searchTerm;
+			//vm.users[0].name = searchTerm;
+		}
 	}
 })();
