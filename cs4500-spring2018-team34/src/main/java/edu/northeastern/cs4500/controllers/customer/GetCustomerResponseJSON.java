@@ -6,7 +6,7 @@ public class GetCustomerResponseJSON {
     private List<Customer> result;
     private String message;
 
-    public List<Customer> getCustomer() {
+    public List<Customer> getResult() {
         return result;
     }
 
