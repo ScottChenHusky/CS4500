@@ -1,0 +1,77 @@
+.searchbar{
+	margin: 20px 0;
+}
+
+.searchbox{
+	vertical-align: middle;
+	display: inline-block;
+	width: 90%;
+}
+.searchbox .searchinput{
+	height: 33px;
+	width: 100%;
+	padding-left: 10px;
+}
+
+		
+.section-title {
+	font-size: 20px;
+	font-weight: 500;
+	color: #2d7788;
+	position: relative;
+	margin-top: 0;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #2d7788;
+}
+
+.section-title .glyphicon {
+	width: 30px;
+	height: 30px;
+	margin-right: 4px;
+	display: inline-block;
+	color: #fff;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-ms-border-radius: 50%;
+	-o-border-radius: 50%;
+	border-radius: 50%;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	background: #2d7788;
+	text-align: center;
+	padding-top: 8px;
+	font-size: 16px;
+	position: relative;
+}
+.section-title .more{
+	float: right;
+	color: #333;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.movie-section{
+	margin-bottom: 15px;
+}
+
+.movie-section .movies{
+	margin: 0;
+	padding: 0;
+}
+
+.movie-section .movies .item{
+	display: inline-block;
+	padding: 0 1%;
+} 
+
+
+
+
+
+
+
+
+
+
