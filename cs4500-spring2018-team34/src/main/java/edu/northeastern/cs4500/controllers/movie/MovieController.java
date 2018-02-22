@@ -91,15 +91,17 @@ public class MovieController {
   }
 
   @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
-  public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "name") String searchId) {
+  public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
     Map<String, JSONObject> map = new HashMap();
     JSONObject status = new JSONObject();
     if (movie == null) {
       status.put("message", "not found");
+
     } else {
       status.put("message", "found");
       map.put("movie", new JSONObject(movie.toMap()));
+
     }
 
       JSONObject json = new JSONObject(map);

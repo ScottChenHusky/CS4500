@@ -12,7 +12,6 @@
             return $http.get(url, vm.movieId)
 				.then(response, error)
 			function response(res) {
-				console.log(res);
 				vm.movie = res;
 				return;
 			}

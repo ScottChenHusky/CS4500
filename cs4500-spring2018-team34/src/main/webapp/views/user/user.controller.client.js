@@ -12,7 +12,6 @@
         vm.name = "Test model!!!!";
         vm.search = search;
         function search(searchTerm) {
-        	console.log("test");
 			SearchController.search(searchTerm);
 		}
         vm.addMovieToDB = addMovieToDB;
@@ -134,7 +133,6 @@
     			return $http.post(url, user)
     				.then(response, error)
     			function response (res) {
-    				console.log(res);
     				$location.url("/user/" + res.data.id);
                 return;
             }
@@ -168,7 +166,6 @@
 		var vm = this;
 		vm.defaultView = true;
 		vm.term = $routeParams['term'];
-		console.log(vm.term);
 		//placeholder data
 		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
 			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
@@ -188,11 +185,9 @@
 			vm.hasUResults = false;
 			vm.movies = [];
 			vm.users = [];
-			console.log(mUrl);
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {
 					vm.movies = response.data;
-					console.log(response.data);
 					vm.hasMResults = true;
 				} 
 			});
