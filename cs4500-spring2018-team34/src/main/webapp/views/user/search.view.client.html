@@ -3,12 +3,13 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Search</title>
-<link rel="stylesheet" type="text/css" href="../../assets/css/search.css">
+<link rel="stylesheet" type="text/css"
+	href="../../assets/css/search.css">
 </head>
 <body>
 
-	<div id='default' ng-show="model.defaultView">		
-		
+	<div id='default' ng-show="model.defaultView">
+
 		<div id='new'>
 			<div class="section">
 				<h2 class="section-title">
@@ -18,10 +19,9 @@
 					<img class="cover" src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
-			</div>	
+			</div>
 		</div>
-		<br/>
-		<br/>
+		<br /> <br />
 		<div id='topRated'>
 			<div class="section">
 				<h2 class="section-title">
@@ -31,10 +31,9 @@
 					<img class="cover" src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
-			</div>	
+			</div>
 		</div>
-		<br/>
-		<br/>
+		<br /> <br />
 		<div id='hot'>
 			<div class="section">
 				<h2 class="section-title">
@@ -44,10 +43,10 @@
 					<img class="cover" src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
-			</div>	
+			</div>
 		</div>
 		<div class="buff"></div>
-		
+
 	</div>
 	<div id='results' ng-show="!model.defaultView">
 		<div id='movieResults'>
@@ -55,34 +54,35 @@
 				<h2 class="section-title">
 					<i class="glyphicon glyphicon-film"></i>Movies
 				</h2>
-				<div ng-show="model.hasMResults" ng-repeat="x in model.movies" class='movieBox'>
-					<img class="cover" src={{x.poster}} alt="" />
-					<h5 class="movie-title">{{x.name}}</h5>
+				<div ng-show="model.hasMResults" ng-repeat="x in model.movies"
+					class='movieBox'>
+					<a href="#!/movie/{{x.id}}"><img class="cover" src={{x.poster}} alt="" /></a>
+					<a href="#!/movie/{{x.id}}"><h5 class="movie-title">{{x.name}}</h5></a>
 				</div>
 				<div ng-show="!model.hasMResults">
 					<h3>No Results Found</h3>
 				</div>
-			</div>	
+			</div>
 		</div>
-		
-		<br/>
-		<br/>
+
+		<br /> <br />
 		<div id='userResults'>
 			<div class="section">
 				<h2 class="section-title">
 					<i class="material-icons">people</i>Users
 				</h2>
-				<div ng-show="model.hasUResults" ng-repeat="x in model.users" class='movieBox'>
-					<img class="cover" src={{x.image}} alt="" />
-					<h5 class="movie-title">{{x.username}}</h5>
+				<div ng-show="model.hasUResults" ng-repeat="x in model.users"
+					class='movieBox'>
+					<a href="#!/user/{{x.id}}"> <img class="cover" src={{x.image}}
+						alt="" /></a> <a href="#!/user/{{x.id}}"><h5 class="movie-title">{{x.username}}</h5></a>
 				</div>
 				<div ng-show="!model.hasUResults">
 					<h3>No Results Found</h3>
 				</div>
-			</div>	
+			</div>
 		</div>
 		<div class="buff"></div>
 	</div>
-	
+
 </body>
 </html>

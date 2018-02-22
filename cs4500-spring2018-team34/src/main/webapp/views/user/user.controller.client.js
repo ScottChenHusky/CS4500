@@ -6,17 +6,15 @@
         .controller('RegisterController', RegisterController)
         .controller('SearchController', SearchController)
         .controller('userProfileController', userProfileController)
-        .controller('userProfileController', userProfileController)
         
     function HomeController ($http) {
         var vm = this;
         vm.name = "Test model!!!!";
         vm.search = search;
         function search(searchTerm) {
-        	console.log("test");
 			SearchController.search(searchTerm);
 		}
-        vm.addMovieToDB = addMovieToDB;
+//        vm.addMovieToDB = addMovieToDB;
 
         // var id_prefix = "tt0";
         // var id_end = 848228;
@@ -135,7 +133,6 @@
     			return $http.post(url, user)
     				.then(response, error)
     			function response (res) {
-    				console.log(res);
     				$location.url("/user/" + res.data.id);
                 return;
             }
@@ -148,33 +145,27 @@
     		return;
     }
     
-    function userProfileController($routeParams) {
-    		var vm = this;
-    		vm.userId = $routeParams.userId;
-    		vm.initProfile = initProfile;
-    		
-    		function initProfile() {
-                var url = '/api/getUserById';
-                var userId = {
-                    userId: vm.userId
-                };
-                return $http.post(url, userId)
-                    .then(response)
-                function response(res) {
-                		//...
-                		//...
-                	    //...
-                }
-            return;
-        }
-        initProfile();
-    	
+    function userProfileController($http, $routeParams) {
+		var vm = this;
+		vm.userId = $routeParams.uid;
+		vm.initProfile = initProfile;
+
+		function initProfile() {
+            var url = '/api/user?id=' + vm.userId;
+            return $http.get(url, vm.userId)
+                .then(response)
+            function response(res) {
+            		vm.user = res.data.result[0];
+            }            
+        return;
     }
+    initProfile();
+	}
+
     function SearchController($http, $routeParams) {
 		var vm = this;
 		vm.defaultView = true;
 		vm.term = $routeParams['term'];
-		console.log(vm.term);
 		//placeholder data
 		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
 			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
@@ -194,7 +185,6 @@
 			vm.hasUResults = false;
 			vm.movies = [];
 			vm.users = [];
-			console.log(mUrl);
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {
 					vm.movies = response.data;
@@ -203,7 +193,6 @@
 						//console.log(vm.movies[0]);
 						vm.hasMResults = true;
 					}
-					
 				} 
 			});
 			$http.get(uUrl).then(function(response) {

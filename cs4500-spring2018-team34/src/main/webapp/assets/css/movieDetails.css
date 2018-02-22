@@ -1,0 +1,98 @@
+.movieDetailCover {
+	width: 10%;
+	height: 20%;
+}
+
+.actor-photo {
+	width: 100x;
+  	height: 170px;
+}
+
+.description {
+	text-align: left;
+}
+
+/*---------------------------------------
+  Review section              
+-----------------------------------------*/
+#review {
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.form-control {
+  border-radius: 0px;
+  border-color: #f0f0f0;
+  box-shadow: none;
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  -webkit-transition: all ease-in-out 0.4s;
+  transition: all ease-in-out 0.4s;
+}
+
+.form-control:focus {
+  border-bottom: 2px solid #999999;
+}
+
+#review input {
+  height: 55px;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#review button#submit {
+  background: #000000;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: 300;
+  height: 55px;
+  padding-bottom: 10px;
+  margin-top: 24px;
+}
+
+#review button#submit:hover {
+  background: #d7b065;
+  color: #ffffff;
+}
+
+
+
+#review .form-control {
+  border-radius: 0px;
+  border-color: #f0f0f0;
+  box-shadow: none;
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  -webkit-transition: all ease-in-out 0.4s;
+  transition: all ease-in-out 0.4s;
+}
+
+#review .form-control:focus {
+  border-bottom: 2px solid #999999;
+}
+
+#review input {
+  height: 55px;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#review button#submit {
+  background: #000000;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: 300;
+  height: 55px;
+  padding-bottom: 10px;
+  margin-top: 24px;
+}
+
+#review button#submit:hover {
+  background: #d7b065;
+  color: #ffffff;
+}
