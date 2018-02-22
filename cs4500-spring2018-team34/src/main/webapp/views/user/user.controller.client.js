@@ -188,7 +188,7 @@
 		
 		function search(searchTerm) {
 			var mUrl = "api/movie/search?name=" + searchTerm;
-			//var uUrl = "api/" + searchTerm;	
+			var uUrl = "api/user?username=" + searchTerm;	
 			vm.defaultView = false;
 			vm.hasMResults = false;
 			vm.hasUResults = false;
@@ -197,17 +197,27 @@
 			console.log(mUrl);
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {
-					vm.movies = response.data;
+					vm.movies = response.data.result;
 					console.log(response.data);
-					vm.hasMResults = true;
+					if(vm.movies != undefined) {
+						vm.hasMResults = true;
+					}
+					
 				} 
 			});
-			/*$http.get(uUrl).then(function(response) {
+			$http.get(uUrl).then(function(response) {
 				if(response.data != undefined) {
-					vm.users = response.data;
-					vm.hasUResults = true;
+					vm.users = response.data.result;
+					console.log(response.data);
+					if(vm.users[0] != null) {
+						for (n = 0; n < vm.users.length; n++) {
+							vm.users[n].image = "../../assets/images/user-photo.png";
+						}
+						vm.hasUResults = true;
+					}
+					
 				} 
-			});*/
+			});
 			
 			//FOR TESTING
 			//vm.hasMResults = true;
