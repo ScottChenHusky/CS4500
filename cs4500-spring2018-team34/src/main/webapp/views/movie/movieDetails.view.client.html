@@ -1,6 +1,3 @@
-{{model.movie}}
-{{movieId}}
-
 <!-- NAVIGATION SECTION -->
 <div class="wraper">
 	<div class="container">
@@ -27,7 +24,7 @@
 
 		<ul class="movies">
 			<li class="item"><img class="detail img-responsive"
-				src="../../assets/images/Death_Note.jpg" alt=""></li>
+				src={{model.movie.poster}} alt=""></li>
 		</ul>
 	</div>
 
@@ -36,10 +33,10 @@
 			<i class="material-icons">mode_edit</i> Overview
 		</h2>
 		<h5>Director: {{model.movie.director}}</h5>
-
+		<h3>Rating: {{model.movie.score}}</h3>
 		<h5>Writers: Charley Parlapanides (screenplay by), Vlas
 			Parlapanides (screenplay by)</h5>
-		<p class="description">{{movie.description}}</p>
+		<p class="description">{{model.movie.description}}</p>
 
 	</section>
 
@@ -49,10 +46,10 @@
 				More</span>
 		</h2>
 
-		<ul class="movies" ng-repeat="actor in model.movie.actors">
+		<ul class="movies">
 			<li class="item"><img class="actor-photo img-responsive"
 				src="../../assets/images/Nat_Wolff.png" alt="">
-				<h5 class="movie-title">{{actor.name}}</h5></li>
+				<h5 class="movie-title">{{model.movie.actors}}</h5></li>
 		</ul>
 	</section>
 </div>

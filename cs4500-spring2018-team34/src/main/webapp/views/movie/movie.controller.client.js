@@ -12,7 +12,7 @@
             return $http.get(url, vm.movieId)
 				.then(response, error)
 			function response(res) {
-				vm.movie = res;
+				vm.movie = res.data.movie;
 				return;
 			}
 
@@ -23,15 +23,5 @@
 			return;
 		}
 		initMovie();
-//		function initMovie() {
-//            var url = '/api/user?id=' + vm.movieId;
-//            return $http.get(url, vm.movieId)
-//                .then(response)
-//            function response(res) {
-//            		vm.movie = res.data.result[0];
-//            }            
-//        return;
-//    }
-//		initMovie();
 	}
 })();
