@@ -36,7 +36,7 @@ public class MovieController {
     List<Movie> moviesActors = movieRepository.findByActorsContaining(searchby);
     List<Movie> moviesCountry = movieRepository.findByCountryContaining(searchby);
     Map<String, JSONObject> map = new HashMap();
-    JSONObject status = new JSONObject();
+    JSONObject json = new JSONObject();
     if (movie == null) {
 
 //      try {
@@ -50,9 +50,9 @@ public class MovieController {
 //      } catch (IOException e) {
 //        e.printStackTrace();
 //      }
-      status.put("Status", "not found");
+      json.put("message", "not found");
     } else {
-      status.put("Status", "found");
+      json.put("message", "found");
     }
 
 
@@ -61,7 +61,7 @@ public class MovieController {
     map.putAll(createMap("Actor", moviesActors));
     map.putAll(createMap("Language", moviesLanguage));
     map.putAll(createMap("Country", moviesCountry));
-    JSONObject json = new JSONObject(map);
+    json.putAll(map);
     return ResponseEntity.ok().body(json);
   }
 
@@ -94,18 +94,16 @@ public class MovieController {
   public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
     Map<String, JSONObject> map = new HashMap();
-    JSONObject status = new JSONObject();
+    JSONObject json = new JSONObject();
     if (movie == null) {
-      status.put("message", "not found");
+      json.put("message", "not found");
 
     } else {
-      status.put("message", "found");
+      json.put("message", "found");
       map.put("movie", new JSONObject(movie.toMap()));
 
     }
-
-
-      JSONObject json = new JSONObject(map);
+      json.putAll(map);
       return ResponseEntity.ok().body(json);
 
   }
