@@ -188,7 +188,7 @@ public class Movie {
     for(int i = 0; i < fields.length; i++){
       try {
         map.put(fields[i].getName(), fields[i].get(this).toString());
-      } catch (IllegalAccessException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
@@ -198,5 +198,17 @@ public class Movie {
   @Override
   public boolean equals(Object obj) {
     return obj instanceof Movie && this.id == ((Movie) obj).id;
+  }
+
+  @Override
+  public int hashCode(){
+    int result = 0;
+    for(Field f: this.getClass().getFields()){
+      try {
+        result += f.get(this).toString().hashCode();
+      } catch (Exception ignored) {
+      }
+    }
+    return result;
   }
 }
