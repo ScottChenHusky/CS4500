@@ -56,7 +56,7 @@
 				</h2>
 				<div ng-show="model.hasMResults" ng-repeat="x in model.movies"
 					class='movieBox'>
-					<a href="#!/movie/{{x.id}}"><img class="cover" src={{x.poster}} alt="" /></a>
+					<a href="#!/movie/{{x.id}}"><img ng-src={{x.poster}} class="cover" alt="" /></a>
 					<a href="#!/movie/{{x.id}}"><h5 class="movie-title">{{x.name}}</h5></a>
 				</div>
 				<div ng-show="!model.hasMResults">
@@ -73,7 +73,7 @@
 				</h2>
 				<div ng-show="model.hasUResults" ng-repeat="x in model.users"
 					class='movieBox'>
-					<a href="#!/user/{{x.id}}"> <img class="cover" src={{x.image}}
+					<a href="#!/user/{{x.id}}"> <img ng-src="{{x.image}}" class="cover" 
 						alt="" /></a> <a href="#!/user/{{x.id}}"><h5 class="movie-title">{{x.username}}</h5></a>
 				</div>
 				<div ng-show="!model.hasUResults">
