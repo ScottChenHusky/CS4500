@@ -1,10 +1,15 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/23/18.
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class MovieTest {
   @Test
   public void testEquals1(){
@@ -59,7 +64,7 @@ public class MovieTest {
   @Test
   public void testDate(){
     Movie movie1 = new Movie();
-    movie1.setDate("1999-09-99");
+    movie1.setDate("1999-09-09");
     assertEquals(movie1.getDate(), "1999-09-09");
   }
 
