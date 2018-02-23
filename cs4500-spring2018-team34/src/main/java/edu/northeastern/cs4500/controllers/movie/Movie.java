@@ -188,7 +188,7 @@ public class Movie {
     for(int i = 0; i < fields.length; i++){
       try {
         map.put(fields[i].getName(), fields[i].get(this).toString());
-      } catch (IllegalAccessException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
