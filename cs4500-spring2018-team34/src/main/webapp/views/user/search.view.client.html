@@ -16,7 +16,7 @@
 					<i class="glyphicon glyphicon-film"></i>New
 				</h2>
 				<div ng-repeat="x in model.movies" class='movieBox'>
-					<img class="cover" src={{x.image}} alt="" />
+					<img class="cover" ng-src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
 			</div>
@@ -28,7 +28,7 @@
 					<i class="glyphicon glyphicon-film"></i>Top Rated
 				</h2>
 				<div ng-repeat="x in model.movies" class='movieBox'>
-					<img class="cover" src={{x.image}} alt="" />
+					<img class="cover" ng-src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
 			</div>
@@ -40,7 +40,7 @@
 					<i class="glyphicon glyphicon-film"></i>Hot
 				</h2>
 				<div ng-repeat="x in model.movies" class='movieBox'>
-					<img class="cover" src={{x.image}} alt="" />
+					<img class="cover" ng-src={{x.image}} alt="" />
 					<h5 class="movie-title">{{x.name}}</h5>
 				</div>
 			</div>
@@ -56,8 +56,8 @@
 				</h2>
 				<div ng-show="model.hasMResults" ng-repeat="x in model.movies"
 					class='movieBox'>
-					<a href="#!/movie/{{x.id}}"><img class="cover" src={{x.poster}} alt="" /></a>
-					<a href="#!/movie/{{x.id}}"><h5 class="movie-title">{{x.name}}</h5></a>
+					<a ng-href="#!/movie/{{x.id}}"><img class="cover" ng-src={{x.poster}} alt="" /></a>
+					<a ng-href="#!/movie/{{x.id}}"><h5 class="movie-title">{{x.name}}</h5></a>
 				</div>
 				<div ng-show="!model.hasMResults">
 					<h3>No Results Found</h3>
@@ -73,8 +73,8 @@
 				</h2>
 				<div ng-show="model.hasUResults" ng-repeat="x in model.users"
 					class='movieBox'>
-					<a href="#!/user/{{x.id}}"> <img class="cover" src={{x.image}}
-						alt="" /></a> <a href="#!/user/{{x.id}}"><h5 class="movie-title">{{x.username}}</h5></a>
+					<a ng-href="#!/user/{{x.id}}"> <img class="cover" ng-src={{x.image}}
+						alt="" /></a> <a ng-href="#!/user/{{x.id}}"><h5 class="movie-title">{{x.username}}</h5></a>
 				</div>
 				<div ng-show="!model.hasUResults">
 					<h3>No Results Found</h3>
