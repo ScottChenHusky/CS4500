@@ -58,34 +58,34 @@ public class MovieTest {
   public void testName(){
     Movie movie1 = new Movie();
     movie1.setName("Test");
-    assertEquals(movie1.getName(), "Test");
+    assertEquals("Test", movie1.getName());
   }
 
   @Test
   public void testDate(){
     Movie movie1 = new Movie();
     movie1.setDate("1999-09-09");
-    assertEquals(movie1.getDate(), "1999-09-09");
+    assertEquals( "1999-09-09", movie1.getDate());
   }
 
   @Test
   public void testScore(){
     Movie movie1 = new Movie();
     movie1.setScore("1.1");
-    assertEquals(movie1.getScore(), "1.1");
+    assertEquals("1.1", movie1.getScore());
   }
 
   @Test
   public void testDescription(){
     Movie movie1 = new Movie();
     movie1.setDescription("Good");
-    assertEquals(movie1.getDescription(), "Good");
+    assertEquals("Good", movie1.getDescription());
   }
 
   @Test
   public void testLevel(){
     Movie movie1 = new Movie();
     movie1.setLevel("PG-13");
-    assertEquals(movie1.getLevel(), "PG-13");
+    assertEquals("PG-13", movie1.getLevel());
   }
 }
