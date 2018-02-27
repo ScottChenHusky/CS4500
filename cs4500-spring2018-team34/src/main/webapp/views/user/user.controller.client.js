@@ -5,7 +5,7 @@
         .controller('LoginController', LoginController)
         .controller('RegisterController', RegisterController)
         .controller('SearchController', SearchController)
-        .controller('userProfileController', userProfileController)
+        .controller('userProfileController', userProfileController);
         
     function HomeController ($http) {
         var vm = this;
@@ -56,18 +56,18 @@
     				password: password
     			};
     			return $http.post(url, user)
-    				.then(response, error)
+    				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);			
-                return;
+
             }
     			
     			function error(err) {
     				vm.error = err.data.message;
-    				return;
+
     			}
     		}
-    		return;
+
     }
     
     function RegisterController($http, $location) {
@@ -131,18 +131,18 @@
     			};
     			
     			return $http.post(url, user)
-    				.then(response, error)
+    				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);
-                return;
+
             }
     				
     			function error(err) {
     				vm.error = err.data.message;
-    				return;
+
     			}	
     		}
-    		return;
+
     }
     
     function userProfileController($http, $routeParams) {
@@ -153,11 +153,10 @@
 		function initProfile() {
             var url = '/api/user?id=' + vm.userId;
             return $http.get(url, vm.userId)
-                .then(response)
+                .then(response);
             function response(res) {
             		vm.user = res.data.result[0];
-            }            
-        return;
+            }
     }
     initProfile();
 	}
@@ -188,9 +187,8 @@
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {					
 					vm.movies = response.data;
-					console.log(response.data);
-					if(vm.movies.Name0 != null) {
-						//console.log(vm.movies[0]);
+
+					if(vm.movies.Movie0 != null) {
 						vm.hasMResults = true;
 						
 						
@@ -202,7 +200,6 @@
 			$http.get(uUrl).then(function(response) {
 				if(response.data != undefined) {
 					vm.users = response.data.result;
-					console.log(response.data);
 					if(vm.users[0] != null) {
 						for (var n = 0; n < vm.users.length; n++) {
 							vm.users[n].image = "../../assets/images/user-photo.png";
