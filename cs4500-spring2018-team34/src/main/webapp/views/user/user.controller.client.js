@@ -182,24 +182,30 @@
 			vm.defaultView = false;
 			vm.hasMResults = false;
 			vm.hasUResults = false;
-			vm.movies = [];
-			vm.users = [];
+			vm.movies = [{poster: ''}];
+			vm.users = [{image: ''}];
 			$http.get(mUrl).then(function(response) {
-				if(response.data != undefined) {
+				if(response.data != undefined) {					
 					vm.movies = response.data;
+
 					if(vm.movies.Movie0 != null) {
 						vm.hasMResults = true;
+						
+						
 					}
+					
+					
 				} 
 			});
 			$http.get(uUrl).then(function(response) {
 				if(response.data != undefined) {
 					vm.users = response.data.result;
 					if(vm.users[0] != null) {
-						for (n = 0; n < vm.users.length; n++) {
+						for (var n = 0; n < vm.users.length; n++) {
 							vm.users[n].image = "../../assets/images/user-photo.png";
 						}
 						vm.hasUResults = true;
+						
 					}
 					
 				} 
