@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.hello;
+package java.edu.northeastern.cs4500.controllers.hello;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

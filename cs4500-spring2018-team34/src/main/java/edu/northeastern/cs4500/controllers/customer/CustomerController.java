@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.customer;
+package java.edu.northeastern.cs4500.controllers.customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.hello;
+package java.edu.northeastern.cs4500.controllers.hello;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

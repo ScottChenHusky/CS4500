@@ -1,9 +1,10 @@
-package edu.northeastern.cs4500.controllers.customer;
+package java.edu.northeastern.cs4500.controllers.customer;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
 
 @Entity(name = "customer")
 public class Customer {

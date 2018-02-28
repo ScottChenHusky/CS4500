@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/23/18.
+package java.edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/23/18.
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

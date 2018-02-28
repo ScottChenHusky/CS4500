@@ -1,5 +1,4 @@
-package edu.northeastern.cs4500.controllers.customer;
-
+package java.edu.northeastern.cs4500.controllers.customer;
 import java.util.List;
 
 public class GetCustomerResponseJSON {
