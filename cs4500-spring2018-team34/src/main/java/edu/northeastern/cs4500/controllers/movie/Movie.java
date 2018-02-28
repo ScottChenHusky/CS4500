@@ -1,4 +1,4 @@
-package java.edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
+package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -200,15 +200,15 @@ public class Movie {
     return obj instanceof Movie && this.id == ((Movie) obj).id;
   }
 
-//  @Override
-//  public int hashCode(){
-//    int result = 0;
-//    for(Field f: this.getClass().getFields()){
-//      try {
-//        result += f.get(this).toString().hashCode();
-//      } catch (Exception ignored) {
-//      }
-//    }
-//    return result;
-//  }
+  @Override
+  public int hashCode(){
+    int result = 0;
+    for(Field f: this.getClass().getFields()){
+      try {
+        result += f.get(this).toString().hashCode();
+      } catch (Exception ignored) {
+      }
+    }
+    return result;
+  }
 }

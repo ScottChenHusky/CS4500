@@ -1,4 +1,4 @@
-package java.edu.northeastern.cs4500.controllers.customer;
+package edu.northeastern.cs4500.controllers.customer;
 
 public class LoginRequestJSON {
     private String username;

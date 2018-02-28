@@ -1,4 +1,4 @@
-package java.edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
+package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package java.edu.northeastern.cs4500.controllers.hello;
+package edu.northeastern.cs4500.controllers.hello;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
