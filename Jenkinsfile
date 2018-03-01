@@ -23,7 +23,7 @@ pipeline {
        stage('SonarQube') {
            steps {
                withSonarQubeEnv('SonarQube') {
-                   sh 'mvn -f cs4500-spring2018-team34/pom.xml clean install'
+                   sh 'mvn -f cs4500-spring2018-team34/pom.xml clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Dmaven.test.failure.ignore=true'
                    sh 'mvn -f cs4500-spring2018-team34/pom.xml sonar:sonar'
                }
            }
