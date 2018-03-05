@@ -185,9 +185,9 @@ public class Movie {
 
     Field[] fields = this.getClass().getFields();
 
-    for(int i = 0; i < fields.length; i++){
+    for (Field field : fields) {
       try {
-        map.put(fields[i].getName(), fields[i].get(this).toString());
+        map.put(field.getName(), field.get(this).toString());
       } catch (Exception e) {
         e.printStackTrace();
       }
