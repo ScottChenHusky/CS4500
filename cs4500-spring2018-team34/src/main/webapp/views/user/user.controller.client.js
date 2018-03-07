@@ -14,30 +14,29 @@
         function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
-//        vm.addMovieToDB = addMovieToDB;
-
-        // var id_prefix = "tt0";
-        // var id_end = 848228;
-        //
-        // function addMovieToDB() {
-        // 	for(var i =6; i < 100; i++){
-        // 		id_end += 1;
-        // 		var id = id_prefix + id_end;
-        // 		var url_front = "http://www.omdbapi.com/?i=";
-        // 		var url_end = "&apikey=a65196c5";
-        // 		var url = url_front + id + url_end;
-        //
-        //
-        //         $.getJSON(url ,
-        //                   function(data) {
-        //                       return $http.post("/api/movie/addMovieFromOMDB", data)
-        //                   });
-			// }
-        //
-        //
-        // }
-        //
-        // addMovieToDB();
+       // vm.addMovieToDB = addMovieToDB;
+       //
+       //  var id_prefix = "tt0";
+       //  var id_end = 848428;
+       //
+       //  function addMovieToDB() {
+       //  	for(var i = 0; i < 50; i++){
+       //  		id_end += 1;
+       //  		var id = id_prefix + id_end;
+       //  		var url_front = "http://www.omdbapi.com/?i=";
+       //  		var url_end = "&apikey=a65196c5";
+       //  		var url = url_front + id + url_end;
+       //
+       //
+       //          $.getJSON(url ,
+       //                    function(data) {
+       //                        return $http.post("/api/movie/addMovieFromOMDB", data)
+       //                    });
+		// 	}
+       //
+       //
+       //  }
+		// addMovieToDB();
     }
     
     function LoginController($http, $location) {
@@ -185,9 +184,9 @@
 			vm.movies = [{poster: ''}];
 			vm.users = [{image: ''}];
 			$http.get(mUrl).then(function(response) {
+                console.log(response);
 				if(response.data != undefined) {					
 					vm.movies = response.data;
-
 					if(vm.movies.Movie0 != null) {
 						vm.hasMResults = true;
 						
