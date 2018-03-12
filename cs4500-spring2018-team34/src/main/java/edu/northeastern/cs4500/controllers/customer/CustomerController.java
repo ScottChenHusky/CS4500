@@ -8,14 +8,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 public class CustomerController{
 
     @Autowired
     private CustomerRepository customerRepository;
+    
+    @RequestMapping(path = "/api/isLoggedIn", method = RequestMethod.GET)
+    public ResponseEntity<LoginResponseJSON> isLoggedIn(HttpSession session) {
+    		LoginResponseJSON answer = (LoginResponseJSON) session.getAttribute("currentUserId");
+    		return ResponseEntity.ok().body(answer);
+    }
 
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
-    public ResponseEntity<LoginResponseJSON> login(@RequestBody LoginRequestJSON request) {
+    public ResponseEntity<LoginResponseJSON> login(@RequestBody LoginRequestJSON request, HttpSession session) {
         List<Customer> result = customerRepository.findByUsernameAndPassword(
                 request.getUsername(), request.getPassword()
         );
@@ -25,16 +33,17 @@ public class CustomerController{
                             .withMessage("credential not found")
             );
         } else {
-            return ResponseEntity.ok().body(
-                   new LoginResponseJSON()
-                            .withId(result.get(0).getId())
-                            .withMessage("credential found")
-            );
+        		LoginResponseJSON answer = new LoginResponseJSON()
+                        				           .withId(result.get(0).getId())
+                                                .withMessage("credential found");
+        		
+        		session.setAttribute("currentUserId" , answer);
+            return ResponseEntity.ok().body(answer);
         }
     }
 
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
-    public ResponseEntity<RegisterResponseJSON> register(@RequestBody RegisterRequestJSON request) {
+    public ResponseEntity<RegisterResponseJSON> register(@RequestBody RegisterRequestJSON request, HttpSession session) {
         if (customerRepository.existsByUsername(request.getUsername())) {
             return ResponseEntity.badRequest().body(
                     new RegisterResponseJSON()
