@@ -1,14 +1,14 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 @RestController
 public class CustomerController{
@@ -19,6 +19,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/isLoggedIn", method = RequestMethod.GET)
     public ResponseEntity<LoginResponseJSON> isLoggedIn(HttpSession session) {
     		LoginResponseJSON answer = (LoginResponseJSON) session.getAttribute("currentUserId");
+
     		return ResponseEntity.ok().body(answer);
     }
 
@@ -40,6 +41,12 @@ public class CustomerController{
         		session.setAttribute("currentUserId" , answer);
             return ResponseEntity.ok().body(answer);
         }
+    }
+
+    @RequestMapping(path = "/api/logout", method = RequestMethod.POST)
+    public void logout(@RequestBody JSONObject request, HttpSession session) {
+        System.out.println(request.toJSONString());
+        session.setAttribute("currentUserId", null);
     }
 
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
