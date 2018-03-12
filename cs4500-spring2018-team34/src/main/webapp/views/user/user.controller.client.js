@@ -8,8 +8,7 @@
         .controller('userProfileController', userProfileController);
         
     function HomeController ($http) {
-        var vm = this;
-        vm.name = "Test model!!!!";
+    		var vm = this;
         vm.search = search;
         function search(searchTerm) {
 			SearchController.search(searchTerm);
@@ -42,11 +41,12 @@
         // addMovieToDB();
     }
     
-    function LoginController($http, $location) {
+    function LoginController($http, $location, $rootScope) {
     		var vm = this;
     		vm.login = login;
     		
     		function login(username, password) {
+    			
     			if (!username || !password) {
                     vm.error = "Please Enter Username & Password";
                     return;
@@ -60,15 +60,22 @@
     			return $http.post(url, user)
     				.then(response, error);
     			function response (res) {
-    				$location.url("/user/" + res.data.id);			
-
+    				$location.url("/user/" + res.data.id);
             }
     			
     			function error(err) {
     				vm.error = err.data.message;
-
     			}
     		}
+    		
+    		function logout() {
+    			if ($rootScope.currentUser != null) {
+    				var url = "/api/logout";
+    				return $http.post(url, $rootScope.currentUser);
+    			}
+    		}
+    		
+    		logout();
 
     }
     

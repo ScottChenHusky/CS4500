@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app='webapp'>
 <head>
-<title>Movie App</title>
+<title>MovieHub</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -44,10 +44,9 @@
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="index.html">WebSiteName</a>
+				<a class="navbar-brand" href="/">MovieHub</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="#!/">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" href="index.html">Dropdown Placeholder<span
 						class="caret"></span></a>
@@ -59,10 +58,10 @@
 				<li><a href="index.html">Regular Page Placeholder</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#!/register"><span
-						class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-				<li><a href="#!/login"><span
-						class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				<li ng-if="$root.currentUser == null"><a href="#!/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<li ng-if="$root.currentUser == null"><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				<li ng-if="$root.currentUser != null"><a href="#!/user/{{$root.currentUser.id}}"><span class="glyphicon glyphicon-user"></span> Home</a></li>
+				<li ng-if="$root.currentUser != null"><a href="#!/login"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -83,7 +82,7 @@
 		</a>
 	</div>
 
-	<div class="container">
+	<div class="container" style="padding-bottom:5%">
 		<div ng-view></div>
 	</div>
 
