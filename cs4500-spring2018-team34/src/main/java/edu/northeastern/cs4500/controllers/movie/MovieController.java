@@ -1,8 +1,6 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 
-import com.oracle.javafx.jmx.json.JSONReader;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
