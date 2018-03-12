@@ -34,6 +34,8 @@
 
 <!-- For main page -->
 <link rel="stylesheet" type="text/css" href="assets/css/homepage.css">
+<link rel="stylesheet" type="text/css" href="assets/css/reset-new.css">
+<link rel="stylesheet" type="text/css" href="assets/css/style-new.css">
 
 <!-- For movieDetails page -->
 <link rel="stylesheet" href="assets/css/movieDetails.css">
@@ -45,6 +47,10 @@
 				<a class="navbar-brand" href="/">MovieHub</a>
 			</div>
 			<ul class="nav navbar-nav">
+<<<<<<< HEAD
+=======
+				<li class="active"><a href="#!/">Home</a></li>
+>>>>>>> master
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" href="index.html">Dropdown Placeholder<span
 						class="caret"></span></a>
@@ -63,24 +69,21 @@
 			</ul>
 		</div>
 	</nav>
-	<div id='searchBar'>
-
-		<h1>Search</h1>
-		<div class="input-group search-container">
-			<!-- <form>
-		      <input type="text" placeholder="Search.." name="search" ng-model="searchTerm">
-		      <button type="submit" ng-click="model.search(searchTerm)">Submit</button>
-		    </form> -->
-			<input type="text" class="form-control"
-				placeholder="Please enter movie name or actor names..."
-				ng-model="searchTerm"> <span class="input-group-btn">
-				<a class="btn btn-default" type="button"
-				href='#!/search/{{searchTerm}}' style="margin-top: 12px"> <span
-					class="glyphicon glyphicon-search"></span>
-			</a>
-			</span>
+	
+	<div class="m-search clearfix">
+		<div class="m-search-gatebox">
+			<select class="m-search-gate">
+			    <option value="1">Movie</option>
+				<option value="0">Actor</option>
+				<option value="1">Year</option>
+				<option value="1">User</option>
+			</select>
 		</div>
-
+		<input type="text" class="m-search-input" ng-model="searchTerm" 
+		placeholder="Please enter movie name or actor names...">
+		<a href='#!/search/{{searchTerm}}' class="m-search-btn">
+			<i class="icon-search"></i>
+		</a>
 	</div>
 
 	<div class="container" style="padding-bottom:5%">

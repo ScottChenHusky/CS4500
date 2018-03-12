@@ -2,53 +2,63 @@
 	<div class="sidebar-wrapper">
 		<div class="profile-container">
 			<img class="photo" src="../../assets/images/user-photo.png" alt="" />
-			<h1 class="name">{{model.user.username}}</h1>
+			<h1 class="name">
+				{{model.user.username}} <a ng-show="!model.fo" href=""> <i
+					ng-click="model.follow()" class="fa fa-heart-o"></i></a> <a
+					ng-show="model.fo" href=""> <i id="unfollow"
+					ng-click="model.unfollow()" class="fa fa-heart"></i></a>
+			</h1>
 			<ul class="list-unstyled contact-list">
 				<li class="email"><i class="fa fa-envelope"></i> <a
 					href="mailto:{{model.user.email}}">{{model.user.email}}</a></li>
 				<li class="phone"><i class="fa fa-phone"></i><a
 					href="tel:{{model.user.phone}}">{{model.user.phone}}</a></li>
 			</ul>
-			<ul class="list-unstyled follow-list">
-				<li class="following"><i class="material-icons">people</i><a
-					href="#">{{model.user.followingNumber}}</a></li>
-				<li class="follower"><i class="material-icons">people_outline</i><a
-					href="#">{{model.user.followerNumber}}</a></li>
+			<ul class="list-unstyled follow-list tabs">
+				<li class="following"><i class="material-icons">people</i>
+				<a href="#following">Following (120)</a></li>
+				<li class="follower"><i class="material-icons">people_outline</i>
+					<a href="#follower"><i aria-hidden="true"></i>Follower (200)</a></li>
 			</ul>
 		</div>
+
 		<!--//profile-container-->
 
 		<ul class="option-menu">
 			<li class="block"><input type="checkbox" name="item" id="item1" />
 				<label for="item1"><i aria-hidden="true"></i> Manage My
 					Profile </label>
-				<ul class="options">
-					<li><a href="#"><i aria-hidden="true"></i> My Address </a></li>
-					<li><a href="#"><i aria-hidden="true"></i> Change
+				<ul class="options tabs">
+					<li><a href="#profile1"><i aria-hidden="true"></i> My
+							Information </a></li>
+					<li><a href="#profile2"><i aria-hidden="true"></i> Change
 							Passwords </a></li>
 				</ul></li>
+
 			<li class="block"><input type="checkbox" name="item" id="item2" />
 				<label for="item2"><i aria-hidden="true"></i> My Movie Lists
-			</label>
-				<ul class="options">
-					<li><a href="#"><i aria-hidden="true"></i> My Favorite
+					<!-- <a
+					href="#tab8"><i class="glyphicon glyphicon-pencil"></i></a> --> </label>
+				<ul class="options tabs">
+					<li><a href="#addlist"><i aria-hidden="true"></i><i
+							class="glyphicon glyphicon-plus"></i> Add New List </a></li>
+					<li><a href="#movie1"><i aria-hidden="true"></i> My
+							Favorite Movies </a></li>
+					<li><a href="#movie2"><i aria-hidden="true"></i> Want to
+							See Movies </a></li>
+					<li><a href="#movie3"><i aria-hidden="true"></i> Action
 							Movies </a></li>
-					<li><a href="#"><i aria-hidden="true"></i> Want to See
-							Movies </a></li>
-					<li><a href="#"><i aria-hidden="true"></i> Action Movies </a></li>
 				</ul></li>
 		</ul>
 	</div>
 	<!--//side-wrapper-->
 
 	<div class="main-wrapper">
-		<section class="movie-section">
-			<a href="">
-				<h2 class="section-title">
-					<i class="glyphicon glyphicon-film"></i> My Favorite Movies
-				</h2>
-			</a>
-
+		<!-- Movie Section Starts -->
+		<section class="movie-section" id="movie1">
+			<h2 class="section-title">
+				<i class="glyphicon glyphicon-film"></i> My Favorite Movies
+			</h2>
 			<ul class="movies">
 				<li>
 					<div class="item">
@@ -70,12 +80,10 @@
 
 		<div class="bottom"></div>
 
-		<section class="movie-section">
-			<a href="">
-				<h2 class="section-title">
-					<i class="glyphicon glyphicon-film"></i> Want to See Movies
-				</h2>
-			</a>
+		<section class="movie-section" id="movie2">
+			<h2 class="section-title">
+				<i class="glyphicon glyphicon-film"></i> Want to See Movies
+			</h2>
 			<ul class="movies">
 				<li>
 					<div class="item">
@@ -89,12 +97,10 @@
 
 		<div class="bottom"></div>
 
-		<section class="movie-section">
-			<a href="">
-				<h2 class="section-title">
-					<i class="glyphicon glyphicon-film"></i> Recommended Movies
-				</h2>
-			</a>
+		<section class="movie-section" id="movie3">
+			<h2 class="section-title">
+				<i class="glyphicon glyphicon-film"></i> Action Movies
+			</h2>
 			<ul class="movies">
 				<li>
 					<div class="item">
@@ -106,23 +112,154 @@
 			</ul>
 		</section>
 
-		<div class="bottom"></div>
+		<!-- Action Section Starts -->
+		<section class="action-section" id="addlist">
+			<h2 class="section-title">Add New List</h2>
+			<div class="form-group">
+				<h4 class="title">
+					Name: <input class="form-control" type="text" />
+				</h4>
+			</div>
 
-		<section class="movie-section">
-			<a href="">
+			<div class="form-group">
+				<h4 class="title">
+					Description:
+					<textarea class="form-control" type="text"
+						placeholder="something to say about your new list..."></textarea>
+				</h4>
+			</div>
+
+			<div class="form-group">
+				<h4 class="title bottom">Movies:</h4>
+				<ul class="movies">
+					<li>
+						<div class="item">
+							<img class="cover img-responsive"
+								src="../../assets/images/Death_Note.jpg" alt="" />
+							<h5 class="movie-title">Movie Name</h5>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<button
+				ng-click=""
+				type="submit" class="btn btn-primary btn-block">Submit</button>
+			<button class="btn btn-danger btn-block">Cancel</button>
+		</section>
+		<!-- Movie Section Ends -->
+
+		<!-- My Information Tab -->
+		<section class="profile-section" id="profile1">
+			<h2 class="section-title">My Information</h2>
+			<div class="form-group">
+				<h4 class="title">
+					Username: <input class="form-control" type="text"
+						value="{{model.user.username}}" readonly />
+				</h4>
+			</div>
+
+			<div class="form-group">
+				<h4 class="title">
+					Level: <input class="form-control" type="text"
+						value="{{model.user.level}}" readonly />
+				</h4>
+			</div>
+
+			<div class="form-group">
+				<h4 class="title">
+					Email: <input class="form-control" type="email"
+						value="{{model.user.email}}" />
+				</h4>
+			</div>
+
+			<div class="form-group">
+				<h4 class="title">
+					Phone: <input class="form-control" type="tel"
+						value="{{model.user.phone}}" />
+				</h4>
+			</div>
+
+			<div class="form-group">
+				<h4 class="title">
+					Birthday: <input class="form-control" type="text"
+						value="{{model.user.dob}}" />
+				</h4>
+			</div>
+
+			<button
+				ng-click="model.register(username, email, phone, password1, password2, admin)"
+				type="submit" class="btn btn-primary btn-block">Submit
+				Changes</button>
+			<button class="btn btn-danger btn-block">Cancel</button>
+		</section>
+
+		<!-- Change Password Tab -->
+		<section class="profile-section" id="profile2">
+			<h2 class="section-title">Change Password</h2>
+			<div class="form-group">
+				<input ng-model="password1" class="form-control"
+					placeholder="old password" type="password" />
+			</div>
+
+			<div class="form-group">
+				<input ng-model="password2" class="form-control"
+					placeholder="new password" type="password" />
+			</div>
+
+			<div class="form-group">
+				<input ng-model="password3" class="form-control"
+					placeholder="verify new password" type="password" />
+			</div>
+
+			<button
+				ng-click=""
+				type="submit" class="btn btn-primary btn-block">Submit</button>
+			<button class="btn btn-danger btn-block" >Cancel</button>
+		</section>
+
+		<!-- Following Section Starts -->
+		<section class="following-section" id="following">
+			<div class="m-search-list w-1000">
 				<h2 class="section-title">
-					<i class="glyphicon glyphicon-film"></i> Friends' Suggestions
+					<i class="material-icons">people</i> Following
 				</h2>
-			</a>
-			<ul class="movies">
-				<li>
-					<div class="item">
-						<img class="cover img-responsive"
-							src="../../assets/images/Death_Note.jpg" alt="" />
-						<h5 class="movie-title">Movie Name</h5>
-					</div>
-				</li>
-			</ul>
+				<ul class="list-ul clearfix">
+					<li>
+						<dl class="clearfix">
+							<dt>
+								<a href=""><img src="../../assets/img/head.png"></a>
+							</dt>
+							<dd>
+								<a href=""><p class="tit">test</p></a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+				<!-- <a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
+			</div>
+		</section>
+
+		<!-- Follower Section Starts -->
+		<section class="follower-section" id="follower">
+			<div class="m-search-list w-1000">
+				<h2 class="section-title">
+					<i class="material-icons">people</i> Follower
+				</h2>
+				<ul class="list-ul clearfix">
+					<li>
+						<dl class="clearfix">
+							<dt>
+								<a href=""><img src="../../assets/img/head.png"></a>
+							</dt>
+							<dd>
+								<a href=""><p class="tit">test</p></a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+				<!-- <a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
+			</div>
 		</section>
 	</div>
 	<!--//main-body-->
