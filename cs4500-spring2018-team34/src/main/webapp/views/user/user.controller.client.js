@@ -46,6 +46,7 @@
     		vm.login = login;
     		
     		function login(username, password) {
+    			
     			if (!username || !password) {
                     vm.error = "Please Enter Username & Password";
                     return;
@@ -66,6 +67,15 @@
     				vm.error = err.data.message;
     			}
     		}
+    		
+    		function logout() {
+    			if ($rootScope.currentUser != null) {
+    				var url = "/api/logout";
+    				return $http.post(url, $rootScope.currentUser);
+    			}
+    		}
+    		
+    		logout();
 
     }
     
