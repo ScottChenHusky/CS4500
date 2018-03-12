@@ -8,8 +8,7 @@
         .controller('userProfileController', userProfileController);
         
     function HomeController ($http) {
-        var vm = this;
-        vm.name = "Test model!!!!";
+    		var vm = this;
         vm.search = search;
         function search(searchTerm) {
 			SearchController.search(searchTerm);
@@ -19,6 +18,8 @@
         // var id_prefix = "tt0";
         // var id_end = 848228;
         //
+        
+        
         // function addMovieToDB() {
         // 	for(var i =6; i < 100; i++){
         // 		id_end += 1;
@@ -40,11 +41,12 @@
         // addMovieToDB();
     }
     
-    function LoginController($http, $location) {
+    function LoginController($http, $location, $rootScope) {
     		var vm = this;
     		vm.login = login;
     		
     		function login(username, password) {
+    			
     			if (!username || !password) {
                     vm.error = "Please Enter Username & Password";
                     return;
@@ -58,15 +60,22 @@
     			return $http.post(url, user)
     				.then(response, error);
     			function response (res) {
-    				$location.url("/user/" + res.data.id);			
-
+    				$location.url("/user/" + res.data.id);
             }
     			
     			function error(err) {
     				vm.error = err.data.message;
-
     			}
     		}
+    		
+    		function logout() {
+    			if ($rootScope.currentUser != null) {
+    				var url = "/api/logout";
+    				return $http.post(url, $rootScope.currentUser);
+    			}
+    		}
+    		
+    		logout();
 
     }
     
@@ -149,6 +158,69 @@
 		var vm = this;
 		vm.userId = $routeParams.uid;
 		vm.initProfile = initProfile;
+		vm.follow = follow;
+		vm.unfollow = unfollow;
+		
+		vm.fo = false;
+		
+        $(".profile-section").hide(); //Hide all content  
+        $(".profile-section").hide();
+   	    $(".action-section").hide();
+   	    $(".follower-section").hide();
+   	    $(".following-section").hide();
+//        $("ul.tabs li:first").addClass("cur").show(); //Activate first tab  
+//        $(".movie-section:first").show(); //Show first tab content  
+          
+        //On Click Event  
+        // Show Movie Section
+        $("ul.tabs li").click(function() {  
+            $("ul.tabs li").removeClass("cur");
+            $(this).addClass("cur");
+            $(".movie-section").hide(); 
+            $(".profile-section").hide();
+            $(".action-section").hide();
+            $(".follower-section").hide();
+            $(".following-section").hide();
+            var activeTab = $(this).find("a").attr("href"); 
+            $(activeTab).fadeIn();
+            return false;  
+        });
+        
+        // Show All Movie Sections
+        $("ul li.block").click(function() {
+        	 $("ul.tabs li").removeClass("cur");
+        	 $(".movie-section").show(); 
+        	 $(".profile-section").hide();
+        	 $(".action-section").hide();
+        	 $(".follower-section").hide();
+         $(".following-section").hide();
+        });
+        
+        // Show Following Section
+        $("div ul li.following").click(function() {
+        	 $(".movie-section").hide(); 
+        	 $(".profile-section").hide();
+        	 $(".action-section").hide();
+       	 $(".follower-section").hide();
+        });
+        
+        // Show Follower Section
+        $("div ul li.follower").click(function() {
+       	 $(".movie-section").hide(); 
+       	 $(".profile-section").hide();
+       	 $(".action-section").hide();
+      	 $(".following-section").hide();
+        });
+        
+        // Cancel Button
+        $("section button.btn-danger").click(function() {
+        	 $("ul.tabs li").removeClass("cur");
+        	 $(".movie-section").show(); 
+        	 $(".profile-section").hide();
+        	 $(".action-section").hide();
+        	 $(".follower-section").hide();
+         $(".following-section").hide();
+        })
 
 		function initProfile() {
             var url = '/api/user?id=' + vm.userId;
@@ -157,18 +229,28 @@
             function response(res) {
             		vm.user = res.data.result[0];
             }
-    }
-    initProfile();
+        }
+        initProfile();
+        
+        function follow() {
+        		vm.fo = true;
+        }
+        
+        function unfollow() {
+    			vm.fo = false;
+        }
 	}
 
     function SearchController($http, $routeParams) {
 		var vm = this;
-		vm.defaultView = true;
-		vm.term = $routeParams['term'];
-		//placeholder data
-		vm.movies = [{name: 'Movie1',image: "../../assets/images/Death_Note.jpg"},
-			{name: 'Movie2', image: "../../assets/images/Death_Note.jpg"},
-			{name: 'Movie3', image: "../../assets/images/Death_Note.jpg"}];
+		
+		// Count Result numbers
+		
+		vm.userNum = 0;
+		vm.movieNum = 0;
+		vm.sum = 0;
+		
+		vm.term = $routeParams['term']; 
 		vm.search = search;
 		if(vm.term !== undefined && vm.term != '') {
 			search(vm.term);
@@ -177,6 +259,7 @@
 		
 		
 		function search(searchTerm) {
+			vm.keyword = searchTerm;
 			var mUrl = "api/movie/search?name=" + searchTerm;
 			var uUrl = "api/user?username=" + searchTerm;	
 			vm.defaultView = false;
@@ -184,28 +267,33 @@
 			vm.hasUResults = false;
 			vm.movies = [{poster: ''}];
 			vm.users = [{image: ''}];
+			
 			$http.get(mUrl).then(function(response) {
-				if(response.data != undefined) {					
+				if(response.data != undefined) {		
+					for (m in response.data) {
+						if(m != "message") {
+							vm.movieNum++;
+							vm.sum++;
+						} 
+					}		
 					vm.movies = response.data;
-
 					if(vm.movies.Movie0 != null) {
 						vm.hasMResults = true;
-						
-						
-					}
-					
-					
-				} 
+					}	
+				}
 			});
+			
 			$http.get(uUrl).then(function(response) {
 				if(response.data != undefined) {
 					vm.users = response.data.result;
+					vm.userNum = vm.users.length;
+					vm.sum = vm.sum + vm.userNum;
+
 					if(vm.users[0] != null) {
 						for (var n = 0; n < vm.users.length; n++) {
 							vm.users[n].image = "../../assets/images/user-photo.png";
 						}
-						vm.hasUResults = true;
-						
+						vm.hasUResults = true;						
 					}
 					
 				} 

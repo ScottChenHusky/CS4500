@@ -63,8 +63,7 @@
 
 .sidebar-wrapper {
 	background: #212121;
-	position: absolute;
-	left: 0;
+	float: left;
 	width: 350px;
 	height: 100%;
 	min-height: 800px;
@@ -96,6 +95,10 @@
 	margin-bottom: 10px;
 }
 
+.sidebar-wrapper .profile-container .name .fa-heart {
+	color: red;
+}
+
 .sidebar-wrapper .tagline {
 	color: rgba(255, 255, 255, 0.6);
 	font-size: 16px;
@@ -107,6 +110,21 @@
 .sidebar-wrapper .profile {
 	margin-bottom: 15px;
 }
+
+.sidebar-wrapper .option-menu .block .options .glyphicon {
+	font-size: 15px;
+	margin-top: 3px;
+	float: right;
+	margin-left: 6px;
+}
+
+.sidebar-wrapper .option-menu .block .options .glyphicon-plus" {
+	font-size: 15px;
+	margin-top: -10px;
+	float: left;
+	margin-left: 6px;
+}
+
 
 /******** Menu *********/
 * {
@@ -214,7 +232,6 @@
 }
 
 .option-menu ul {
-	background: #c0c0c0;
 	margin: 0;
 	padding: 0;
 	-moz-box-shadow: inset 0 2px 2px #b3b3b3;
@@ -227,8 +244,15 @@
 	padding: 6px 12px;
 	color: #feffff;
 	text-decoration: none;
+	background: #c0c0c0;
+	border-bottom: 1px solid #fff;
 }
-
+.option-menu ul li.cur a{
+	background: #44c6eb;
+}
+.option-menu ul li:last-child a{
+	border-bottom: 0;
+}
 .option-menu ul li a:hover {
 	color: #929292;
 }
@@ -371,6 +395,19 @@
 
 .main-wrapper .movie-section .movies h5{
 	text-align: center;
+}
+
+.main-wrapper .movie-section .form-group .title textarea {
+	height: 100px;
+}
+
+.main-wrapper .profile-section .title{
+	font-size: 17px;
+	font-weight: 400;
+	color: #2d7788;
+	position: relative;
+	margin-top: 0;
+	margin-bottom: 5px;
 }
 
 /* small devices 768px*/
