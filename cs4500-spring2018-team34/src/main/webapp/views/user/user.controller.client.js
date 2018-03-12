@@ -275,7 +275,7 @@
 							vm.movieNum++;
 							vm.sum++;
 						} 
-					}		
+					}
 					vm.movies = response.data;
 					if(vm.movies.Movie0 != null) {
 						vm.hasMResults = true;

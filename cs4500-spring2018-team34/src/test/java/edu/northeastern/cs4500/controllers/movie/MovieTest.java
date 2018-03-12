@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/23/18.
+package edu.northeastern.cs4500.controllers.movie;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +42,7 @@ public class MovieTest {
     movie1.id = 1;
     Movie movie2 = new Movie();
     movie2.id = 1;
-    assertTrue(movie1.hashCode() == movie2.hashCode());
+    assertEquals(movie1.hashCode(), movie2.hashCode());
   }
 
   @Test
