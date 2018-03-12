@@ -3,10 +3,12 @@ package edu.northeastern.cs4500.controllers.customer;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
-@Entity(name = "customer-followlist")
-public class CustomerFollow {
+@Entity
+@Table(name = "customer_followlist")
+public class CustomerFollowing {
     @Id
     @GeneratedValue
     private Integer id;
@@ -22,7 +24,7 @@ public class CustomerFollow {
         this.id = id;
     }
 
-    public CustomerFollow withId(Integer id) {
+    public CustomerFollowing withId(Integer id) {
         this.setId(id);
         return this;
     }
@@ -35,6 +37,11 @@ public class CustomerFollow {
         this.date = date;
     }
 
+    public CustomerFollowing withDate(Date date) {
+        this.setDate(date);
+        return this;
+    }
+
     public Integer getCustomerFromId() {
         return customerFromId;
     }
@@ -43,7 +50,7 @@ public class CustomerFollow {
         this.customerFromId = customerFromId;
     }
 
-    public CustomerFollow withCustomerFromId(Integer customerFromId) {
+    public CustomerFollowing withCustomerFromId(Integer customerFromId) {
         this.setCustomerFromId(customerFromId);
         return this;
     }
@@ -56,7 +63,7 @@ public class CustomerFollow {
         this.customerToId = customerToId;
     }
 
-    public CustomerFollow withCustomerToId(Integer customerToId) {
+    public CustomerFollowing withCustomerToId(Integer customerToId) {
         this.setCustomerToId(customerToId);
         return this;
     }
