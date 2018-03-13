@@ -181,15 +181,12 @@ public class Movie {
   public String getBoxoffice(){return this.boxoffice;}
   public Map<String, String> toMap(){
     Map<String, String> map = new HashMap<>();
-
-
     Field[] fields = this.getClass().getFields();
 
     for (Field field : fields) {
       try {
         map.put(field.getName(), field.get(this).toString());
-      } catch (Exception e) {
-        e.printStackTrace();
+      } catch (Exception ignore) {
       }
     }
     return map;
