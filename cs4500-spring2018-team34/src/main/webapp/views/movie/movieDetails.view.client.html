@@ -75,20 +75,20 @@
 					<form id="review-form">
 						<div class="col-md-4 col-sm-4">
 							<input type="number" class="form-control" name="rate"
-								placeholder="rate">
+								placeholder="Rate" min="0" max="5" ng-model="rating">
 						</div>
 						<div class="col-md-4 col-sm-4">
 							<input type="text" class="form-control" name="summary"
-								placeholder="Summary">
+								placeholder="Summary" ng-model="summary">
 						</div>
 
 						<div class="col-md-12 col-sm-12">
 							<textarea class="form-control" rows="5" name="reviews"
-								placeholder="Reviews"></textarea>
+								placeholder="Reviews" ng-model="review"></textarea>
 						</div>
 						<div class="col-md-offset-9 col-md-3 col-sm-offset-3 col-sm-6">
 							<button id="submit" type="submit" class="form-control"
-								name="submit">submit</button>
+								name="submit" ng-click="postReview()">submit</button>
 						</div>
 					</form>
 				</div>
