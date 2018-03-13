@@ -10,6 +10,8 @@
     function HomeController ($http) {
     		var vm = this;
         vm.search = search;
+        
+        
         function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
@@ -44,6 +46,7 @@
     function LoginController($http, $location, $rootScope) {
     		var vm = this;
     		vm.login = login;
+    		vm.logout = logout;
     		
     		function login(username, password) {
     			
@@ -61,18 +64,17 @@
     				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);
+    				sessionStorage.setItem("currentUserId", res.data.id);
             }
     			
     			function error(err) {
     				vm.error = err.data.message;
     			}
+    			
     		}
     		
     		function logout() {
-    			if ($rootScope.currentUser != null) {
-    				var url = "/api/logout";
-    				return $http.post(url, $rootScope.currentUser);
-    			}
+    			sessionStorage.removeItem("currentUserId");
     		}
     		
     		logout();
@@ -143,6 +145,7 @@
     				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);
+    				sessionStorage.setItem("currentUserId", res.data.id);
 
             }
     				
