@@ -228,6 +228,24 @@
                 .then(response);
             function response(res) {
             		vm.user = res.data.result[0];
+            		
+            		url = '/api/user/following/' + vm.userId;
+            		$http.get(url)
+            			.then(following_response);
+            		
+            		function following_response(res) {
+            			vm.following = res.data.result;
+            		}
+            		
+            		url = '/api/user/followers/' + vm.userId;
+            		$http.get(url)
+            			.then(followers_response);
+            		
+            		function followers_response(res) {
+            			vm.follower = res.data.result;
+            		}
+            		
+            		
             }
         }
         initProfile();
