@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,7 +42,6 @@ public class MovieController {
         MovieComment m = (MovieComment) input.get(i);
         map.put(type + i, new JSONObject(m.toMap()));
       }
-
 
     }
 
@@ -127,25 +127,27 @@ public class MovieController {
   @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
   public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
-    Map<String, JSONObject> map = new HashMap();
     JSONObject json = new JSONObject();
     if (movie == null) {
       json.put("message", "not found");
     } else {
       Integer search = Integer.parseInt(searchId);
-      System.out.println("Search: " + search + "\n");
       List<MovieComment> comments = movieCommentRepository.findMovieCommentByMovieIdOrderByDate(search);
       json.put("message", "found");
-      map.put("movie", new JSONObject(movie.toMap()));
-      map.putAll(createMap("comment", comments, "MovieComment"));
+      json.put("movie", new JSONObject(movie.toMap()));
+      JSONArray array = new JSONArray();
+      for(MovieComment mc: comments){
+        JSONObject temp = new JSONObject(mc.toMap());
+        array.add(temp);
+      }
+      json.put("comment", array);
 
     }
-      json.putAll(map);
       return ResponseEntity.ok().body(json);
 
   }
 
-  @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> addComment(@RequestBody JSONObject source){
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
@@ -158,8 +160,8 @@ public class MovieController {
               source.get("review").toString(),
               source.get("score").toString(),
               new Date(),
-              Integer.parseInt(source.get("customer_id").toString()),
-              Integer.parseInt(source.get("movie_id").toString())
+              customerId,
+              movieId
       );
       movieCommentRepository.save(movieComment);
       json.put("message", "success");
@@ -168,7 +170,7 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> deleteComment(@RequestBody JSONObject source){
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
@@ -184,7 +186,7 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/updateComment",method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/updateComment",method = RequestMethod.POST)
   public ResponseEntity<JSONObject> updateComment(@RequestBody JSONObject source){
     JSONObject json = new JSONObject();
     try{
