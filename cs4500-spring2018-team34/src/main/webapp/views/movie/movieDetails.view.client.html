@@ -77,10 +77,10 @@
 							<input type="number" class="form-control" name="rate"
 								placeholder="Rate" min="0" max="5" ng-model="rating">
 						</div>
-						<div class="col-md-4 col-sm-4">
+						<!-- <div class="col-md-4 col-sm-4">
 							<input type="text" class="form-control" name="summary"
 								placeholder="Summary" ng-model="summary">
-						</div>
+						</div> -->
 
 						<div class="col-md-12 col-sm-12">
 							<textarea class="form-control" rows="5" name="reviews"
@@ -93,12 +93,13 @@
 					</form>
 				</div>
 			</div>
-
-			<div class="fadeInUp">
-				<h3>Amazing movie</h3>
-				<h5>January 25, 2018</h5>
-				<p>xxxxxxxxxxxxxxxxxxxxxxxxx</p>
-				<h4>Ben</h4>
+			<h1 style="padding-bottom:20px">Comments</h1>
+			
+			<div class=fadeInUp" style="border:1px solid black; margin-bottom:5px" ng-repeat="comment in model.comments">
+				<h5>{{comment.date}}</h5>
+				<h3>Score: {{comment.score}}/5</h3>
+				<p>{{comment.review}}<p>
+				<h4>{{comment.username}}</h4>
 			</div>
 		</div>
 	</div>
