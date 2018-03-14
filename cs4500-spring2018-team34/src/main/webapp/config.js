@@ -10,7 +10,7 @@
                     controller: 'HomeController',
                     controllerAs: 'model',
                     resolve: {
-                    		CurrentUser: getCurrentUser
+                    		loggedIn: checkLoggedIn
                     }
                 })
                 
@@ -46,51 +46,25 @@
                             loggedIn: checkLoggedIn
                     }
         			});
-        
-        function getCurrentUser($http, $rootScope, $location, $q) {
-        		var deferred = $q.defer();
-        		$http.get("/api/isLoggedIn")
-        			.then(response, error);
-        		
-        		function response(res) {
-        			var user = res.data;
-        			if(user == "") {
-        				$rootScope.currentUser = null;
-        			} else {
-                    $rootScope.currentUser = user;
-                }
-        		}
-        		
-        		function error(err) {
-    				$location.url("/login");
-    			}
-        		
-        		deferred.resolve();
-        		return deferred.promise;
-        }
+  
         
         function checkLoggedIn($http, $location, $q, $rootScope) {
 
             var deferred = $q.defer();
             
-			$http.get("/api/isLoggedIn")
-				.then(response, error);
-			
-			function response (res) {
-				var user = res.data;
-                if(user == "") {
-                    $rootScope.currentUser = null;
-                    deferred.reject();
-                    $location.url("/login");
-                } else {
-                    $rootScope.currentUser = user;
-                    deferred.resolve();
-                }
-			}
-			
-			function error(err) {
-				$location.url("/login");
-			}
+            if (sessionStorage.getItem("currentUserId") == null) {
+            		$rootScope.currentUserId = null;
+            		if ($location.path() == "/") {
+            			deferred.resolve();
+            		} else {
+            			deferred.reject();
+            			$location.url("/login");
+            		}
+            } else {
+            		$rootScope.currentUserId = sessionStorage.getItem("currentUserId");
+                deferred.resolve();
+            }
+            
             return deferred.promise;
         }
         
