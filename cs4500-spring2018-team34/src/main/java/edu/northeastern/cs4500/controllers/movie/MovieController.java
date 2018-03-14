@@ -145,7 +145,7 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> addComment(@RequestBody JSONObject source){
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
@@ -168,7 +168,7 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> deleteComment(@RequestBody JSONObject source){
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
@@ -184,7 +184,7 @@ public class MovieController {
 
   }
 
-  @RequestMapping(path = "/api/movie/updateComment",method = RequestMethod.GET)
+  @RequestMapping(path = "/api/movie/updateComment",method = RequestMethod.POST)
   public ResponseEntity<JSONObject> updateComment(@RequestBody JSONObject source){
     JSONObject json = new JSONObject();
     try{
