@@ -24,10 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.cs4500.controllers.customer.CustomerRepository;
+
 @RestController
 public class MovieController {
   @Autowired
   private MovieRepository movieRepository;
+  @Autowired
+  private CustomerRepository customerRepository;
 
   @Autowired
   private MovieCommentRepository movieCommentRepository;
@@ -138,6 +142,7 @@ public class MovieController {
       JSONArray array = new JSONArray();
       for(MovieComment mc: comments){
         JSONObject temp = new JSONObject(mc.toMap());
+        temp.put("username", customerRepository.findById(mc.getCustomer_id()).getUsername());
         array.add(temp);
       }
       json.put("comment", array);
