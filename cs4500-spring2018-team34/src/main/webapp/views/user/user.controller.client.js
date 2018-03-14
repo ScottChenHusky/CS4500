@@ -157,14 +157,15 @@
 
     }
     
-    function userProfileController($http, $routeParams) {
+    function userProfileController($http, $routeParams, $location) {
 		var vm = this;
+		vm.isOwner = false;
+		vm.isFollowing = false;
 		vm.userId = $routeParams.uid;
 		vm.initProfile = initProfile;
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		
-		vm.fo = false;
 		
         $(".profile-section").hide(); //Hide all content  
         $(".profile-section").hide();
@@ -226,9 +227,12 @@
         })
 
 		function initProfile() {
+        	
             var url = '/api/user?id=' + vm.userId;
-            return $http.get(url, vm.userId)
+            
+            $http.get(url, vm.userId)
                 .then(response);
+            
             function response(res) {
             		vm.user = res.data.result[0];
             		
@@ -246,19 +250,70 @@
             		
             		function followers_response(res) {
             			vm.follower = res.data.result;
+            			
+            			//
+            			if ($location.path().includes("/user/" + sessionStorage.getItem("currentUserId"))) {
+            				vm.isOwner = true;
+            			} else {
+            				vm.isOwner = false;
+            				vm.isFollowing = false;
+            				for (var i = 0; i < vm.follower.length; i++) {
+            					if (vm.follower[i].follower == sessionStorage.getItem("currentUserId")) {
+            						vm.isFollowing = true;
+            					}
+            				}
+            			}
+            			
+            			//
+            			
             		}
             		
             		
             }
+            
+			
+
         }
         initProfile();
         
         function follow() {
-        		vm.fo = true;
+        		var url = "/api/user/follow";
+        		var obj = {
+        			from: sessionStorage.getItem("currentUserId"),
+        			to: vm.userId
+        		};
+        		$http.post(url, obj)
+        			.then(response, error);
+        		
+        		function response(res) {
+        			initProfile();
+        			return;
+        		}
+        		
+        		function error(err) {
+        			initProfile();
+        			return;
+        		}
         }
         
         function unfollow() {
-    			vm.fo = false;
+        		var url = "/api/user/un-follow";
+        		var obj = {
+        			from: sessionStorage.getItem("currentUserId"),
+        			to: vm.userId
+        		};
+        		$http.post(url, obj)
+    				.then(response, error);
+    		
+        		function response(res) {
+        			initProfile();
+        			return;
+        		}
+    		
+        		function error(err) {
+        			initProfile();
+        			return;
+        		}
         }
 	}
 

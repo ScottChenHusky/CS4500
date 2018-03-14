@@ -3,10 +3,14 @@
 		<div class="profile-container">
 			<img class="photo" src="../../assets/images/user-photo.png" alt="" />
 			<h1 class="name">
-				{{model.user.username}} <a ng-show="!model.fo" href=""> <i
-					ng-click="model.follow()" class="fa fa-heart-o"></i></a> <a
-					ng-show="model.fo" href=""> <i id="unfollow"
-					ng-click="model.unfollow()" class="fa fa-heart"></i></a>
+				{{model.user.username}}
+				<a ng-if="!model.isOwner && !model.isFollowing">
+					<i ng-click="model.follow()" class="fa fa-heart-o"></i>
+				</a>
+				
+				<a ng-if="!model.isOwner && model.isFollowing">
+					<i id="unfollow" ng-click="model.unfollow()" class="fa fa-heart"></i>
+				</a>
 			</h1>
 			<ul class="list-unstyled contact-list">
 				<li class="email"><i class="fa fa-envelope"></i> <a
@@ -225,13 +229,14 @@
 					<i class="material-icons">people</i> Following
 				</h2>
 				<ul class="list-ul clearfix">
-					<li>
+					<li ng-repeat="following in model.following">
 						<dl class="clearfix">
 							<dt>
-								<a href=""><img src="../../assets/img/head.png"></a>
+								<a href="#!/user/{{following.following}}"><img src="../../assets/img/head.png"></a>
 							</dt>
 							<dd>
-								<a href=""><p class="tit">test</p></a>
+								<a href="#!/user/{{following.following}}"><p class="tit">Name: {{following.user_name}}</p></a>
+								<a href="#!/user/{{following.following}}"><p class="tit">ID: {{following.following}}</p></a>
 							</dd>
 						</dl>
 					</li>
@@ -247,13 +252,14 @@
 					<i class="material-icons">people</i> Follower
 				</h2>
 				<ul class="list-ul clearfix">
-					<li>
+					<li ng-repeat="follower in model.follower">
 						<dl class="clearfix">
 							<dt>
-								<a href=""><img src="../../assets/img/head.png"></a>
+								<a href="#!/user/{{follower.follower}}"><img src="../../assets/img/head.png"></a>
 							</dt>
 							<dd>
-								<a href=""><p class="tit">test</p></a>
+								<a href="#!/user/{{follower.follower}}"><p class="tit">Name: {{follower.user_name}}</p></a>
+								<a href="#!/user/{{follower.follower}}"><p class="tit">ID: {{follower.follower}}</p></a>
 							</dd>
 						</dl>
 					</li>
