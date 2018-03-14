@@ -28,6 +28,9 @@ import edu.northeastern.cs4500.controllers.customer.CustomerRepository;
 
 @RestController
 public class MovieController {
+  String[] filterList = {
+          "arse", "asshole","bitch","cunt","fuck","nigga","nigger"," ass ","ass hole"
+  };
   @Autowired
   private MovieRepository movieRepository;
   @Autowired
@@ -161,19 +164,36 @@ public class MovieController {
       json.put("message","Already comment");
       return ResponseEntity.ok().body(json);
     } else {
-      MovieComment movieComment = new MovieComment(
-              source.get("review").toString(),
-              source.get("score").toString(),
-              new Date(),
-              customerId,
-              movieId
-      );
-      movieCommentRepository.save(movieComment);
-      json.put("message", "success");
+      String inputData = source.get("review").toString();
+      boolean bad = false;
+      for(String s: filterList){
+        if(inputData.toLowerCase().contains(s)){
+          bad = true;
+          break;
+        }
+      }
+
+        if(!bad){
+          MovieComment movieComment = new MovieComment(
+                  inputData,
+                  source.get("score").toString(),
+                  new Date(),
+                  customerId,
+                  movieId
+          );
+          movieCommentRepository.save(movieComment);
+          json.put("message", "success");
+        } else {
+          json.put("message", "bad words");
+        }
+
+      }
+
+
       return ResponseEntity.ok().body(json);
     }
 
-  }
+
 
   @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> deleteComment(@RequestBody JSONObject source){

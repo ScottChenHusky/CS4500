@@ -32,9 +32,9 @@ public class CustomerEmail {
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress("spoiledtomatillos@gmail.com"));
       message.setRecipients(Message.RecipientType.TO,
-              InternetAddress.parse("chang.yid@husky.neu.edu"));
+              InternetAddress.parse("xu.fa@husky.neu.edu"));
       message.setSubject("Spoiled Tomatillos");
-      message.setText("Dear Yidan Chang:" +
+      message.setText("Dear Customer:" +
               "\n\n This is Spoiled Tomatillos! Thanks for using our products! :)" +
               "\n\n - Team 34");
 
