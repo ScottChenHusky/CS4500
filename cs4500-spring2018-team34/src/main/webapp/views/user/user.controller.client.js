@@ -10,6 +10,8 @@
     function HomeController ($http) {
     		var vm = this;
         vm.search = search;
+        
+        
         function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
@@ -44,6 +46,7 @@
     function LoginController($http, $location, $rootScope) {
     		var vm = this;
     		vm.login = login;
+    		vm.logout = logout;
     		
     		function login(username, password) {
     			
@@ -61,18 +64,17 @@
     				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);
+    				sessionStorage.setItem("currentUserId", res.data.id);
             }
     			
     			function error(err) {
     				vm.error = err.data.message;
     			}
+    			
     		}
     		
     		function logout() {
-    			if ($rootScope.currentUser != null) {
-    				var url = "/api/logout";
-    				return $http.post(url, $rootScope.currentUser);
-    			}
+    			sessionStorage.removeItem("currentUserId");
     		}
     		
     		logout();
@@ -143,6 +145,7 @@
     				.then(response, error);
     			function response (res) {
     				$location.url("/user/" + res.data.id);
+    				sessionStorage.setItem("currentUserId", res.data.id);
 
             }
     				
@@ -154,14 +157,15 @@
 
     }
     
-    function userProfileController($http, $routeParams) {
+    function userProfileController($http, $routeParams, $location) {
 		var vm = this;
+		vm.isOwner = false;
+		vm.isFollowing = false;
 		vm.userId = $routeParams.uid;
 		vm.initProfile = initProfile;
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		
-		vm.fo = false;
 		
         $(".profile-section").hide(); //Hide all content  
         $(".profile-section").hide();
@@ -223,21 +227,93 @@
         })
 
 		function initProfile() {
+        	
             var url = '/api/user?id=' + vm.userId;
-            return $http.get(url, vm.userId)
+            
+            $http.get(url, vm.userId)
                 .then(response);
+            
             function response(res) {
             		vm.user = res.data.result[0];
+            		
+            		url = '/api/user/following/' + vm.userId;
+            		$http.get(url)
+            			.then(following_response);
+            		
+            		function following_response(res) {
+            			vm.following = res.data.result;
+            		}
+            		
+            		url = '/api/user/followers/' + vm.userId;
+            		$http.get(url)
+            			.then(followers_response);
+            		
+            		function followers_response(res) {
+            			vm.follower = res.data.result;
+            			
+            			//
+            			if ($location.path().includes("/user/" + sessionStorage.getItem("currentUserId"))) {
+            				vm.isOwner = true;
+            			} else {
+            				vm.isOwner = false;
+            				vm.isFollowing = false;
+            				for (var i = 0; i < vm.follower.length; i++) {
+            					if (vm.follower[i].follower == sessionStorage.getItem("currentUserId")) {
+            						vm.isFollowing = true;
+            					}
+            				}
+            			}
+            			
+            			//
+            			
+            		}
+            		
+            		
             }
+            
+			
+
         }
         initProfile();
         
         function follow() {
-        		vm.fo = true;
+        		var url = "/api/user/follow";
+        		var obj = {
+        			from: sessionStorage.getItem("currentUserId"),
+        			to: vm.userId
+        		};
+        		$http.post(url, obj)
+        			.then(response, error);
+        		
+        		function response(res) {
+        			initProfile();
+        			return;
+        		}
+        		
+        		function error(err) {
+        			initProfile();
+        			return;
+        		}
         }
         
         function unfollow() {
-    			vm.fo = false;
+        		var url = "/api/user/un-follow";
+        		var obj = {
+        			from: sessionStorage.getItem("currentUserId"),
+        			to: vm.userId
+        		};
+        		$http.post(url, obj)
+    				.then(response, error);
+    		
+        		function response(res) {
+        			initProfile();
+        			return;
+        		}
+    		
+        		function error(err) {
+        			initProfile();
+        			return;
+        		}
         }
 	}
 
