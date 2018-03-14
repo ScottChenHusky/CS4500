@@ -20,8 +20,8 @@ public class MovieComment {
   public String review;
   public String score;
   public Date date;
-  public Integer customerId;
-  public Integer movieId;
+  public int customerId;
+  public int movieId;
 
   public MovieComment(){
 
