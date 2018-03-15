@@ -9,10 +9,12 @@ public class CustomerPhoneNumber {
   public static final String ACCOUNT_SID = "AC916d339685776d381e560adfb97e20dc";
   public static final String AUTH_TOKEN = "83a41d12fb0962ae0943e16de5c36724";
 
-  public static void main(String[] args) {
+  public static void sendCodeToPhone(String number) {
     Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-    Message message = Message.creator(new PhoneNumber("+18572148474"),
+
+    Message message = Message.creator(new PhoneNumber(number),
+
             new PhoneNumber("+19782881503"),
             "Welcome to Spoiled Tomatillos! This is team-34!").create();
 
