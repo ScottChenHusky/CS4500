@@ -28,6 +28,7 @@ import edu.northeastern.cs4500.controllers.customer.CustomerRepository;
 
 @RestController
 public class MovieController {
+  private String log;
   String[] filterList = {
           "arse", "asshole","bitch","cunt","fuck","nigga","nigger"," ass ","ass hole"
   };
@@ -87,10 +88,8 @@ public class MovieController {
         JSONObject movieJSON = (JSONObject) jsonParser.parse(result);
         json.put("movie", movieJSON);
 
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (ParseException e) {
-        e.printStackTrace();
+      } catch (IOException | ParseException e) {
+        log = e.toString();
       }
       json.put("message", "not found");
     } else {
@@ -161,7 +160,7 @@ public class MovieController {
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
     JSONObject json = new JSONObject();
     if (movieCommentRepository.existsMovieCommentByCustomerIdAndMovieId(customerId, movieId)){
-      json.put("message","Already comment");
+      json.put("message","exist");
       return ResponseEntity.ok().body(json);
     } else {
       String inputData = source.get("review").toString();

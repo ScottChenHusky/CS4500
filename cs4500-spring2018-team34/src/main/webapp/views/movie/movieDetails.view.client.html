@@ -90,9 +90,15 @@
 							<button id="submit" type="submit" class="form-control"
 								name="submit" ng-click="postReview()">submit</button>
 						</div>
+						<div class="col-md-12 col-sm-12">
+							<div ng-show="model.error" class="alert alert-danger">{{model.error}}</div>
+						</div>
+
 					</form>
+
 				</div>
 			</div>
+
 			<h1 style="padding-bottom:20px">Comments</h1>
 			
 			<div class=fadeInUp" style="border:1px solid black; margin-bottom:5px" ng-repeat="comment in model.comments">

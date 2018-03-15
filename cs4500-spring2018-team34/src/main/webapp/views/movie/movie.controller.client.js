@@ -15,7 +15,6 @@
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
-				console.log(vm.comments);
 			}
 
 			function error(err) {
@@ -32,12 +31,11 @@
 		
 		$scope.postReview = function() {
 			var url = '/api/movie/addComment';
-			console.log($scope.user);
 			var rR = {movieId:vm.movieId, customerId:$scope.user, score:""+$scope.rating+"", review:$scope.review};	
 			var data = JSON.stringify(rR);
 			$http.post(url, data).then(function(response) {
-				if(response.message == "Already comment") {
-					alert("You've already reviewed this movie");
+				if(response.data.message === "exist") {
+					vm.error = "You have reviewed this movie!";
 				} else {
 					initMovie();
 				}

@@ -26,8 +26,8 @@ public class MovieCommentTest {
     MovieComment mc = new MovieComment();
     mc.setReview("Review");
     String re = mc.getReview();
-    assertEquals("Review", mc.review);
-    assertEquals(re, mc.review);
+    assertEquals("Review", mc.getReview());
+    assertEquals(re, mc.getReview());
 
   }
 
@@ -36,8 +36,8 @@ public class MovieCommentTest {
     MovieComment mc = new MovieComment();
     mc.setScore("3");
     String re = mc.getScore();
-    assertEquals("3", mc.score);
-    assertEquals(re, mc.score);
+    assertEquals("3", mc.getScore());
+    assertEquals(re, mc.getScore());
 
   }
 
@@ -47,8 +47,8 @@ public class MovieCommentTest {
     Date date = new Date();
     mc.setDate(date);
     Date d = mc.getDate();
-    assertEquals(date, mc.date);
-    assertEquals(d, mc.date);
+    assertEquals(date, mc.getDate());
+    assertEquals(d, mc.getDate());
 
   }
 
@@ -57,7 +57,7 @@ public class MovieCommentTest {
     MovieComment mc = new MovieComment();
     mc.setCustomer_id(1);
     int customer_id = mc.getCustomer_id();
-    assertEquals(1, mc.customerId);
+    assertEquals(1, mc.getCustomer_id());
     assertEquals(1, customer_id);
   }
 
@@ -66,7 +66,7 @@ public class MovieCommentTest {
     MovieComment mc = new MovieComment();
     mc.setMovie_id(1);
     int movie_id = mc.getMovie_id();
-    assertEquals(1, mc.movieId);
+    assertEquals(1, mc.getMovie_id());
     assertEquals(1, movie_id);
   }
 
