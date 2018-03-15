@@ -131,18 +131,6 @@ public class MovieTest {
 
 
   @Test
-  public void testWithLanguage() {
-
-  }
-
-  @Test
-  public void hashCodeTest() {
-    Movie m = new Movie();
-    int i = m.hashCode();
-    assertTrue(i == 0);
-  }
-
-  @Test
   public void testEquals() {
     Movie m1 = new Movie();
     Movie m2 = new Movie();
