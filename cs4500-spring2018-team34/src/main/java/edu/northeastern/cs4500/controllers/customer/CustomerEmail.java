@@ -1,16 +1,12 @@
 package edu.northeastern.cs4500.controllers.customer;
 
-import java.util.Properties;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 public class CustomerEmail {
-  public static void main(String[] args) {
+  public static void sendEmail(String name, String email) {
     Properties props = new Properties();
     props.put("mail.smtp.host", "smtp.gmail.com");
     props.put("mail.smtp.socketFactory.port", "465");
@@ -32,9 +28,9 @@ public class CustomerEmail {
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress("spoiledtomatillos@gmail.com"));
       message.setRecipients(Message.RecipientType.TO,
-              InternetAddress.parse("chang.yid@husky.neu.edu"));
+              InternetAddress.parse(email));
       message.setSubject("Spoiled Tomatillos");
-      message.setText("Dear Yidan Chang:" +
+      message.setText("Dear " + name + ":" +
               "\n\n This is Spoiled Tomatillos! Thanks for using our products! :)" +
               "\n\n - Team 34");
 
