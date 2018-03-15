@@ -109,11 +109,11 @@ public class MovieTest {
     m.withTime("123");
     assertEquals("123", m.getTime());
     m.withOmdbreference("OMDB");
-    assertEquals("OMDB", m.omdbreference);
+    assertEquals("OMDB", m.getOmdbreference());
     m.withRtreference("RT");
-    assertEquals("RT", m.rtreference);
+    assertEquals("RT", m.getRtreference());
     m.withTmdbreference("TMDB");
-    assertEquals("TMDB", m.tmdbreference);
+    assertEquals("TMDB", m.getTmdbreference());
     m.withDirector("L");
     assertEquals("L", m.getDirector());
     m.withActors("L");
