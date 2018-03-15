@@ -14,6 +14,8 @@ public class CustomerFollowingController {
 
     @Autowired
     private CustomerFollowingRepository repository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @RequestMapping(path = "/api/user/following/{id}", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> getFollowing(@PathVariable(name = "id") String id) {
@@ -22,12 +24,14 @@ public class CustomerFollowingController {
         JSONArray array = new JSONArray();
         for (CustomerFollowing each : result) {
             JSONObject following = new JSONObject();
+            Customer customer = customerRepository.findById(each.getCustomerToId());
+            following.put("user_name", customer.getUsername());
             following.put("following", each.getCustomerToId());
             following.put("date", each.getDate().toString());
             array.add(following);
         }
         json.put("result", array);
-        return ResponseEntity.ok(json);
+        return ResponseEntity.ok().body(json);
     }
 
     @RequestMapping(path = "/api/user/followers/{id}", method = RequestMethod.GET)
@@ -37,12 +41,14 @@ public class CustomerFollowingController {
         JSONArray array = new JSONArray();
         for (CustomerFollowing each : result) {
             JSONObject follower = new JSONObject();
+            Customer customer = customerRepository.findById(each.getCustomerFromId());
+            follower.put("user_name", customer.getUsername());
             follower.put("follower", each.getCustomerFromId());
             follower.put("date", each.getDate().toString());
             array.add(follower);
         }
         json.put("result", array);
-        return ResponseEntity.ok(json);
+        return ResponseEntity.ok().body(json);
     }
 
     @RequestMapping(path = "/api/user/follow", method = RequestMethod.POST)
@@ -54,7 +60,7 @@ public class CustomerFollowingController {
         }
         Integer from = Integer.parseInt(fromStr);
         Integer to = Integer.parseInt(toStr);
-        List<CustomerFollowing> result = repository.findByCustomerFromIdAndAndCustomerToId(from, to);
+        List<CustomerFollowing> result = repository.findByCustomerFromIdAndCustomerToId(from, to);
         if (result.isEmpty()) {
             CustomerFollowing following = new CustomerFollowing()
                     .withCustomerFromId(from)
@@ -76,7 +82,7 @@ public class CustomerFollowingController {
         }
         Integer from = Integer.parseInt(fromStr);
         Integer to = Integer.parseInt(toStr);
-        List<CustomerFollowing> result = repository.findByCustomerFromIdAndAndCustomerToId(from, to);
+        List<CustomerFollowing> result = repository.findByCustomerFromIdAndCustomerToId(from, to);
         if (!result.isEmpty()) {
             repository.delete(result.get(0).getId());
             return ResponseEntity.ok().body("un-follow successful");
