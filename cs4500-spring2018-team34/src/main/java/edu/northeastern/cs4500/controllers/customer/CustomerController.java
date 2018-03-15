@@ -53,6 +53,8 @@ public class CustomerController{
                 .withLevel(1)
                 .withScore(0);
         customerRepository.save(customer);
+        CustomerEmail.sendEmail(customer.getUsername(), customer.getEmail());
+        CustomerPhoneNumber.sendCodeToPhone(customer.getPhone());
         return ResponseEntity.ok().body(
                 new RegisterResponseJSON()
                         .withId(customer.getId())
