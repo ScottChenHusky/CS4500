@@ -12,7 +12,9 @@ public class CustomerPhoneNumber {
   public static void sendCodeToPhone(String number) {
     Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
+
     Message message = Message.creator(new PhoneNumber(number),
+
             new PhoneNumber("+19782881503"),
             "Welcome to Spoiled Tomatillos! This is team-34!").create();
 

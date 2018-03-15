@@ -1,9 +1,14 @@
 package edu.northeastern.cs4500.controllers.customer;
 
-import javax.mail.*;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 public class CustomerEmail {
   public static void sendEmail(String name, String email) {
@@ -28,6 +33,7 @@ public class CustomerEmail {
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress("spoiledtomatillos@gmail.com"));
       message.setRecipients(Message.RecipientType.TO,
+
               InternetAddress.parse(email));
       message.setSubject("Spoiled Tomatillos");
       message.setText("Dear " + name + ":" +
