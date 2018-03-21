@@ -17,11 +17,11 @@ public class MovieComment {
   @Id
   @GeneratedValue
   public Integer id;
-  public String review;
-  public String score;
-  public Date date;
-  public Integer customerId;
-  public Integer movieId;
+  private String review;
+  private String score;
+  private Date date;
+  private int customerId;
+  private int movieId;
 
   public MovieComment(){
 
@@ -47,11 +47,11 @@ public class MovieComment {
     this.date = date;
   }
 
-  public void setCustomer_id(Integer customer_id) {
+  public void setCustomer_id(int customer_id) {
     this.customerId = customer_id;
   }
 
-  public void setMovie_id(Integer movie_id) {
+  public void setMovie_id(int movie_id) {
     this.movieId = movie_id;
   }
 
@@ -67,11 +67,11 @@ public class MovieComment {
     return date;
   }
 
-  public Integer getCustomer_id() {
+  public int getCustomer_id() {
     return customerId;
   }
 
-  public Integer getMovie_id() {
+  public int getMovie_id() {
     return movieId;
   }
 
@@ -80,13 +80,12 @@ public class MovieComment {
     Map<String, String> map = new HashMap<>();
 
 
-    Field[] fields = this.getClass().getFields();
+    Field[] fields = this.getClass().getDeclaredFields();
 
     for (Field field : fields) {
       try {
         map.put(field.getName(), field.get(this).toString());
-      } catch (Exception e) {
-        e.printStackTrace();
+      } catch (Exception ignored) {
       }
     }
     return map;

@@ -15,22 +15,22 @@ public class Movie {
   @Id
   @GeneratedValue
   public Integer id;
-  public String name;
-  public String date;
-  public String score;
-  public String description;
-  public String level;
-  public String language;
-  public String time;
-  public String omdbreference;
-  public String rtreference;
-  public String tmdbreference;
-  public String director;
-  public String actors;
-  public String country;
-  public String awards;
-  public String poster;
-  public String boxoffice;
+  private String name;
+  private String date;
+  private String score;
+  private String description;
+  private String level;
+  private String language;
+  private String time;
+  private String omdbreference;
+  private String rtreference;
+  private String tmdbreference;
+  private String director;
+  private String actors;
+  private String country;
+  private String awards;
+  private String poster;
+  private String boxoffice;
 
   public void setName(String name) {
     this.name = name;
@@ -181,7 +181,7 @@ public class Movie {
   public String getBoxoffice(){return this.boxoffice;}
   public Map<String, String> toMap(){
     Map<String, String> map = new HashMap<>();
-    Field[] fields = this.getClass().getFields();
+    Field[] fields = this.getClass().getDeclaredFields();
 
     for (Field field : fields) {
       try {
@@ -200,12 +200,24 @@ public class Movie {
   @Override
   public int hashCode(){
     int result = 0;
-    for(Field f: this.getClass().getFields()){
+    for(Field f: this.getClass().getDeclaredFields()){
       try {
         result += f.get(this).toString().hashCode();
       } catch (Exception ignored) {
       }
     }
     return result;
+  }
+
+  public String getOmdbreference() {
+    return omdbreference;
+  }
+
+  public String getRtreference() {
+    return rtreference;
+  }
+
+  public String getTmdbreference() {
+    return tmdbreference;
   }
 }
