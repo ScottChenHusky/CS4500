@@ -255,6 +255,14 @@
 	font-size: 28px;
 	line-height: 2;
 }
+
+.m-search-list .noResult {
+	font-size: 26px;
+	color: #5e5e5e;
+	margin-top: 2%;
+    text-align: center; 
+}
+
 .list-ul {
 	display: inline-block;
 	width: 100%;
