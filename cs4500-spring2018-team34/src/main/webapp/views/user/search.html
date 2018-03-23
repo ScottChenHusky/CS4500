@@ -18,21 +18,17 @@
 			<li>Users({{model.userNum}})</li>
 		</ul>
 	</div>
-	
-	{{model.test}}
 
 	<!-- All Results Start -->
 	<ul class="m-tab-bd w-1000">
 		<li class="item">
 			<div class="m-search-list">
 				<div class="list-tit">Movies</div>
+				<div class="list-ul"></div>
 				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
-				 <ul class="list-ul clearfix"
-					ng-repeat="movie in model.movies">
-					
-					{{movie}}
+				<ul class="clearfix" ng-repeat="movie in model.movies">
 					<li ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
-						<dl class="clearfix">
+						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
 							<dt>
 								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
 							</dt>
@@ -46,7 +42,9 @@
 						</dl>
 					</li>
 				</ul>
-				<!-- <a href="javascript:;" target="_blank" class="more">more movies &gt;</a> -->
+				<a href="" ng-click="model.moreMovies()"
+					ng-show="model.movieCap + 1 < model.movieNum" class="more">more
+					movies &gt;</a>
 			</div>
 			<div class="m-search-list">
 				<div class="list-tit">Users</div>
@@ -69,21 +67,17 @@
 					ng-show="model.userCap + 1 < model.userNum" class="more">more
 					users &gt;</a>
 			</div>
-
-			<div class="m-search-list">
-				<div class="list-tit">Actor</div>
-			</div>
 		</li>
 		<!-- All Results End -->
 
 		<li class="item" style="display: none;">
 			<div class="m-search-list">
-				<div class="list-tit">
-					Movies <span>View more</span>
-				</div>
-				<ul class="list-ul clearfix" ng-repeat="movie in model.movies">
-					<li ng-show="movie != 'found'">
-						<dl class="clearfix">
+				<div class="list-tit">Movies</div>
+				<div class="list-ul"></div>
+				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
+				<ul class="clearfix" ng-repeat="movie in model.movies">
+					<li ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
+						<dl class="list-ul clearfix">
 							<dt>
 								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
 							</dt>
@@ -97,14 +91,15 @@
 						</dl>
 					</li>
 				</ul>
-				<!-- <a href="" ng-click="model.moreUsersTab()"
-					ng-show="model.userCapTab + 1 < model.userNum" class="more">more
-					movies &gt;</a> -->
+				<a href="" ng-click="model.moreMoviesTab()"
+					ng-show="model.movieCapTab + 2 < model.movieNum" class="more">more
+					movies &gt;</a>
 			</div>
 		</li>
 		<li class="item" style="display: none;">
 			<div class="m-search-list w-1000">
 				<div class="list-tit">Users</div>
+				<h2 ng-show="model.userNum == 0" class="noResult">No Result!</h2>
 				<ul class="list-ul clearfix" ng-repeat="user in model.users">
 					<li ng-show="$index <= model.userCapTab">
 						<dl class="clearfix">
@@ -120,7 +115,7 @@
 					</li>
 				</ul>
 				<a href="" ng-click="model.moreUsersTab()"
-					ng-show="model.userCapTab + 1 < model.userNum" class="more">more
+					ng-show="model.userCapTab < model.userNum" class="more">more
 					movies &gt;</a>
 			</div>
 		</li>

@@ -263,6 +263,9 @@
     text-align: center; 
 }
 
+.m-search-list .fixBlank {
+	margin-top: -20%;
+}
 .list-ul {
 	display: inline-block;
 	width: 100%;
