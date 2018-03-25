@@ -67,6 +67,7 @@ public class MovieController {
     JSONObject json = new JSONObject();
     if (movie.size() == 0) {
       StringBuffer response = new StringBuffer();
+      // need to change TMDB api
       try{
         String requestUrl = "http://www.omdbapi.com/?s="+searchby+ "&apikey=a65196c5";
         URL url = new URL(requestUrl);
