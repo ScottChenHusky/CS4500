@@ -386,6 +386,9 @@
 
     function SearchController($http, $routeParams) {
 		var vm = this;
+        vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
+		vm.deleteUser = deleteUser;
+        vm.deleteMovie = deleteMovie;
 		
 		// Count Result numbers
 		
@@ -398,8 +401,46 @@
 		if(vm.term !== undefined && vm.term != '') {
 			search(vm.term);
 		}
+
+		function deleteMovie(movieId) {
+            var url = "/api/deleteMovie";
+            var movie = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                movieId: movieId
+            };
+
+            $http.post(url, movie)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+        }
 		
-		
+		function deleteUser(userId) {
+
+		    var url = "/api/deleteUser";
+            var user = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                userId: userId
+            };
+
+            $http.post(url, user)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+
+        }
 		
 		function search(searchTerm) {
 			vm.keyword = searchTerm;
@@ -413,7 +454,7 @@
 			
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {		
-					for (m in response.data) {
+					for (var m in response.data) {
 						if(m != "message") {
 							vm.movieNum++;
 							vm.sum++;
