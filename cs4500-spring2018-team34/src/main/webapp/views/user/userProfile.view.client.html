@@ -29,15 +29,27 @@
 		<!--//profile-container-->
 
 		<ul class="option-menu">
-			<li class="block"><input type="checkbox" name="item" id="item1" />
-				<label for="item1"><i aria-hidden="true"></i> Manage My
-					Profile </label>
+			<li ng-show="model.isOwner || model.currentUserLevel == '0'" class="block">
+				<input type="checkbox" name="item" id="item1" />
+				<label for="item1">
+                    <i aria-hidden="true"></i>
+                    Manage My Profile
+                </label>
 				<ul class="options tabs">
-					<li><a href="#profile1"><i aria-hidden="true"></i> My
-							Information </a></li>
-					<li><a href="#profile2"><i aria-hidden="true"></i> Change
-							Passwords </a></li>
-				</ul></li>
+					<li>
+                        <a href="#profile1" target="_self">
+                            <i aria-hidden="true"></i>
+                            My Information
+                        </a>
+                    </li>
+					<li>
+                        <a href="#profile2">
+                            <i aria-hidden="true"></i>
+                            Change Passwords
+                        </a>
+                    </li>
+				</ul>
+            </li>
 
 			<li class="block"><input type="checkbox" name="item" id="item2" />
 				<label for="item2"><i aria-hidden="true"></i> My Movie Lists
@@ -201,6 +213,9 @@
 		<!-- Change Password Tab -->
 		<section class="profile-section" id="profile2">
 			<h2 class="section-title">Change Password</h2>
+			<div ng-if="model.error" class="alert alert-danger">
+				{{model.error}}
+			</div>
 			<div class="form-group">
 				<input ng-model="password1" class="form-control"
 					placeholder="old password" type="password" />
@@ -217,7 +232,7 @@
 			</div>
 
 			<button
-				ng-click=""
+				ng-click="model.updatePassword(password1, password2, password3)"
 				type="submit" class="btn btn-primary btn-block">Submit</button>
 			<button class="btn btn-danger btn-block" >Cancel</button>
 		</section>

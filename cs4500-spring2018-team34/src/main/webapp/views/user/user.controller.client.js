@@ -63,8 +63,24 @@
     			return $http.post(url, user)
     				.then(response, error);
     			function response (res) {
-    				$location.url("/user/" + res.data.id);
-    				sessionStorage.setItem("currentUserId", res.data.id);
+    				var userId = res.data.id;
+    				url = '/api/user?id=' + userId;
+
+    				$http.get(url)
+						.then(response, error);
+
+    				function response(res) {
+                        sessionStorage.setItem("currentUserId", userId);
+                        sessionStorage.setItem("currentUserLevel", res.data.result[0].level);
+                        $location.url("/user/" + userId);
+					}
+
+					function error(err) {
+    					vm.error = err.data.message;
+					}
+
+
+
             }
     			
     			function error(err) {
@@ -75,47 +91,67 @@
     		
     		function logout() {
     			sessionStorage.removeItem("currentUserId");
+                sessionStorage.removeItem("currentUserLevel");
+    			var url = "/api/logout";
+    			var user = {
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
+                    userId: vm.userId
+				};
+
+    			return $http.post(url, user)
+					.then(response);
+
+    			function response(res) {
+    				return;
+				}
     		}
-    		
-    		logout();
+
+    		if (sessionStorage.getItem("currentUserId")) {
+                logout();
+			}
 
     }
     
     function RegisterController($http, $location) {
     		var vm = this;
     		vm.register = register;
-//    		vm.phoneNumberValidation = phoneNumberValidation;
-//    		
-//    		function phoneNumberValidation(phone) {
-//    			console.log("...........");
-//    			if (phone === "") {
-//    				return true;
-//    			}
-//    			
-//    			if (phone.length !== 12) {
-//    				console.log("!!!");
-//    				return false;
-//    			}
-//
-//    			var front = phone.substr(0, 3);
-//    			var middle = phone.substring(4, 7);
-//    			var rear = phone.substring(8, 12);
-//    			
-//    			console.log((!isNaN(parseInt(front, 10))) 
-//    			&& (!isNaN(parseInt(middle, 10))) 
-//    			&& (!isNaN(parseInt(rear, 10))) 
-//    			&& (phone.charAt(3) === "-")
-//    			&& (phone.charAt(7) === "-"));
-//    			
-//    			return (!isNaN(parseInt(front, 10))) 
-//    			&& (!isNaN(parseInt(middle, 10))) 
-//    			&& (!isNaN(parseInt(rear, 10))) 
-//    			&& (phone.charAt(3) === "-")
-//    			&& (phone.charAt(7) === "-");
-//    			
-//    		}
+    		vm.applyAdminCode = applyAdminCode;
+
+    		function applyAdminCode(username, email, phone) {
+                if (!username) {
+                    vm.error = "Please Enter Username";
+                    return;
+                } else if (!email) {
+                    vm.error = "Please Enter Email";
+                    return;
+                } else if (!phone) {
+                    vm.error = "Please Enter Phone Number";
+                    return;
+                }
+
+                var url = "/api/applyAdminCode";
+                var user = {
+                    username: username,
+                    email: email,
+                    phone: phone
+				};
+
+                return $http.post(url, user)
+                    .then(response, error);
+
+                function response (res) {
+                    $location.url("/user/" + res.data.id);
+                    sessionStorage.setItem("currentUserId", res.data.id);
+                }
+
+                function error(err) {
+                    vm.error = err.data.message;
+
+                }
+			}
+
     		
-    		function register(username, email, phone, password1, password2, admin) {
+    		function register(username, email, phone, password1, password2, adminCode) {
     			if (!username) {
     				vm.error = "Please Enter Username";
                 return;
@@ -125,20 +161,21 @@
     			} else if (!password1) {
     				vm.error = "Please Enter Password";
                     return;
-       		} else if (!password2) {
-       			vm.error = "Please Enter Verified Password";
-       			return;
-       		} else if (password1 !== password2) {
-       			vm.error = "Passwords don't match!";
-       			return;
-       		}
+       			} else if (!password2) {
+       				vm.error = "Please Enter Verified Password";
+       				return;
+       			} else if (password1 !== password2) {
+       				vm.error = "Passwords don't match!";
+       				return;
+       			}
     			
     			var url = "/api/register";
     			var user = {
     				username: username,
     				email: email,
     				phone: phone,
-    				password: password1
+    				password: password1,
+					adminCode: adminCode
     			};
     			
     			return $http.post(url, user)
@@ -147,7 +184,7 @@
     				$location.url("/user/" + res.data.id);
     				sessionStorage.setItem("currentUserId", res.data.id);
 
-            }
+            	}
     				
     			function error(err) {
     				vm.error = err.data.message;
@@ -160,14 +197,50 @@
     function userProfileController($http, $routeParams, $location) {
 		var vm = this;
 		vm.isOwner = false;
+		vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
 		vm.isFollowing = false;
 		vm.userId = $routeParams.uid;
 		vm.initProfile = initProfile;
 		vm.follow = follow;
 		vm.unfollow = unfollow;
+		vm.updatePassword = updatePassword;
+
+		function updatePassword(old, new1, new2) {
+			if (!old) {
+				vm.error = "Please enter the old password";
+				return;
+			} else if (!new1) {
+				vm.error = "Please enter the new password";
+				return;
+			} else if (new1 != new2) {
+				vm.error = "New password don't match";
+				return;
+			}
+
+
+			var url = "/api/updateUserPassword";
+			var user = {
+				loggedInUserId: sessionStorage.getItem("currentUserId"),
+				userId: vm.userId,
+				oldPassword: old,
+				newPassword: new1
+			};
+
+			return $http.update(url, user)
+				.then(response, error);
+
+			function response(res) {
+                initProfile();
+			}
+
+			function error(err) {
+				vm.error = err.data.message;
+				return;
+			}
+		}
 		
 		
-        $(".profile-section").hide(); //Hide all content  
+        //$(".profile-section").hide(); //Hide all content
         $(".profile-section").hide();
    	    $(".action-section").hide();
    	    $(".follower-section").hide();
@@ -250,7 +323,6 @@
             		
             		function followers_response(res) {
             			vm.follower = res.data.result;
-            			
             			//
             			if ($location.path().includes("/user/" + sessionStorage.getItem("currentUserId"))) {
             				vm.isOwner = true;
@@ -263,12 +335,7 @@
             					}
             				}
             			}
-            			
-            			//
-            			
             		}
-            		
-            		
             }
             
 			
@@ -279,6 +346,7 @@
         function follow() {
         		var url = "/api/user/follow";
         		var obj = {
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
         			from: sessionStorage.getItem("currentUserId"),
         			to: vm.userId
         		};
@@ -299,6 +367,7 @@
         function unfollow() {
         		var url = "/api/user/un-follow";
         		var obj = {
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
         			from: sessionStorage.getItem("currentUserId"),
         			to: vm.userId
         		};
@@ -319,6 +388,9 @@
 
     function SearchController($http, $routeParams) {
 		var vm = this;
+        vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
+		vm.deleteUser = deleteUser;
+        vm.deleteMovie = deleteMovie;
 		
 		// Count Result numbers
 		
@@ -331,8 +403,46 @@
 		if(vm.term !== undefined && vm.term != '') {
 			search(vm.term);
 		}
+
+		function deleteMovie(movieId) {
+            var url = "/api/deleteMovie";
+            var movie = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                movieId: movieId
+            };
+
+            $http.post(url, movie)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+        }
 		
-		
+		function deleteUser(userId) {
+
+		    var url = "/api/deleteUser";
+            var user = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                userId: userId
+            };
+
+            $http.post(url, user)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+
+        }
 		
 		function search(searchTerm) {
 			vm.keyword = searchTerm;
@@ -346,7 +456,7 @@
 			
 			$http.get(mUrl).then(function(response) {
 				if(response.data != undefined) {		
-					for (m in response.data) {
+					for (var m in response.data) {
 						if(m != "message") {
 							vm.movieNum++;
 							vm.sum++;
