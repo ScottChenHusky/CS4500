@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 
+import edu.northeastern.cs4500.repositories.CustomerRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,8 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.northeastern.cs4500.controllers.customer.CustomerRepository;
 
 @RestController
 public class MovieController {

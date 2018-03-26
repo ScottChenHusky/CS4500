@@ -1,5 +1,9 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import edu.northeastern.cs4500.repositories.Customer;
+import edu.northeastern.cs4500.repositories.CustomerFollowing;
+import edu.northeastern.cs4500.repositories.CustomerFollowingRepository;
+import edu.northeastern.cs4500.repositories.CustomerRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
