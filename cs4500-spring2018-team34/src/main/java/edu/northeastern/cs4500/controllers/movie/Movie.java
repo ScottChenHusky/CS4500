@@ -31,6 +31,9 @@ public class Movie {
   private String awards;
   private String poster;
   private String boxoffice;
+  private String t1;
+  private String t2;
+  private String t3;
 
   public void setName(String name) {
     this.name = name;
@@ -134,6 +137,24 @@ public class Movie {
     return this;
   }
 
+  public void setT1(String t1){this.t1 = t1;}
+  public Movie withT1(String t1){
+    this.setT1(t1);
+    return this;
+  }
+
+  public void setT2(String t2){this.t2 = t2;}
+  public Movie withT2(String t2){
+    this.setT2(t2);
+    return this;
+  }
+
+  public void setT3(String t3){this.t3 = t3;}
+  public Movie withT3(String t3){
+    this.setT3(t3);
+    return this;
+  }
+
   public Integer getId() {
     return this.id;
   }
@@ -179,6 +200,12 @@ public class Movie {
   public String getPoster(){return this.poster;}
 
   public String getBoxoffice(){return this.boxoffice;}
+
+  public String getT1(){return this.t1;}
+
+  public String getT2(){return this.t2;}
+
+  public String getT3(){return this.t3;}
   public Map<String, String> toMap(){
     Map<String, String> map = new HashMap<>();
     Field[] fields = this.getClass().getDeclaredFields();

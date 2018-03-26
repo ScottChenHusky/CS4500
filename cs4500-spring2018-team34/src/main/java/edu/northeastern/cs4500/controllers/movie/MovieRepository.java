@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
   List<Movie> findByName(String name);
   Movie findById(Integer id);
@@ -11,4 +13,10 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
   List<Movie> findByActorsContaining(String actors);
   List<Movie> findByNameContaining(String name);
   List<Movie> findByCountryContaining(String country);
+  boolean existsById(Integer Id);
+  boolean existsByOmdbreference(String omdbreference);
+  long count();
+  @Transactional
+  Long deleteById(Integer Id);
+
 }
