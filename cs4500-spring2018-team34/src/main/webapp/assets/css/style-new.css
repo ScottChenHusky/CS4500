@@ -486,16 +486,19 @@
     font-size: 22px;
 }
 .m_left{
-    width: 45%;
+    width: 40%;
     float: left;
     margin-top: 5px;
     border-right: 1px solid #e9e9e9;
+/*     padding-right: 2%; */
 }
 .m_right{
-    width: 50%;
+    width: 55%;
     margin-left: 25px;
     float: left;
-    margin-top: 5px;
+    margin-top: 3%;
+/*     border-left: 1px solid #e9e9e9;
+    padding-left: 2%; */
 }
 .tag span{
     display: inline-block;
@@ -542,7 +545,7 @@
     color: #e09015;
 } */
 .botn{
-    padding-top: 1%;
+    padding-top: 2%;
 }
 .botn a{
     display: block;
@@ -579,13 +582,14 @@ ul{
     width: 25%;
     height: 20%;
     position: relative;
-    margin-top: 22px;
+    margin-top: 0px;
+    margin-left: 5px;
 }
 .s_vimg li.act{
     margin-top: 20px;
     border: 2px solid #8cc63f;
     border-radius: 2px;
-}
+} 
 .act_img{
     display: none;
     position: absolute;
@@ -599,7 +603,7 @@ ul{
     display: block;
 }
 .ml30{
-    margin-left: 1%;
+    margin-left: 5px;
 }
 .dy_main .title{
     line-height: 45px;
@@ -624,7 +628,9 @@ ul{
     right: 0;
 }
 .slide ul{
-    position: absolute;
+ /* position: absolute; */
+  /* position: relative; */
+  /*   float: left; */
     top:0;
     left: 20px;
     width: 920px;
@@ -632,9 +638,10 @@ ul{
 }
 .slide ul li{
     width: 115px;
-    height: 165px;
+    height: 175px;
     float: left;
     text-align: center;
+    margin-left: 2%;
 }
 .link{
     height: 60px;
@@ -673,28 +680,40 @@ ul{
     margin-top: 10px;
 }
 .post{
-    width: 78px;
-    height: 32px;
+    width: 200px;
+    height: 40px;
     background-color: #75a43e;
     border-radius: 14px;
     margin-top: 10px;
     border: 0;
-    font-size: 16px;
+    font-size: 20px;
     color: #fff;
+    margin-right: 1%;
+    float: right;
 }
 .fl{
     float: left;
 }
 .mo_info{
-    width: 465px;
+    width: 50%;
     margin-top: 15px;
+    margin-bottom: 10px;
+    padding-left: 5%;
+}
+
+.comment_line{
+    border-right: 1px solid #eaeaea;
 }
 .mo_info .date{
     font-size: 18px;
-    color: #4c4c4c;
+    mergin-bottom: 5px;
+    color: #75a43e;
+    /* color: #4c4c4c; */
 }
+
 .mo_info p{
-    margin-top: 15px;
+	margin-bottom:5px;
+    margin-top: 10px;
     font-size: 16px;
     color: #666666;
     line-height: 21px;
@@ -709,6 +728,7 @@ ul{
 }
 .mo_info a{
     text-decoration: none;
+    font-size: 16px;
     color: #75a43e;
 }
 .mo_info img{

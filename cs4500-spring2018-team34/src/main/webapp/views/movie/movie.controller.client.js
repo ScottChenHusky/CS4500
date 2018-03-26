@@ -10,10 +10,11 @@
 		vm.initMovie = initMovie;
 		// post review
 		vm.review = review;
-		//get the user info for each comment
+		// get the user info for each comment
 		vm.getUserForComment = getUserForComment;
 
 		vm.comments = [];
+		vm.actors = [];
 
 		function initMovie() {
 			var url = '/api/movie/get?id=' + vm.movieId;
@@ -21,6 +22,20 @@
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
+				// give a list of actors
+				var string = vm.movie.actors;
+				if (string != undefined || string != null) {
+					for (var i=0; i<string.length;i++) {
+						var j = string.indexOf(",");
+						if(j != -1) {
+							vm.actors.push(string.slice(0, j));
+							string = string.slice(j+2, string.length);
+						} else {
+							vm.actors.push(string);
+							return;
+						}
+					}
+				}
 			}
 			function error(err) {
 				vm.error = err.data.message;
@@ -28,23 +43,23 @@
 		}
 		initMovie();
 		getUserForComment(vm.userId);
-
+		
 		// post review
 		function review(rating, review) {
-			var url = '/api/movie/addComment';
-			console.log("rating: " + rating);
-			if (rating == null || rating == undefined) {
-				vm.reviewError = "Please give a rate."
-			}
+			console.log(rating);
 			if (review == null || review == undefined) {
 				vm.reviewError = "Please give some comments."
-			} else {
+			} 
+			if (rating == null || rating == undefined) {
+				vm.reviewError = "Please give a rate."
+			}else {
 				var rR = {
 					movieId : vm.movieId,
 					customerId : vm.userId,
 					score : "" + rating + "",
 					review : review
 				};
+				var url = '/api/movie/addComment';
 				var data = JSON.stringify(rR);
 				$http.post(url, data).then(function(response) {
 					if (response.data.message === "exist") {
@@ -56,9 +71,8 @@
 			}
 		}
 
-		//get the user info for each comment
+		// get the user info for each comment
 		function getUserForComment(userId) {
-			console.log("here")
 			var url = '/api/user?id=' + userId;
 			return $http.get(url, vm.userId).then(response);
 			function response(res) {

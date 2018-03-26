@@ -22,23 +22,23 @@ body {
 			</div>
 			<div class="botn">
 				<a href=""><img src="../../assets/img/add.png">Add to
-					playlist</a> <a href=""><img src="../../assets/img/add.png">Add
+					favorite</a> <a href=""><img src="../../assets/img/add.png">Add
 					to playlist</a> <a href="">Recommend to Friend</a>
 			</div>
 		</div>
 
 		<div class="m_right">
-			<div class="tag">
+			<!-- <div class="tag">
 				<a href="#overview"><span>Overview</span></a> <span>Movie
 					Time&Tickets</span> <span>Reviews</span>
-			</div>
+			</div> -->
 			<div>
 				<div class="vedio">
 					<img src="../assets/img/vedio_img.png"> <span>Trailer
 						1</span>
 				</div>
 				<ul class="s_vimg">
-					<li class="act"><img src="assets/img/s_vimg.png"><img
+					<li><img src="assets/img/s_vimg.png"><img
 						src="assets/img/act_top.png" class="act_img"></li>
 					<li class="ml30"><img src="assets/img/s_vimg.png"><img
 						src="assets/img/act_top.png" class="act_img"></li>
@@ -61,7 +61,9 @@ body {
 				src="assets/img/slide_left.png"></a> <a href=""
 				class="slide_right"><img src="assets/img/slide_right.png"></a>
 			<ul class="slide_ul">
-				<li><img src="assets/img/slide_img1.png"><span>Ryan
+				<li ng-repeat="actor in model.actors track by $index"><img
+					src="assets/img/slide_img1.png"><span>{{actor}}</span></li>
+				<!-- <li><img src="assets/img/slide_img1.png"><span>Ryan
 						Gosling</span></li>
 				<li><img src="assets/img/slide_img2.png"><span>Ryan
 						Gosling</span></li>
@@ -72,72 +74,83 @@ body {
 				<li><img src="assets/img/slide_img1.png"><span>Ryan
 						Gosling</span></li>
 				<li><img src="assets/img/slide_img2.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img1.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img2.png"><span>Ryan
-						Gosling</span></li>
+						Gosling</span></li> -->
 			</ul>
 		</div>
 	</div>
-	<div class="dy_main">
-		<div class="title">Movie Reviews</div>
-		<div class="pj">
-			<span>Add Your Review</span>
-			<div class="star">
-				<img src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img
-					src="assets/img/star_act.png"> <img src="assets/img/star.png">
-				<label>Rate</label>
+	<div class="container dy_main">
+		<div class="title">Post Your Review</div>
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<!-- Reviews FORM HERE -->
+				<div class="fadeInUp">
+					<form id="review-form">
+						<div class="col-md-12 col-sm-12 botn">
+							<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
+						</div>
+						<div class="col-md-4 col-sm-4">
+							<input type="number" class="form-control" name="rate"
+								placeholder="Rate" min="0" max="5" ng-model="rating">
+						</div>
+						<!-- <div class="col-md-4 col-sm-4">
+							<input type="text" class="form-control" name="summary"
+								placeholder="Summary" ng-model="summary">
+						</div> -->
+
+						<div class="col-md-12 col-sm-12">
+							<textarea class="form-control" rows="5" name="reviews"
+								placeholder="Reviews" ng-model="review"></textarea>
+						</div>
+						<button id="submit" type="button" class="post" name="submit"
+							ng-click="model.review(rating, review)">submit</button>
+						<!-- <div class="col-md-offset-9 col-md-3 col-sm-offset-3 col-sm-6">
+							<button id="submit" type="button" class="post" name="submit"
+								ng-click="model.review(rating, review)">submit</button> -->
+				</div>
+				</form>
 			</div>
-			<textarea class="textarea"></textarea>
-			<button type="button" class="post">Post</button>
 		</div>
-		<div class="mo_info fl">
-			<div class="date">January 25,2018</div>
-			<p>A sad existential story. To believe that you are special, to
-				find out that you are nothing special, and that you are no longer
-				attached to the special or not, that is the meaning, free will is
-				the original sin of all such films, and it is also a routine. "It's
-				good...</p>
-			<a href="" class="mo_link">>Full Review</a> <img
-				src="assets/img/s_img.png"><a href="">Ben</a>
+		<div class="dy_main">
+			<!-- <div class="title">Movie Reviews</div>
+				<div class="pj">
+					<span>Post Your Review</span>
+					<div ng-if="model.error" class="alert alert-danger">
+						{{model.error}}</div>
+					<div class="col-md-4 col-sm-4">
+						<input type="number" class="form-control" name="rate"
+							placeholder="Rate" min="0" max="5" ng-model="rating">
+					</div>
+
+					<div class="star">
+						<img src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star_act.png"> <img
+							src="assets/img/star.png"> <label>Rate</label>
+					</div>
+					<textarea class="textarea"></textarea>
+					<button type="button" class="post">Post</button>
+				</div> -->
+
+			<div class="mo_info fl comment_line"
+				ng-repeat="comment in model.comments">
+				<div class="date">{{comment.date}}</div>
+				<p class="wrap">{{comment.review}}</p>
+				<!-- <a href="" class="mo_link">>Full Review</a> -->
+				<img src="assets/img/s_img.png"><a href="">{{comment.username}}</a>
+			</div>
+			<!-- <div class="lr fl"></div> -->
+			<div class="clear"></div>
 		</div>
-		<div class="lr fl"></div>
-		<div class="mo_info fl">
-			<div class="date">January 25,2018</div>
-			<p>A sad existential story. To believe that you are special, to
-				find out that you are nothing special, and that you are no longer
-				attached to the special or not, that is the meaning, free will is
-				the original sin of all such films, and it is also a routine. "It's
-				good...</p>
-			<a href=" " class="mo_link">>Full Review</a> <img
-				src="assets/img/s_img.png"><a href="">Ben</a>
+		<div class="dy_main" style="margin-bottom: 25px;">
+			<div class="title">Movie Time&Tickets</div>
+			<div class="link">
+				<a href="https://www.amctheatres.com/">AMC</a>
+			</div>
 		</div>
-		<div class="clear"></div>
-		<div class="mo_info fl">
-			<div class="date">January 25,2018</div>
-			<p>A sad existential story. To believe that you are special, to
-				find out that you are nothing special, and that you are no longer
-				attached to the special or not, that is the meaning, free will is
-				the original sin of all such films, and it is also a routine. "It's
-				good...</p>
-			<a href="" class="mo_link">>Full Review</a> <img
-				src="assets/img/s_img.png"><a href="">Ben</a>
-		</div>
-		<div class="lr fl"></div>
-		<div class="clear"></div>
 	</div>
-	<div class="dy_main" style="margin-bottom: 25px;">
-		<div class="title">Movie Time&Tickets</div>
-		<div class="link">
-			<a href="">AMC</a>
-		</div>
-	</div>
-</div>
