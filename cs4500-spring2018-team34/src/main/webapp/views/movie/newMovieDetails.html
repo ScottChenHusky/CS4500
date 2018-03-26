@@ -6,18 +6,17 @@ body {
 <div class="content">
 	<div class="dy_main">
 		<div class="name">
-			<span>{{model.movie.name}}</span><img src="assets/img/heart.png">
+			<span>{{model.movie.name}}</span> <label>{{model.movie.score}}</label>
 		</div>
 		<div class="m_left">
-			<div class="tag">
-				<a href="#overview"><span>Overview</span></a> <span>Movie
-					Time&Tickets</span> <span>Reviews</span>
-			</div>
+
 			<div class="dy_info">
-				<img src="assets/img/dy_img.png">
+				<img class="poster" src="{{model.movie.poster}}">
 				<div class="tetx">
-					<span>Director: {{model.movie.diretor}}</span> <span>1982</span> <span>1h57min</span> <span>Action</span>
-					<span>Rate:<label>7.2</label></span>
+					<span>Director: {{model.movie.director}}</span> <span>Year:
+						{{model.movie.date}}</span> <span>Duration: {{model.movie.time}}
+						min</span> <span>Language: {{model.movie.language}}</span><span>Level:
+						{{model.movie.level}}</span><span>Country: {{model.movie.country}}</span>
 				</div>
 				<div class="clear"></div>
 			</div>
@@ -27,23 +26,33 @@ body {
 					to playlist</a> <a href="">Recommend to Friend</a>
 			</div>
 		</div>
+
 		<div class="m_right">
-			<div class="vedio">
-				<img src="../assets/img/vedio_img.png"> <span>Trailer 1</span>
+			<div class="tag">
+				<a href="#overview"><span>Overview</span></a> <span>Movie
+					Time&Tickets</span> <span>Reviews</span>
 			</div>
-			<ul class="s_vimg">
-				<li class="act"><img src="assets/img/s_vimg.png"><img
-					src="assets/img/act_top.png" class="act_img"></li>
-				<li class="ml30"><img src="assets/img/s_vimg.png"><img
-					src="assets/img/act_top.png" class="act_img"></li>
-				<li class="ml30"><img src="assets/img/s_vimg.png"><img
-					src="assets/img/act_top.png" class="act_img"></li>
-			</ul>
+			<div>
+				<div class="vedio">
+					<img src="../assets/img/vedio_img.png"> <span>Trailer
+						1</span>
+				</div>
+				<ul class="s_vimg">
+					<li class="act"><img src="assets/img/s_vimg.png"><img
+						src="assets/img/act_top.png" class="act_img"></li>
+					<li class="ml30"><img src="assets/img/s_vimg.png"><img
+						src="assets/img/act_top.png" class="act_img"></li>
+					<li class="ml30"><img src="assets/img/s_vimg.png"><img
+						src="assets/img/act_top.png" class="act_img"></li>
+				</ul>
+			</div>
+
 		</div>
 		<div class="clear"></div>
 	</div>
 	<div class="dy_main">
 		<div class="title" id="overview">Description</div>
+		<p>{{model.movie.description}}</p>
 	</div>
 	<div class="dy_main">
 		<div class="title">CAST+CREW</div>

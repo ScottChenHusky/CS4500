@@ -307,7 +307,6 @@
 	font-family: Arial;
 }
 .m-search-list .rate {
-	margin-top: 50px;
 	color: #e09015;
 	font-size: 24px;
 }
@@ -462,10 +461,16 @@
     clear: both;
 }
 .dy_main{
-    width: 1000px;
+    width: 100%;
     background-color: #fff;
     padding: 10px 20px 20px;
     margin: 25px auto 0;
+}
+.dy_main p{
+	margin-top: 1%;
+	font-size: 17px;
+	font-weight: 400px;
+	color: #808080;
 }
 .dy_main .name{
     font-size: 30px;
@@ -474,19 +479,20 @@
     font-weight: bold;
     line-height: 45px;
 }
-.dy_main .name img{
+.dy_main .name label{
     vertical-align: top;
+    color: #e09015;
     margin-left: 10px;
-    margin-top: 10px;
+    font-size: 22px;
 }
 .m_left{
-    width: 410px;
+    width: 45%;
     float: left;
     margin-top: 5px;
     border-right: 1px solid #e9e9e9;
 }
 .m_right{
-    width: 520px;
+    width: 50%;
     margin-left: 25px;
     float: left;
     margin-top: 5px;
@@ -496,7 +502,8 @@
     padding: 5px 10px 2px;
     border-radius: 1px;
     background-color: #f5f5f5;
-    margin-right: 5px;
+    margin-bottom: 2%;
+    float: right;
     font-size: 18px;
     color: #8cc63f;
     font-family: "Myriad Pro";
@@ -504,25 +511,38 @@
 .dy_info{
     padding-top: 20px;
 }
-.dy_info img{
+.dy_info .poster{
     float: left;
-    margin-top: 15px;
+    margin-top: 2%;
+    height: 250px;
+    width: 170px;
 }
 .dy_info .tetx{
     float: left;
     margin-left: 18px;
 }
+
+.dy_info .tetx .botn a{
+    float: left;
+    margin-left: 18px;
+}
+
+.dy_info .tetx .botn .movieIcon{
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
 .dy_info .tetx span{
     display: block;
     margin-top: 15px;
-    font-size: 18px;
+    font-size: 16px;
     color: #808080;
 }
-.dy_info .tetx span label{
+/* .dy_info .tetx span label{
     color: #e09015;
-}
+} */
 .botn{
-    padding-top: 25px;
+    padding-top: 1%;
 }
 .botn a{
     display: block;
@@ -543,7 +563,7 @@
 }
 .vedio{
     padding: 5px;
-    border: 1px solid #e9e9e9;
+ /*    border: 1px solid #e9e9e9; */
 }
 .vedio span{
     line-height: 35px;
@@ -556,8 +576,8 @@ ul{
 }
 .s_vimg li{
     float: left;
-    width: 151px;
-    height: 85px;
+    width: 25%;
+    height: 20%;
     position: relative;
     margin-top: 22px;
 }
@@ -579,7 +599,7 @@ ul{
     display: block;
 }
 .ml30{
-    margin-left: 30px;
+    margin-left: 1%;
 }
 .dy_main .title{
     line-height: 45px;
@@ -645,7 +665,7 @@ ul{
     color: #e09015;
 }
 .pj .textarea{
-    background: url("../assets/img/areabg.png") no-repeat right bottom;
+    background: url("../img/areabg.png") no-repeat right bottom;
     width: 965px;
     height: 58px;
     border: 1px solid #e5e5e5;

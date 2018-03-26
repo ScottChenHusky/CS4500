@@ -2,7 +2,7 @@
     <div ng-if="model.error" class="alert alert-danger">
         {{model.error}}
     </div>
-    <h1>Register</h1>
+    <h1>Join Us</h1>
 
     <form name="registerForm" id="registerForm" novalidate>
 
@@ -13,7 +13,7 @@
                    type="text"
                    required/>
         </div>
-        
+
         <div class="form-group">
             <input ng-model="email"
                    class="form-control"
@@ -21,43 +21,18 @@
                    type="text"
                    required/>
         </div>
-        
+
         <div class="form-group">
             <input ng-model="phone"
                    class="form-control"
                    placeholder="Phone: 123-123-1234"
                    type="text"
                    required/>
-        </div>        
-
-        <div class="form-group">
-            <input ng-model="password1"
-                   class="form-control"
-                   placeholder="password"
-                   type="password"
-                   required/>
         </div>
 
-        <div class="form-group">
-            <input ng-model="password2"
-                   class="form-control"
-                   placeholder="verify password"
-                   type="password"
-                   required/>
-        </div>
-
-        <div class="form-group">
-            <input ng-model="adminCode"
-                   class="form-control"
-                   placeholder="Optional: Enter the admin code to be an admin user"
-                   type="test"/>
-        </div>
-
-
-
-        <button ng-click="model.register(username, email, phone, password1, password2, adminCode)"
+        <button ng-click="model.applyAdminCode(username, email, phone)"
                 type="submit"
-                class="btn btn-primary btn-block">Register</button>
+                class="btn btn-primary btn-block">Apply Admin Code</button>
 
         <a class="btn btn-danger btn-block"
            href="#">Cancel</a>

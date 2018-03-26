@@ -19,12 +19,16 @@
         				controller: 'LoginController',
         				controllerAs: 'model'
         			})
-        			
         			.when('/register', {
         				templateUrl: 'views/user/register.view.client.html',
         				controller: 'RegisterController',
         				controllerAs: 'model'
         			})
+            		.when('/join_us', {
+                		templateUrl: 'views/user/register.view.admin.html',
+                		controller: 'RegisterController',
+                		controllerAs: 'model'
+            		})
         			.when('/search/:term', {
         				templateUrl: 'views/user/search.html',
         				controller: 'SearchController',
