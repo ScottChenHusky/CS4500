@@ -346,6 +346,7 @@
         function follow() {
         		var url = "/api/user/follow";
         		var obj = {
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
         			from: sessionStorage.getItem("currentUserId"),
         			to: vm.userId
         		};
@@ -366,6 +367,7 @@
         function unfollow() {
         		var url = "/api/user/un-follow";
         		var obj = {
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
         			from: sessionStorage.getItem("currentUserId"),
         			to: vm.userId
         		};
