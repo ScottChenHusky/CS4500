@@ -1,6 +1,7 @@
 package edu.northeastern.cs4500.services;
 
 import edu.northeastern.cs4500.repositories.Customer;
+import edu.northeastern.cs4500.repositories.CustomerFollowing;
 import edu.northeastern.cs4500.repositories.CustomerFollowingRepository;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,12 +87,12 @@ public class CustomerService {
     }
 
     public void logout(Integer executor, Integer target) throws Exception {
-        internalEnsureAccess(executor, target);
+        ensureAccess(executor, target);
         CustomerService.SESSION.remove(target);
     }
 
     public void changePassword(Integer executor, Integer target, String oldPassword, String newPassword) throws Exception {
-        internalEnsureAccess(executor, target);
+        ensureAccess(executor, target);
         Customer customer = internalFindTheCustomer(target);
         if (! customer.getPassword().equals(oldPassword)) {
             throw new IllegalArgumentException("oldPassword");
@@ -124,7 +125,7 @@ public class CustomerService {
     }
 
     public void updateCustomer(Integer executor, Integer target, Map<String, Object> kwargs) throws Exception {
-        internalEnsureAccess(executor, target);
+        ensureAccess(executor, target);
         Customer customer = internalFindTheCustomer(target);
         for (Map.Entry<String, Object> each : kwargs.entrySet()) {
             try {
@@ -151,12 +152,12 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Integer executor, Integer target) throws Exception {
-        internalEnsureAccess(executor, target);
+        ensureAccess(executor, target);
         customerRepository.delete(target);
         CustomerService.SESSION.remove(target);
     }
 
-    public void internalEnsureAccess(Integer executor, Integer target) throws Exception {
+    public void ensureAccess(Integer executor, Integer target) throws Exception {
         Integer[] access = CustomerService.SESSION.get(executor);
         if (access == null) {
             throw new IllegalStateException("executor");
@@ -168,12 +169,50 @@ public class CustomerService {
         access[1] = CustomerService.AUTO_LOGOUT;
     }
 
-    public Customer internalFindTheCustomer(Integer id) {
+    private Customer internalFindTheCustomer(Integer id) {
         Customer customer = customerRepository.findById(id);
         if (customer == null) {
             throw new IllegalStateException("id");
         }
         return customer;
+    }
+
+    public List<Customer> getFollowing(Integer id) {
+        List<CustomerFollowing> temp = customerFollowingRepository.findByCustomerFromId(id);
+        List<Integer> ids = new ArrayList<>();
+        for (CustomerFollowing following : temp) {
+            ids.add(following.getCustomerToId());
+        }
+        return customerRepository.findByIdIn(ids);
+    }
+
+    public List<Customer> getFollowers(Integer id) {
+        List<CustomerFollowing> temp = customerFollowingRepository.findByCustomerToId(id);
+        List<Integer> ids = new ArrayList<>();
+        for (CustomerFollowing following : temp) {
+            ids.add(following.getCustomerToId());
+        }
+        return customerRepository.findByIdIn(ids);
+    }
+
+    public void follow(Integer executor, Integer from, Integer to) throws Exception {
+        ensureAccess(executor, from);
+        List<CustomerFollowing> result = customerFollowingRepository.findByCustomerFromIdAndCustomerToId(from, to);
+        if (result.isEmpty()) {
+            CustomerFollowing following = new CustomerFollowing()
+                    .withCustomerFromId(from)
+                    .withCustomerToId(to)
+                    .withDate(new Date());
+            customerFollowingRepository.save(following);
+        }
+    }
+
+    public void unFollow(Integer executor, Integer from, Integer to) throws Exception {
+        ensureAccess(executor, from);
+        List<CustomerFollowing> result = customerFollowingRepository.findByCustomerFromIdAndCustomerToId(from, to);
+        if (! result.isEmpty()) {
+            customerFollowingRepository.delete(result.get(0).getId());
+        }
     }
 
 }
