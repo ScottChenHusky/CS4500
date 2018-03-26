@@ -28,7 +28,7 @@ public class Overall {
   public ResponseEntity<JSONObject> getSystemInfo() {
     JSONObject logInfo = new JSONObject();
     JSONObject json = new JSONObject();
-    logInfo.put("Task", logInfo);
+    logInfo.put("Task", "getSystemInfo");
     json.put("Available processor (cores)", Runtime.getRuntime().availableProcessors());
     json.put("Free memory (bytes)", Runtime.getRuntime().freeMemory());
     long maxMemory = Runtime.getRuntime().maxMemory();
@@ -47,8 +47,14 @@ public class Overall {
     json.put("Root", jsonArray);
     json.put("Movie Count", movieRepository.count());
     json.put("Movie Comment Count", movieCommentRepository.count());
-    logInfo.put("Result", json);
-    log.fine(logInfo.toJSONString());
+    logInfo.put("Result", json.toString());
+    File file = new File("myapplication.log");
+    double bytes = 0;
+    if (file.exists()) {
+      bytes = file.length();
+    }
+    json.put("Current Log File Size", bytes);
+    log.fine(logInfo.toString());
     return ResponseEntity.ok().body(json);
   }
 }

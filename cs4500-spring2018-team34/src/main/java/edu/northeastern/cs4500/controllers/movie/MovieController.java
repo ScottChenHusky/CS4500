@@ -82,7 +82,7 @@ public class MovieController {
     map.putAll(createMap("Language", moviesLanguage, "Movie"));
     map.putAll(createMap("Country", moviesCountry, "Movie"));
     json.putAll(map);
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return ResponseEntity.ok().body(json);
   }
 
@@ -138,7 +138,7 @@ public class MovieController {
     logInfo.put("Task", "ApiConnector");
     logInfo.put("Type", type);
     logInfo.put("SearchBy", searchBy);
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return jsonObject;
   }
 
@@ -176,7 +176,7 @@ public class MovieController {
     }
     logInfo.put("Task", "getMovie");
     logInfo.put("id", searchId);
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return ResponseEntity.ok().body(json);
 
   }
@@ -222,7 +222,7 @@ public class MovieController {
     logInfo.put("CustomerId", customerId);
     logInfo.put("MovieId", movieId);
 
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return ResponseEntity.ok().body(json);
   }
 
@@ -244,7 +244,7 @@ public class MovieController {
     logInfo.put("Task", "deleteComment");
     logInfo.put("CustomerId", customerId);
     logInfo.put("MovieId", movieId);
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return ResponseEntity.ok().body(json);
   }
 
@@ -263,11 +263,11 @@ public class MovieController {
       movieCommentRepository.save(movieComment);
       json.put("message", "success");
       logInfo.put("message", "success");
-      log.finest(logInfo.toJSONString());
+      log.finest(logInfo.toString());
     } catch (Exception e) {
       json.put("message", "failed");
       logInfo.put("Exception", e.toString());
-      log.warning(logInfo.toJSONString());
+      log.warning(logInfo.toString());
     }
     return ResponseEntity.ok().body(json);
 
@@ -297,7 +297,7 @@ public class MovieController {
       jsonObject.put("message", "not found");
       logInfo.put("message", "not found");
     }
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
     return ResponseEntity.ok().body(jsonObject);
   }
 
@@ -354,9 +354,9 @@ public class MovieController {
 
     } catch (NullPointerException e) {
       logInfo.put("Exception", e.toString());
-      log.warning(logInfo.toJSONString());
+      log.warning(logInfo.toString());
     }
-    log.finest(logInfo.toJSONString());
+    log.finest(logInfo.toString());
 
     return movie;
 
