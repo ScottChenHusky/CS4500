@@ -236,6 +236,9 @@ public class CustomerController{
             String message = e.getMessage();
             processAccessException(response, message);
             switch (message) {
+                case "key":
+                    response.put("message", "invalid key-value update");
+                    break;
                 case "value":
                     response.put("message", "value of invalid type exists");
                     break;
@@ -316,6 +319,7 @@ public class CustomerController{
         }
         try {
             customerService.follow(ids[0], ids[1], ids[2]);
+            response.put("message", "follow succeeded");
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
@@ -333,6 +337,7 @@ public class CustomerController{
         }
         try {
             customerService.unFollow(ids[0], ids[1], ids[2]);
+            response.put("message", "un-follow succeeded");
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();

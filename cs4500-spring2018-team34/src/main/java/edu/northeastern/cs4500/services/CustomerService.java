@@ -112,8 +112,10 @@ public class CustomerService {
         List<Object[]> result = new ArrayList<>();
         if (id != null) {
             Customer customer = customerRepository.findById(id);
-            Boolean isOnline = CustomerService.SESSION.containsKey(id);
-            result.add(new Object[]{customer, isOnline});
+            if (customer != null) {
+                Boolean isOnline = CustomerService.SESSION.containsKey(id);
+                result.add(new Object[]{customer, isOnline});
+            }
         } else if (username != null) {
             List<Customer> customers = customerRepository.findByUsernameLike("%" + username + "%");
             for (Customer customer : customers) {
@@ -143,9 +145,15 @@ public class CustomerService {
                     case "privacyLevel":
                         customer.setPrivacyLevel(Integer.parseInt((String) each.getValue()));
                         break;
+                    default:
+                        throw new IllegalArgumentException("key");
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentException("value");
+                if (e.getMessage().equals("key")) {
+                    throw e;
+                } else {
+                    throw new IllegalArgumentException("value");
+                }
             }
         }
         customerRepository.save(customer);
@@ -190,7 +198,7 @@ public class CustomerService {
         List<CustomerFollowing> temp = customerFollowingRepository.findByCustomerToId(id);
         List<Integer> ids = new ArrayList<>();
         for (CustomerFollowing following : temp) {
-            ids.add(following.getCustomerToId());
+            ids.add(following.getCustomerFromId());
         }
         return customerRepository.findByIdIn(ids);
     }
