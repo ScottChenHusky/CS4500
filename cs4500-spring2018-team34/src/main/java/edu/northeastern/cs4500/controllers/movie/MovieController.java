@@ -68,11 +68,10 @@ public class MovieController {
     List<Movie> moviesCountry = movieRepository.findByCountryContaining(searchby);
     Map<String, JSONObject> map = new HashMap();
     JSONObject json = new JSONObject();
-    System.out.println("Search Movies: " + searchby);
     logInfo.put("Task", "MovieSearch");
     logInfo.put("SearchBy", searchby);
     JSONObject movieResult = new JSONObject();
-    if(movie.size() == 0){
+    if (movie.size() == 0) {
       movieResult = mainSearch(searchby);
     } else {
       movieResult = new JSONObject(movie.get(0).toMap());
@@ -88,6 +87,7 @@ public class MovieController {
   }
 
   private JSONObject apiConnector(int type, String searchBy) {
+    JSONObject logInfo = new JSONObject();
     String requestUrl = "";
     switch (type) {
       case 0:
@@ -133,51 +133,37 @@ public class MovieController {
       JSONParser jsonParser = new JSONParser();
       jsonObject = (JSONObject) jsonParser.parse(result);
     } catch (ParseException | IOException e) {
-      e.printStackTrace();
+      logInfo.put("Exception", e.toString());
     }
+    logInfo.put("Task", "ApiConnector");
+    logInfo.put("Type", type);
+    logInfo.put("SearchBy", searchBy);
+    log.finest(logInfo.toJSONString());
     return jsonObject;
   }
 
-  public JSONObject mainSearch(@RequestParam(name = "name") String searchby) {
+  public JSONObject mainSearch(String searchby) {
     JSONObject movieJSON = apiConnector(0, searchby);
     Movie m = tmdbParser(movieJSON);
     JSONObject finalR = new JSONObject();
     finalR.put("Results", m.toMap());
     return finalR;
   }
-//  public void parseFromOMDB(String input){
-//
-//
-//    Movie movie = new Movie()
-//            .withLanguage(source.get("Language").toString())
-//            .withDate((source.get("Released").toString()))
-//            .withDescription(source.get("Plot").toString())
-//            .withLevel(source.get("Rated").toString())
-//            .withName(source.get("Title").toString())
-//            .withScore(source.get("imdbRating").toString())
-//            .withTime(source.get("Runtime").toString())
-//            .withOmdbreference(source.get("imdbID").toString())
-//            .withRtreference("")
-//            .withTmdbreference("")
-//            .withDirector(source.get("Director").toString())
-//            .withActors(source.get("Actors").toString())
-//            .withCountry(source.get("Country").toString())
-//            .withAwards(source.get("Awards").toString())
-//            .withBoxOffice(source.get("BoxOffice").toString())
-//            .withPoster(source.get("Poster").toString());
-//
-//  }
+
 
   @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
   public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
+    JSONObject logInfo = new JSONObject();
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
     JSONObject json = new JSONObject();
     if (movie == null) {
+      logInfo.put("message", "not found");
       json.put("message", "not found");
     } else {
       Integer search = Integer.parseInt(searchId);
       List<MovieComment> comments = movieCommentRepository.findMovieCommentByMovieIdOrderByDate(search);
       json.put("message", "found");
+      logInfo.put("message", "found");
       json.put("movie", new JSONObject(movie.toMap()));
       JSONArray array = new JSONArray();
       for (MovieComment mc : comments) {
@@ -188,17 +174,22 @@ public class MovieController {
       json.put("comment", array);
 
     }
+    logInfo.put("Task", "getMovie");
+    logInfo.put("id", searchId);
+    log.finest(logInfo.toJSONString());
     return ResponseEntity.ok().body(json);
 
   }
 
   @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> addComment(@RequestBody JSONObject source) {
+    JSONObject logInfo = new JSONObject();
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
     JSONObject json = new JSONObject();
     if (movieCommentRepository.existsMovieCommentByCustomerIdAndMovieId(customerId, movieId)) {
       json.put("message", "exist");
+      logInfo.put("message", "exist");
       return ResponseEntity.ok().body(json);
     } else {
       String inputData = source.get("review").toString();
@@ -220,60 +211,76 @@ public class MovieController {
         );
         movieCommentRepository.save(movieComment);
         json.put("message", "success");
+        logInfo.put("message", "success");
       } else {
         json.put("message", "bad words");
+        logInfo.put("message", "bad words");
       }
 
     }
+    logInfo.put("Task", "addComment");
+    logInfo.put("CustomerId", customerId);
+    logInfo.put("MovieId", movieId);
 
-
+    log.finest(logInfo.toJSONString());
     return ResponseEntity.ok().body(json);
   }
 
 
   @RequestMapping(path = "/api/movie/deleteComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> deleteComment(@RequestBody JSONObject source) {
+    JSONObject logInfo = new JSONObject();
     Integer customerId = Integer.parseInt(source.get("customerId").toString());
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
     JSONObject json = new JSONObject();
     if (movieCommentRepository.existsMovieCommentByCustomerIdAndMovieId(customerId, movieId)) {
       movieCommentRepository.deleteMovieCommentByCustomerIdAndMovieId(customerId, movieId);
       json.put("message", "success");
-      return ResponseEntity.ok().body(json);
+      logInfo.put("message", "success");
     } else {
       json.put("message", "does not exist");
-      return ResponseEntity.ok().body(json);
+      logInfo.put("message", "does not exist");
     }
-
+    logInfo.put("Task", "deleteComment");
+    logInfo.put("CustomerId", customerId);
+    logInfo.put("MovieId", movieId);
+    log.finest(logInfo.toJSONString());
+    return ResponseEntity.ok().body(json);
   }
 
   @RequestMapping(path = "/api/movie/updateComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> updateComment(@RequestBody JSONObject source) {
+    JSONObject logInfo = new JSONObject();
+    logInfo.put("Task", "updateComment");
     JSONObject json = new JSONObject();
     try {
       Integer movieCommentId = Integer.parseInt(source.get("id").toString());
+      logInfo.put("MovieCommentId", movieCommentId);
       MovieComment movieComment = movieCommentRepository.getOne(movieCommentId);
       movieComment.setDate(new Date());
       movieComment.setReview(source.get("review").toString());
       movieComment.setScore(source.get("score").toString());
       movieCommentRepository.save(movieComment);
       json.put("message", "success");
-
+      logInfo.put("message", "success");
+      log.finest(logInfo.toJSONString());
     } catch (Exception e) {
       json.put("message", "failed");
-      json.put("error", e.toString());
-
+      logInfo.put("Exception", e.toString());
+      log.warning(logInfo.toJSONString());
     }
     return ResponseEntity.ok().body(json);
 
   }
 
-  //TODO get the list of tmdb request
-
   @RequestMapping(path = "/api/deleteMovie", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> deleteMovie(@RequestBody JSONObject source) {
+    JSONObject logInfo = new JSONObject();
+    logInfo.put("Task", "deleteMovie");
     Integer movieId = Integer.parseInt(source.get("movieId").toString());
-    Integer CustomerId = Integer.parseInt(source.get("loggedInUserId").toString());
+    Integer customerId = Integer.parseInt(source.get("loggedInUserId").toString());
+    logInfo.put("MovieId", movieId);
+    logInfo.put("CustomerId", customerId);
     JSONObject jsonObject = new JSONObject();
     if (movieRepository.existsById(movieId)) {
       movieRepository.deleteById(movieId);
@@ -281,37 +288,45 @@ public class MovieController {
       if (!movieRepository.existsById(movieId)
               && movieCommentRepository.countByMovieId(movieId) > 0) {
         jsonObject.put("message", "ok");
+        logInfo.put("message", "ok");
       } else {
         jsonObject.put("message", "failed");
+        logInfo.put("message", "failed");
       }
     } else {
       jsonObject.put("message", "not found");
+      logInfo.put("message", "not found");
     }
+    log.finest(logInfo.toJSONString());
     return ResponseEntity.ok().body(jsonObject);
   }
 
   public Movie tmdbParser(JSONObject source) {
+    JSONObject logInfo = new JSONObject();
+    logInfo.put("Task", "tmdbParser");
     Movie movie = new Movie();
     // convert the json from tmdb to list of tmdbid
     JSONArray array = (JSONArray) source.get("results");
 
     JSONObject temp = (JSONObject) array.get(0);
     String id = temp.get("id").toString();
+    logInfo.put("id", id);
     JSONObject tmdb = apiConnector(1, id);
 
     String imdbId = tmdb.get("imdb_id").toString();
+    logInfo.put("imdbId", imdbId);
     JSONObject omdb = apiConnector(2, imdbId);
 
     JSONObject trailer = apiConnector(3, id);
     JSONArray jsonArray = (JSONArray) trailer.get("results");
 
     List<String> trailers = new ArrayList<>();
-    for(Object o : jsonArray){
+    for (Object o : jsonArray) {
       JSONObject t = (JSONObject) o;
       trailers.add(t.get("key").toString());
     }
 
-    for(int i = 0; i < 3; i++){
+    for (int i = 0; i < 3; i++) {
       trailers.add("");
     }
     try {
@@ -333,13 +348,15 @@ public class MovieController {
               .withT1(trailers.get(0))
               .withT2(trailers.get(1))
               .withT3(trailers.get(2));
-      if(!movieRepository.existsByOmdbreference(imdbId)){
+      if (!movieRepository.existsByOmdbreference(imdbId)) {
         movieRepository.save(movie);
       }
 
-    } catch (NullPointerException ignored) {
-
+    } catch (NullPointerException e) {
+      logInfo.put("Exception", e.toString());
+      log.warning(logInfo.toJSONString());
     }
+    log.finest(logInfo.toJSONString());
 
     return movie;
 
