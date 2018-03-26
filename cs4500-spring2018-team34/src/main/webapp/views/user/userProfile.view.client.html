@@ -3,13 +3,11 @@
 		<div class="profile-container">
 			<img class="photo" src="../../assets/images/user-photo.png" alt="" />
 			<h1 class="name">
-				{{model.user.username}}
-				<a ng-if="!model.isOwner && !model.isFollowing">
-					<i ng-click="model.follow()" class="fa fa-heart-o"></i>
-				</a>
-				
-				<a ng-if="!model.isOwner && model.isFollowing">
-					<i id="unfollow" ng-click="model.unfollow()" class="fa fa-heart"></i>
+				{{model.user.username}} <a
+					ng-if="!model.isOwner && !model.isFollowing"> <i
+					ng-click="model.follow()" class="fa fa-heart-o"></i>
+				</a> <a ng-if="!model.isOwner && model.isFollowing"> <i
+					id="unfollow" ng-click="model.unfollow()" class="fa fa-heart"></i>
 				</a>
 			</h1>
 			<ul class="list-unstyled contact-list">
@@ -19,19 +17,25 @@
 					href="tel:{{model.user.phone}}">{{model.user.phone}}</a></li>
 			</ul>
 			<ul class="list-unstyled follow-list tabs">
-				<li class="following"><i class="material-icons">people</i>
-				<a href="#following">Following {{model.following.length}}</a></li>
+				<li class="following"><i class="material-icons">people</i> <a
+					href="#following">Following {{model.following.length}}</a></li>
 				<li class="follower"><i class="material-icons">people_outline</i>
-					<a href="#follower"><i aria-hidden="true"></i>Follower {{model.follower.length}}</a></li>
+					<a href="#follower"><i aria-hidden="true"></i>Follower
+						{{model.follower.length}}</a></li>
 			</ul>
 		</div>
 
-		<!--//profile-container-->
-
+		<!-- //profile-container -->
 		<ul class="option-menu">
-			<li class="block"><input type="checkbox" name="item" id="item1" />
-				<label for="item1"><i aria-hidden="true"></i> Dashboard </label>
-			</li>
+			<li class="block dashHome"><input type="checkbox" name="item"
+				id="item3" /> <label for="item3"><i aria-hidden="true"></i>
+					Dashboard </label>
+				<ul class="options tabs">
+					<li><a href="#dash1"><i aria-hidden="true"></i> User
+							Management </a></li>
+					<li><a href="#dash2"><i aria-hidden="true"></i> User
+							Management </a></li>
+				</ul></li>
 			<li class="block"><input type="checkbox" name="item" id="item1" />
 				<label for="item1"><i aria-hidden="true"></i> Manage My
 					Profile </label>
@@ -44,8 +48,7 @@
 
 			<li class="block"><input type="checkbox" name="item" id="item2" />
 				<label for="item2"><i aria-hidden="true"></i> My Movie Lists
-					<!-- <a
-					href="#tab8"><i class="glyphicon glyphicon-pencil"></i></a> --> </label>
+					<a href="#tab8"><i class="glyphicon glyphicon-pencil"></i></a> </label>
 				<ul class="options tabs">
 					<li><a href="#addlist"><i aria-hidden="true"></i><i
 							class="glyphicon glyphicon-plus"></i> Add New List </a></li>
@@ -58,9 +61,343 @@
 				</ul></li>
 		</ul>
 	</div>
-	<!--//side-wrapper-->
+	<!-- side-wrapper -->
 
 	<div class="main-wrapper">
+		<!-- START DASHBOARD SECTION -->
+
+		<!-- START USER MANAGEMENT -->
+		<section class="dash-section" id="dash1">
+			<!-- PAGE CONTENT WRAPPER -->
+			<div class="page-content-wrap">
+
+				<div class="row">
+					<div class="col-md-12">
+
+						<!-- START DEFAULT DATATABLE -->
+						<div class="panel panel-default">
+						<div class="panel-heading">
+							<h1 class="panel-title">User Management</h1>
+						</div>
+							<div class="panel-body">
+								<div class="table-responsive">
+									<table class="table datatable">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Name</th>
+												<th>Status</th>
+												<th>Email</th>
+												<th>Phone</th>
+												<th>Level</th>
+												<th>Last Login</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<!-- ID -->
+												<td>1</td>
+												<!-- Name -->
+												<td>Scott</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>scott@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>1</td>
+												<!-- Last Login -->
+												<td>2011/04/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>5</td>
+												<!-- Name -->
+												<td>Ranran</td>
+												<!-- Status -->
+												<td><span class="label label-danger">Offline</span></td>
+												<!-- Email -->
+												<td>ranran@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>1</td>
+												<!-- Last Login -->
+												<td>2018/01/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>7</td>
+												<!-- Name -->
+												<td>Ben</td>
+												<!-- Status -->
+												<td><span class="label label-danger">Offline</span></td>
+												<!-- Email -->
+												<td>ben@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>2</td>
+												<!-- Last Login -->
+												<td>2017/09/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>3</td>
+												<!-- Name -->
+												<td>Clare</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>clare@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>6</td>
+												<!-- Last Login -->
+												<td>2014/08/01</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>2</td>
+												<!-- Name -->
+												<td>Allen</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>allen@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>3</td>
+												<!-- Last Login -->
+												<td>2016/04/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>4</td>
+												<!-- Name -->
+												<td>Ran</td>
+												<!-- Status -->
+												<td><span class="label label-danger">Offline</span></td>
+												<!-- Email -->
+												<td>ran@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>2</td>
+												<!-- Last Login -->
+												<td>2001/01/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>9</td>
+												<!-- Name -->
+												<td>John</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>john@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>1</td>
+												<!-- Last Login -->
+												<td>2013/04/15</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>6</td>
+												<!-- Name -->
+												<td>Eva</td>
+												<!-- Status -->
+												<td><span class="label label-danger">Offline</span></td>
+												<!-- Email -->
+												<td>Eva@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>4</td>
+												<!-- Last Login -->
+												<td>2016/02/22</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>8</td>
+												<!-- Name -->
+												<td>Lynn</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>lynn@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>7</td>
+												<!-- Last Login -->
+												<td>2015/11/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>0</td>
+												<!-- Name -->
+												<td>Sam</td>
+												<!-- Status -->
+												<td><span class="label label-success">Online</span></td>
+												<!-- Email -->
+												<td>sam@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>6</td>
+												<!-- Last Login -->
+												<td>2012/07/25</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<!-- ID -->
+												<td>10</td>
+												<!-- Name -->
+												<td>Alex</td>
+												<!-- Status -->
+												<td><span class="label label-danger">Offline</span></td>
+												<!-- Email -->
+												<td>Alex@gmail.com</td>
+												<!-- Phone -->
+												<td>0001112233</td>
+												<!-- Level -->
+												<td>3</td>
+												<!-- Last Login -->
+												<td>2016/04/05</td>
+												<td>
+													<button
+														class="btn btn-default btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-pencil"></span>
+													</button>
+													<button
+														class="btn btn-danger btn-rounded btn-condensed btn-sm">
+														<span class="fa fa-times"></span>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- END USER MANAGEMENT -->
+
+		<!-- START USER STATUS -->
+		<section class="dash-section" id="dash2">
+			
+		</section>
+		<!-- END DASHBOARD SECTION -->
+
 		<!-- Movie Section Starts -->
 		<section class="movie-section" id="movie1">
 			<h2 class="section-title">
@@ -149,9 +486,7 @@
 				</ul>
 			</div>
 
-			<button
-				ng-click=""
-				type="submit" class="btn btn-primary btn-block">Submit</button>
+			<button ng-click="" type="submit" class="btn btn-primary btn-block">Submit</button>
 			<button class="btn btn-danger btn-block">Cancel</button>
 		</section>
 		<!-- Movie Section Ends -->
@@ -219,10 +554,8 @@
 					placeholder="verify new password" type="password" />
 			</div>
 
-			<button
-				ng-click=""
-				type="submit" class="btn btn-primary btn-block">Submit</button>
-			<button class="btn btn-danger btn-block" >Cancel</button>
+			<button ng-click="" type="submit" class="btn btn-primary btn-block">Submit</button>
+			<button class="btn btn-danger btn-block">Cancel</button>
 		</section>
 
 		<!-- Following Section Starts -->
@@ -235,11 +568,14 @@
 					<li ng-repeat="following in model.following">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{following.following}}"><img src="../../assets/img/head.png"></a>
+								<a href="#!/user/{{following.following}}"><img
+									src="../../assets/img/head.png"></a>
 							</dt>
 							<dd>
-								<a href="#!/user/{{following.following}}"><p class="tit">Name: {{following.user_name}}</p></a>
-								<a href="#!/user/{{following.following}}"><p class="tit">ID: {{following.following}}</p></a>
+								<a href="#!/user/{{following.following}}"><p class="tit">Name:
+										{{following.user_name}}</p></a> <a
+									href="#!/user/{{following.following}}"><p class="tit">ID:
+										{{following.following}}</p></a>
 							</dd>
 						</dl>
 					</li>
@@ -258,11 +594,13 @@
 					<li ng-repeat="follower in model.follower">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{follower.follower}}"><img src="../../assets/img/head.png"></a>
+								<a href="#!/user/{{follower.follower}}"><img
+									src="../../assets/img/head.png"></a>
 							</dt>
 							<dd>
-								<a href="#!/user/{{follower.follower}}"><p class="tit">Name: {{follower.user_name}}</p></a>
-								<a href="#!/user/{{follower.follower}}"><p class="tit">ID: {{follower.follower}}</p></a>
+								<a href="#!/user/{{follower.follower}}"><p class="tit">Name:
+										{{follower.user_name}}</p></a> <a href="#!/user/{{follower.follower}}"><p
+										class="tit">ID: {{follower.follower}}</p></a>
 							</dd>
 						</dl>
 					</li>
@@ -273,3 +611,7 @@
 	</div>
 	<!--//main-body-->
 </div>
+
+<script type="text/javascript" src="../../assets/plugins/plugins.js"></script>
+<script type="text/javascript" src="../../assets/plugins/actions.js"></script>
+<script type="text/javascript" src="j../../assets/plugins/datatables/jquery.dataTables.min.js"></script>

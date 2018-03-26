@@ -165,6 +165,7 @@
 		$(".action-section").hide();
 		$(".follower-section").hide();
 		$(".following-section").hide();
+		$(".dash-section").hide();
 		// $("ul.tabs li:first").addClass("cur").show(); //Activate first tab
 		// $(".movie-section:first").show(); //Show first tab content
 
@@ -178,20 +179,22 @@
 			$(".action-section").hide();
 			$(".follower-section").hide();
 			$(".following-section").hide();
+			$(".dash-section").hide();
 			var activeTab = $(this).find("a").attr("href");
 			$(activeTab).fadeIn();
 			return false;
 		});
 
-		// Show All Movie Sections
-		$("ul li.block").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(".movie-section").show();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-		});
+		// // Show All Movie Sections
+		// $("ul li.block").click(function() {
+		// $("ul.tabs li").removeClass("cur");
+		// $(".movie-section").show();
+		// $(".profile-section").hide();
+		// $(".action-section").hide();
+		// $(".follower-section").hide();
+		// $(".following-section").hide();
+		// $(".dashHome-section").hide();
+		// });
 
 		// Show Following Section
 		$("div ul li.following").click(function() {
@@ -199,6 +202,7 @@
 			$(".profile-section").hide();
 			$(".action-section").hide();
 			$(".follower-section").hide();
+			$(".dash-section").hide();
 		});
 
 		// Show Follower Section
@@ -207,6 +211,8 @@
 			$(".profile-section").hide();
 			$(".action-section").hide();
 			$(".following-section").hide();
+			$(".follower-section").show();
+			$(".dash-section").hide();
 		});
 
 		// Cancel Button
@@ -217,75 +223,18 @@
 			$(".action-section").hide();
 			$(".follower-section").hide();
 			$(".following-section").hide();
-		})
-
-		function initProfile() {
-			var url = '/api/user?id=' + vm.userId;
-			return $http.get(url, vm.userId).then(response);
-			function response(res) {
-				vm.user = res.data.result[0];
-			}
-		}
-		initProfile();
-
-		$(".profile-section").hide(); // Hide all content
-		$(".profile-section").hide();
-		$(".action-section").hide();
-		$(".follower-section").hide();
-		$(".following-section").hide();
-		// $("ul.tabs li:first").addClass("cur").show(); //Activate first tab
-		// $(".movie-section:first").show(); //Show first tab content
-
-		// On Click Event
-		// Show Movie Section
-		$("ul.tabs li").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(this).addClass("cur");
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-			var activeTab = $(this).find("a").attr("href");
-			$(activeTab).fadeIn();
-			return false;
+			$(".dash-section").hide();
 		});
 
-		// Show All Movie Sections
-		$("ul li.block").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(".movie-section").show();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-		});
-
-		// Show Following Section
-		$("div ul li.following").click(function() {
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-		});
-
-		// Show Follower Section
-		$("div ul li.follower").click(function() {
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".following-section").hide();
-		});
-
-		// Cancel Button
-		$("section button.btn-danger").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(".movie-section").show();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-		})
+		// Show Dashboard
+		// $("ul li.tabs").click(function() {
+		// $(".dashHome-section").show();
+		// $(".movie-section").hide();
+		// $(".profile-section").hide();
+		// $(".action-section").hide();
+		// $(".follower-section").hide();
+		// $(".following-section").hide();
+		// })
 
 		function initProfile() {
 
@@ -324,12 +273,9 @@
 						}
 					}
 
-					//
-
 				}
 
 			}
-
 		}
 		initProfile();
 
@@ -376,7 +322,7 @@
 		var vm = this;
 
 		vm.term = $routeParams['term'];
-		
+
 		// Capacity of movie/user result lists
 		vm.movieCap = 9;
 		vm.movieCapTab = 19;
@@ -400,7 +346,7 @@
 
 			vm.movies = [];
 			vm.users = [];
-			
+
 			// number of all results
 			vm.sum = 0;
 
@@ -456,7 +402,7 @@
 								}
 							});
 		}
-		
+
 		function moreMovies() {
 			vm.movieCap = vm.movieCap + 10;
 		}
