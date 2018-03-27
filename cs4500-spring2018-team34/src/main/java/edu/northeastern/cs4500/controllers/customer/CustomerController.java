@@ -25,14 +25,22 @@ public class CustomerController{
     }
 
     private Integer[] extractExecutorIdAndTargetId(JSONObject response, JSONObject request) {
-        String executor = request.getOrDefault("loggedInUserId", "").toString();
-        String target = request.getOrDefault("userId", "").toString();
-        if (executor.equals("") || target.equals("")) {
+        Object executor = request.getOrDefault("loggedInUserId", "");
+        Object target = request.getOrDefault("userId", "");
+        if (executor == null || target == null) {
+            response.put("message", "input value cannot be undefined");
+            return null;
+        }
+        String executorStr = executor.toString();
+        String targetStr = target.toString();
+        if (executorStr.equals("") || targetStr.equals("")) {
+            System.out.println(executorStr);
+            System.out.println(targetStr);
             response.put("message", "request not complete");
             return null;
         }
-        Integer executorId = myParseInt(executor);
-        Integer targetId = myParseInt(target);
+        Integer executorId = myParseInt(executorStr);
+        Integer targetId = myParseInt(targetStr);
         if (executorId == null || targetId == null) {
             response.put("message", "incorrect id format");
             return null;
@@ -75,14 +83,20 @@ public class CustomerController{
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> login(@RequestBody JSONObject request) {
         JSONObject response = new JSONObject();
-        String username = request.getOrDefault("username", "").toString();
-        String password = request.getOrDefault("password", "").toString();
-        if (username.equals("") || password.equals("")) {
+        Object username = request.getOrDefault("username", "");
+        Object password = request.getOrDefault("password", "");
+        if (username == null || password == null) {
+            response.put("message", "input value cannot be undefined");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String usernameStr = username.toString();
+        String passwordStr = password.toString();
+        if (usernameStr.equals("") || passwordStr.equals("")) {
             response.put("message", "login request not complete");
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            Integer result = customerService.login(username, password);
+            Integer result = customerService.login(usernameStr, passwordStr);
             response.put("id", result);
             response.put("message", "login succeeded");
             return ResponseEntity.ok().body(response);
@@ -124,17 +138,26 @@ public class CustomerController{
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> register(@RequestBody JSONObject request) {
         JSONObject response = new JSONObject();
-        String username = request.getOrDefault("username", "").toString();
-        String password = request.getOrDefault("password", "").toString();
-        String email = request.getOrDefault("email", "").toString();
-        String phone = request.getOrDefault("phone", "").toString(); // optional
-        String code = request.getOrDefault("adminCode", "").toString(); // admin
-        if (username.equals("") || password.equals("") || email.equals("")) {
+        Object username = request.getOrDefault("username", "");
+        Object password = request.getOrDefault("password", "");
+        Object email = request.getOrDefault("email", "");
+        Object phone = request.getOrDefault("phone", "");
+        Object code = request.getOrDefault("adminCode", "");
+        if (username == null || password == null || email == null || phone == null || code == null) {
+            response.put("message", "input value cannot be undefined");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String usernameStr = username.toString();
+        String passwordStr = password.toString();
+        String emailStr = email.toString();
+        String phoneStr = phone.toString(); // optional
+        String codeStr = code.toString(); // admin
+        if (usernameStr.equals("") || passwordStr.equals("") || emailStr.equals("")) {
             response.put("message", "registration request not complete");
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            Integer result = customerService.register(username, password, email, phone, code);
+            Integer result = customerService.register(usernameStr, passwordStr, emailStr, phoneStr, codeStr);
             response.put("id", result);
             response.put("message", "registration succeeded");
             return ResponseEntity.ok().body(response);
@@ -160,14 +183,23 @@ public class CustomerController{
     public ResponseEntity<JSONObject> changePassword(@RequestBody JSONObject request) {
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(response, request);
-        String oldPassword = request.getOrDefault("oldPassword", "").toString();
-        String newPassword = request.getOrDefault("newPassword", "").toString();
-        if (ids == null || oldPassword.equals("") || newPassword.equals("")) {
+        if (ids == null) {
+            return ResponseEntity.badRequest().body(response);
+        }
+        Object oldPassword = request.getOrDefault("oldPassword", "");
+        Object newPassword = request.getOrDefault("newPassword", "");
+        if (oldPassword == null || newPassword == null) {
+            response.put("message", "input value cannot be undefined");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String oldPasswordStr = oldPassword.toString();
+        String newPasswordStr = newPassword.toString();
+        if (oldPasswordStr.equals("") || newPasswordStr.equals("")) {
             response.put("message", "password change request not complete");
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            customerService.changePassword(ids[0], ids[1], oldPassword, newPassword);
+            customerService.changePassword(ids[0], ids[1], oldPasswordStr, newPasswordStr);
         } catch (Exception e) {
             String message = e.getMessage();
             processAccessException(response, message);
@@ -347,14 +379,21 @@ public class CustomerController{
     }
 
     private Integer[] extractExecutorIdAndFromIdAndToId(JSONObject response, JSONObject request) {
-        String executor = request.getOrDefault("loggedInUserId", "").toString();
-        String fromStr = request.getOrDefault("from", "").toString();
-        String toStr = request.getOrDefault("to", "").toString();
-        if (executor.equals("") || fromStr.equals("") || toStr.equals("")) {
+        Object executor = request.getOrDefault("loggedInUserId", "");
+        Object from = request.getOrDefault("from", "");
+        Object to = request.getOrDefault("to", "");
+        if (executor == null || from == null || to == null) {
+            response.put("message", "input value cannot be undefined");
+            return null;
+        }
+        String executorStr = executor.toString();
+        String fromStr = from.toString();
+        String toStr = to.toString();
+        if (executorStr.equals("") || fromStr.equals("") || toStr.equals("")) {
             response.put("message", "request not complete");
             return null;
         }
-        Integer executorId = myParseInt(executor);
+        Integer executorId = myParseInt(executorStr);
         Integer fromId = myParseInt(fromStr);
         Integer toId = myParseInt(toStr);
         if (executorId == null || fromId == null || toId == null) {
