@@ -1,7 +1,6 @@
 package edu.northeastern.cs4500.controllers.movie;// Created by xuanyuli on 2/15/18.
 
 
-import edu.northeastern.cs4500.repositories.CustomerRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,10 +21,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
+
+import edu.northeastern.cs4500.repositories.CustomerRepository;
 
 @RestController
 public class MovieController {
@@ -41,20 +40,16 @@ public class MovieController {
   @Autowired
   private MovieCommentRepository movieCommentRepository;
 
-  public Map<String, JSONObject> createMap(String type, List input, String who) {
-    Map<String, JSONObject> map = new HashMap();
-    for (int i = 0; i < input.size(); i++) {
-      if (who.equals("Movie")) {
-        Movie m = (Movie) input.get(i);
-        map.put(type + i, new JSONObject(m.toMap()));
-      } else {
-        MovieComment m = (MovieComment) input.get(i);
-        map.put(type + i, new JSONObject(m.toMap()));
+  private JSONArray createMap(List input) {
+    JSONArray result = new JSONArray();
+    for (Object o : input) {
+      Movie m = (Movie)o;
+      if(m.getRtreference() != "Banned"){
+        result.add(new JSONObject(m.toMap()));
       }
 
     }
-
-    return map;
+    return result;
   }
 
   @RequestMapping(path = "/api/movie/search", method = RequestMethod.GET)
@@ -65,7 +60,6 @@ public class MovieController {
     List<Movie> moviesLanguage = movieRepository.findByLanguageContaining(searchby);
     List<Movie> moviesActors = movieRepository.findByActorsContaining(searchby);
     List<Movie> moviesCountry = movieRepository.findByCountryContaining(searchby);
-    Map<String, JSONObject> map = new HashMap();
     JSONObject json = new JSONObject();
     logInfo.put("Task", "MovieSearch");
     logInfo.put("SearchBy", searchby);
@@ -76,11 +70,10 @@ public class MovieController {
       movieResult = new JSONObject(movie.get(0).toMap());
     }
     json.put("Movie", movieResult);
-    map.putAll(createMap("Name", moviesName, "Movie"));
-    map.putAll(createMap("Actor", moviesActors, "Movie"));
-    map.putAll(createMap("Language", moviesLanguage, "Movie"));
-    map.putAll(createMap("Country", moviesCountry, "Movie"));
-    json.putAll(map);
+    json.put("Name", createMap(moviesName));
+    json.put("Actor", createMap(moviesActors));
+    json.put("Language", createMap(moviesLanguage));
+    json.put("Country", createMap(moviesCountry));
     log.finest(logInfo.toString());
     return ResponseEntity.ok().body(json);
   }
@@ -281,20 +274,15 @@ public class MovieController {
     logInfo.put("MovieId", movieId);
     logInfo.put("CustomerId", customerId);
     JSONObject jsonObject = new JSONObject();
+    Movie movie = movieRepository.findById(movieId);
     if (movieRepository.existsById(movieId)) {
-      movieRepository.deleteById(movieId);
-      movieCommentRepository.deleteByMovieId(movieId);
-      if (!movieRepository.existsById(movieId)
-              && movieCommentRepository.countByMovieId(movieId) > 0) {
-        jsonObject.put("message", "ok");
-        logInfo.put("message", "ok");
-      } else {
+      movie.setRtreference("Banned");
+      movieRepository.save(movie);
+      jsonObject.put("message", "ok");
+      logInfo.put("message", "ok");
+    } else {
         jsonObject.put("message", "failed");
         logInfo.put("message", "failed");
-      }
-    } else {
-      jsonObject.put("message", "not found");
-      logInfo.put("message", "not found");
     }
     log.finest(logInfo.toString());
     return ResponseEntity.ok().body(jsonObject);
@@ -338,6 +326,7 @@ public class MovieController {
               .withOmdbreference(imdbId)
               .withLevel(omdb.get("Rated").toString())
               .withTmdbreference("")
+              .withRtreference("")
               .withDirector(omdb.get("Director").toString())
               .withActors(omdb.get("Actors").toString())
               .withCountry(omdb.get("Country").toString())
