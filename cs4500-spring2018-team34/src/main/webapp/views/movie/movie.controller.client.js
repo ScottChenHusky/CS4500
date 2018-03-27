@@ -6,6 +6,7 @@
 		var vm = this;
 		vm.movieId = $routeParams.mid;
 		vm.userId = sessionStorage.getItem("currentUserId");
+		vm.trailerUrl = "";
 
 		vm.initMovie = initMovie;
 		// post review
@@ -24,6 +25,9 @@
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
+				vm.trailerId = res.data.movie.t1;
+				console.log(vm.trailerId);
+				vm.trailerUrl = "https://www.youtube.com/embed/" + vm.trailerId;
 				// give a list of actors
 				var string = vm.movie.actors;
 				if (string != undefined || string != null) {
@@ -50,13 +54,10 @@
 		vm.rate = null;
 		function giveRate(num) {
 			vm.rate = num;
-			console.log("giveRate: " + vm.rate);
 		}
 		function review(review) {
 
-			console.log(vm.rate);
 			if (vm.rate == null || vm.rate == undefined) {
-				console.log("here");
 				vm.reviewError = "Please give a rate."
 			}
 			if (review == null || review == undefined) {

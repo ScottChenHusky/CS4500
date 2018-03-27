@@ -445,6 +445,10 @@
 	font-size: 20px;
 }
 
+.main-wrapper .dash-section .panel .panel-heading .panel-title span{
+	float: right;
+}
+
 .main-wrapper .dash-section .panel.panel-default {
 	border-top-color: #F5F5F5;
 	border-top-width: 1px;

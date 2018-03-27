@@ -28,9 +28,12 @@ body {
 			</div>
 		</div>
 
+		
 		<div class="m_right">
-			<iframe src="https://www.youtube.com/embed/ZRMvVoL_NNk?showinfo=0"
+			<iframe width="420" height="315"
+				ng-src="{{model.trailerUrl}}"
 				frameborder="0" allowfullscreen></iframe>
+
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -112,7 +115,9 @@ body {
 
 	<div class="mo_info fl comment_line"
 		ng-repeat="comment in model.comments">
-		<div class="date">{{comment.date}} <label>{{comment.score}}</label></div>
+		<div class="date">
+			{{comment.date}} <label>{{comment.score}}</label>
+		</div>
 		<p class="wrap">{{comment.review}}</p>
 		<img src="assets/img/s_img.png"><a href="">{{comment.username}}</a>
 
@@ -125,6 +130,8 @@ body {
 		<a href="https://www.amctheatres.com/">AMC</a>
 	</div>
 </div>
+
+{{model.movie}}
 
 <script type="text/javascript" src="../../assets/js/jquery-carousel.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper.min.js"></script>

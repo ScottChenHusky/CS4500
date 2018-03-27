@@ -1,4 +1,4 @@
-
+{{model.movies}}
 <style type="text/css">
 .m-tab-bd li {
 	width: 100%;
@@ -26,24 +26,40 @@
 				<div class="list-tit">Movies</div>
 				<div class="list-ul"></div>
 				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
+				<ul class="clearfix">
+					<li>
+						<dl class="list-ul clearfix">
+							<dt>
+								<a href="#!/movie/{{movie.id}}"><img src="{{model.exactMovie.poster}}"></a>
+							</dt>
+							<dd>
+								<a href="#!/movie/{{movie.id}}">
+									<p align="left" class="tit">{{model.exactMovie.name}}</p>
+									<p align="left" class="keywords">{{movie.exactMovie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{model.exactMovie.score}}</p>
+								</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
 				<ul class="clearfix" ng-repeat="movie in model.movies">
-					<li ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
+					<li>
 						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
 							<dt>
 								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
 								<a href="#!/movie/{{movie.id}}">
-                                    <p align="left" class="tit">{{movie.name}}</p>
-                                    <p align="left" class="keywords">{{movie.actors}}</p>
-                                    <button ng-show="model.currentUserLevel == '0'"
-                                            style="float: right"
-                                            class="btn btn-danger"
-                                            ng-click="model.deleteMovie(movie.id)">
-                                        Delete Movie
-                                    </button>
-                                    <p align="left" class="rate">{{movie.score}}</p>
-                                </a>
+									<p align="left" class="tit">{{movie.name}}</p>
+									<p align="left" class="keywords">{{movie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{movie.score}}</p>
+								</a>
 							</dd>
 						</dl>
 					</li>
@@ -61,7 +77,7 @@
 							<dt>
 								<a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a>
 							</dt>
-<!-- =======
+							<!-- =======
 				<ul class="list-ul clearfix">
 					<li>
 						<dl class="clearfix" ng-repeat="user in model.users">
@@ -73,16 +89,11 @@
 >>>>>>> master -->
 							<dd>
 								<a href="#!/user/{{user.id}}">
-                                    <p class="tit">
-                                        {{user.username}}
-                                    </p>
-                                </a>
-                                <button ng-show="model.currentUserLevel == '0'"
-                                        style="float: right"
-                                        class="btn btn-danger"
-                                        ng-click="model.deleteUser(user.id)">
-                                    Delete User
-                                </button>
+									<p class="tit">{{user.username}}</p>
+								</a>
+								<button ng-show="model.currentUserLevel == '0'"
+									style="float: right" class="btn btn-danger"
+									ng-click="model.deleteUser(user.id)">Delete User</button>
 								<!-- <a href="javascript:;" class="edit-btn">Edit</a>
 								<a href="javascript:;" class="delete-btn">Delete</a> -->
 							</dd>
@@ -102,7 +113,8 @@
 				<div class="list-ul"></div>
 				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
 				<ul class="clearfix" ng-repeat="movie in model.movies">
-					<li ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
+					<li
+						ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
 						<dl class="list-ul clearfix">
 							<dt>
 								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
