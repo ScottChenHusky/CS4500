@@ -3,6 +3,7 @@ body {
 	background: #f7f7f7;
 }
 </style>
+<link rel="stylesheet" href="assets/css/swiper.min.css">
 <div class="content">
 	<div class="dy_main">
 		<div class="name">
@@ -28,129 +29,167 @@ body {
 		</div>
 
 		<div class="m_right">
-			<!-- <div class="tag">
-				<a href="#overview"><span>Overview</span></a> <span>Movie
-					Time&Tickets</span> <span>Reviews</span>
-			</div> -->
-			<div>
-				<div class="vedio">
-					<img src="../assets/img/vedio_img.png"> <span>Trailer
-						1</span>
-				</div>
-				<ul class="s_vimg">
-					<li><img src="assets/img/s_vimg.png"><img
-						src="assets/img/act_top.png" class="act_img"></li>
-					<li class="ml30"><img src="assets/img/s_vimg.png"><img
-						src="assets/img/act_top.png" class="act_img"></li>
-					<li class="ml30"><img src="assets/img/s_vimg.png"><img
-						src="assets/img/act_top.png" class="act_img"></li>
-				</ul>
-			</div>
-
+			<iframe src="https://www.youtube.com/embed/ZRMvVoL_NNk?showinfo=0"
+				frameborder="0" allowfullscreen></iframe>
 		</div>
 		<div class="clear"></div>
 	</div>
-	<div class="dy_main">
-		<div class="title" id="overview">Description</div>
-		<p>{{model.movie.description}}</p>
+</div>
+<div class="dy_main">
+	<div class="title" id="overview">Description</div>
+	<p>{{model.movie.description}}</p>
+</div>
+<div class="dy_main">
+	<div class="title">CAST+CREW</div>
+	<div class="slide">
+		<a href="" class="slide_left"><img src="assets/img/slide_left.png"></a>
+		<a href="" class="slide_right"><img
+			src="assets/img/slide_right.png"></a>
+		<ul class="slide_ul">
+			<li ng-repeat="actor in model.actors track by $index"><img
+				src="assets/img/slide_img1.png"><span>{{actor}}</span></li>
+		</ul>
 	</div>
-	<div class="dy_main">
-		<div class="title">CAST+CREW</div>
-		<div class="slide">
-			<a href="" class="slide_left"><img
-				src="assets/img/slide_left.png"></a> <a href=""
-				class="slide_right"><img src="assets/img/slide_right.png"></a>
-			<ul class="slide_ul">
-				<li ng-repeat="actor in model.actors track by $index"><img
-					src="assets/img/slide_img1.png"><span>{{actor}}</span></li>
-				<!-- <li><img src="assets/img/slide_img1.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img2.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img1.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img2.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img1.png"><span>Ryan
-						Gosling</span></li>
-				<li><img src="assets/img/slide_img2.png"><span>Ryan
-						Gosling</span></li> -->
-			</ul>
-		</div>
-	</div>
-	<div class="container dy_main">
-		<div class="title">Post Your Review</div>
-		<div class="row">
-			<div class="col-md-12 col-sm-12">
-				<!-- Reviews FORM HERE -->
-				<div class="fadeInUp">
-					<form id="review-form">
-						<div class="col-md-12 col-sm-12 botn">
-							<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
-						</div>
-						<div class="col-md-4 col-sm-4">
-							<input type="number" class="form-control" name="rate"
-								placeholder="Rate" min="0" max="5" ng-model="rating">
-						</div>
-						<!-- <div class="col-md-4 col-sm-4">
-							<input type="text" class="form-control" name="summary"
-								placeholder="Summary" ng-model="summary">
-						</div> -->
-
-						<div class="col-md-12 col-sm-12">
-							<textarea class="form-control" rows="5" name="reviews"
-								placeholder="Reviews" ng-model="review"></textarea>
-						</div>
-						<button id="submit" type="button" class="post" name="submit"
-							ng-click="model.review(rating, review)">submit</button>
-						<!-- <div class="col-md-offset-9 col-md-3 col-sm-offset-3 col-sm-6">
-							<button id="submit" type="button" class="post" name="submit"
-								ng-click="model.review(rating, review)">submit</button> -->
-				</div>
-				</form>
-			</div>
-		</div>
-		<div class="dy_main">
-			<!-- <div class="title">Movie Reviews</div>
-				<div class="pj">
-					<span>Post Your Review</span>
-					<div ng-if="model.error" class="alert alert-danger">
-						{{model.error}}</div>
+</div>
+<!-- <div class="container dy_main">
+	<div class="title">Post Your Review</div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			Reviews FORM HERE
+			<div class="fadeInUp">
+				<form id="review-form">
+					<div class="col-md-12 col-sm-12 botn">
+						<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
+					</div>
 					<div class="col-md-4 col-sm-4">
 						<input type="number" class="form-control" name="rate"
 							placeholder="Rate" min="0" max="5" ng-model="rating">
 					</div>
+					<div class="col-md-4 col-sm-4">
+							<input type="text" class="form-control" name="summary"
+								placeholder="Summary" ng-model="summary">
+						</div>
 
-					<div class="star">
-						<img src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star_act.png"> <img
-							src="assets/img/star.png"> <label>Rate</label>
+					<div class="col-md-12 col-sm-12">
+						<textarea class="form-control" rows="5" name="reviews"
+							placeholder="Reviews" ng-model="review"></textarea>
 					</div>
-					<textarea class="textarea"></textarea>
-					<button type="button" class="post">Post</button>
-				</div> -->
-
-			<div class="mo_info fl comment_line"
-				ng-repeat="comment in model.comments">
-				<div class="date">{{comment.date}}</div>
-				<p class="wrap">{{comment.review}}</p>
-				<!-- <a href="" class="mo_link">>Full Review</a> -->
-				<img src="assets/img/s_img.png"><a href="">{{comment.username}}</a>
+					<button id="submit" type="button" class="post" name="submit"
+						ng-click="model.review(rating, review)">submit</button>
+					<div class="col-md-offset-9 col-md-3 col-sm-offset-3 col-sm-6">
+							<button id="submit" type="button" class="post" name="submit"
+								ng-click="model.review(rating, review)">submit</button>
 			</div>
-			<!-- <div class="lr fl"></div> -->
-			<div class="clear"></div>
+			</form>
 		</div>
-		<div class="dy_main" style="margin-bottom: 25px;">
-			<div class="title">Movie Time&Tickets</div>
-			<div class="link">
-				<a href="https://www.amctheatres.com/">AMC</a>
-			</div>
+	</div> -->
+<div class="dy_main">
+	<div class="title">Movie Reviews</div>
+	<div class="pj">
+		<div class="col-md-12 col-sm-12 botn">
+			<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
 		</div>
+		<span>Add Your Review</span>
+		<div class="xzw_starBox">
+			<ul class="star stars">
+				<li><a ng-click="model.giveRate(1)" href="javascript:void(0)"
+					title="1" class="one-star">1</a></li>
+				<li><a ng-click="model.giveRate(2)" href="javascript:void(0)"
+					title="2" class="two-stars">2</a></li>
+				<li><a ng-click="model.giveRate(3)" href="javascript:void(0)"
+					title="3" class="three-stars">3</a></li>
+				<li><a ng-click="model.giveRate(4)" href="javascript:void(0)"
+					title="4" class="four-stars">4</a></li>
+				<li><a ng-click="model.giveRate(5)" href="javascript:void(0)"
+					title="5" class="five-stars">5</a></li>
+			</ul>
+			<div class="current-rating showb"></div>
+		</div>
+		<textarea ng-model="review" class="textarea"></textarea>
+		<button ng-click="model.review(review)" type="button" class="post">Post</button>
 	</div>
+
+	<div class="mo_info fl comment_line"
+		ng-repeat="comment in model.comments">
+		<div class="date">{{comment.date}} <label>{{comment.score}}</label></div>
+		<p class="wrap">{{comment.review}}</p>
+		<img src="assets/img/s_img.png"><a href="">{{comment.username}}</a>
+
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="dy_main" style="margin-bottom: 25px;">
+	<div class="title">Movie Time&Tickets</div>
+	<div class="link">
+		<a href="https://www.amctheatres.com/">AMC</a>
+	</div>
+</div>
+
+<script type="text/javascript" src="../../assets/js/jquery-carousel.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper.min.js"></script>
+<script type="text/javascript">
+	$(".slide").thumbnailImg({
+		small_elem : ".small_list",
+		left_btn : ".slide_left",
+		right_btn : ".slide_right"
+	});
+	var viewSwiper, previewSwiper;
+	$(document).ready(function() {
+		var stepW = 30;
+		var stars = $(".stars > li");
+		$(".showb").css("width", 0);
+		stars.each(function(i) {
+			$(stars[i]).click(function(e) {
+				var n = i + 1;
+				$(".showb").css({
+					"width" : stepW * n
+				});
+				$(this).find('a').blur();
+				return stopDefault(e);
+				return descriptionTemp;
+			});
+		});
+
+		viewSwiper = new Swiper('.view .swiper-container', {
+			// autoplay : 3000,
+			loop : true,
+			onSlideChangeStart : function() {
+				updateNavPosition()
+			}
+		});
+
+		previewSwiper = new Swiper('.preview .swiper-container', {
+			visibilityFullFit : true,
+			slidesPerView : 'auto',
+			onlyExternal : true,
+			onSlideClick : function() {
+				viewSwiper.swipeTo(previewSwiper.clickedSlideIndex)
+			}
+
+		});
+	});
+
+	function updateNavPosition() {
+		$('.preview .active-nav').removeClass('active-nav')
+		var activeNav = $('.preview .swiper-slide').eq(
+				viewSwiper.activeIndex - 1).addClass('active-nav')
+		if (!activeNav.hasClass('swiper-slide-visible')) {
+			if (activeNav.index() > previewSwiper.activeIndex) {
+				var thumbsPerNav = Math.floor(previewSwiper.width
+						/ activeNav.width()) - 1
+				previewSwiper.swipeTo(activeNav.index() - thumbsPerNav)
+			} else {
+				previewSwiper.swipeTo(activeNav.index())
+			}
+		}
+
+	}
+
+	function stopDefault(e) {
+		if (e && e.preventDefault)
+			e.preventDefault();
+		else
+			window.event.returnValue = false;
+		return false;
+	};
+</script>

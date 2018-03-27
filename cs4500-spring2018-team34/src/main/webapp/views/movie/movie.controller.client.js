@@ -12,6 +12,8 @@
 		vm.review = review;
 		// get the user info for each comment
 		vm.getUserForComment = getUserForComment;
+		// get rate from stars
+		vm.giveRate = giveRate;
 
 		vm.comments = [];
 		vm.actors = [];
@@ -25,11 +27,11 @@
 				// give a list of actors
 				var string = vm.movie.actors;
 				if (string != undefined || string != null) {
-					for (var i=0; i<string.length;i++) {
+					for (var i = 0; i < string.length; i++) {
 						var j = string.indexOf(",");
-						if(j != -1) {
+						if (j != -1) {
 							vm.actors.push(string.slice(0, j));
-							string = string.slice(j+2, string.length);
+							string = string.slice(j + 2, string.length);
 						} else {
 							vm.actors.push(string);
 							return;
@@ -43,29 +45,37 @@
 		}
 		initMovie();
 		getUserForComment(vm.userId);
-		
+
 		// post review
-		function review(rating, review) {
-			console.log(rating);
+		vm.rate = null;
+		function giveRate(num) {
+			vm.rate = num;
+			console.log("giveRate: " + vm.rate);
+		}
+		function review(review) {
+
+			console.log(vm.rate);
+			if (vm.rate == null || vm.rate == undefined) {
+				console.log("here");
+				vm.reviewError = "Please give a rate."
+			}
 			if (review == null || review == undefined) {
 				vm.reviewError = "Please give some comments."
-			} 
-			if (rating == null || rating == undefined) {
-				vm.reviewError = "Please give a rate."
-			}else {
+			} else {
 				var rR = {
 					movieId : vm.movieId,
 					customerId : vm.userId,
-					score : "" + rating + "",
+					score : "" + vm.rate + "",
 					review : review
 				};
 				var url = '/api/movie/addComment';
 				var data = JSON.stringify(rR);
 				$http.post(url, data).then(function(response) {
 					if (response.data.message === "exist") {
-						vm.error = "You have reviewed this movie!";
+						vm.reviewError = "You have reviewed this movie!";
 					} else {
 						initMovie();
+						window.location.reload();
 					}
 				});
 			}
@@ -80,7 +90,5 @@
 			}
 			vm.username = vm.user.username;
 		}
-		
-		
 	}
 })();

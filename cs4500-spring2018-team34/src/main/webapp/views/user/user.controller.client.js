@@ -201,6 +201,9 @@
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
+		// For Admin
+		vm.deleteUser = deleteUser;
+		vm.deleteMovie = deleteMovie;
 
 		function updatePassword(old, new1, new2) {
 			if (!old) {
@@ -236,6 +239,45 @@
 			}
 		}
 		
+		function deleteMovie(movieId) {
+            var url = "/api/deleteMovie";
+            var movie = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                movieId: movieId
+            };
+
+            $http.post(url, movie)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+        }
+		
+		function deleteUser(userId) {
+
+		    var url = "/api/deleteUser";
+            var user = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                userId: userId
+            };
+
+            $http.post(url, user)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+
+        }
 		
 		$(".profile-section").hide(); // Hide all content
 		$(".profile-section").hide();
@@ -282,14 +324,15 @@
 		});
 
 		// Cancel Button
-		$("section button.btn-danger").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(".movie-section").show();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-			$(".dash-section").hide();
+		$("section button.cancel").click(function() {
+			window.location.reload();
+//			$("ul.tabs li").removeClass("cur");
+//			$(".movie-section").show();
+//			$(".profile-section").hide();
+//			$(".action-section").hide();
+//			$(".follower-section").hide();
+//			$(".following-section").hide();
+//			$(".dash-section").hide();
 		});
 
 		function initProfile() {
