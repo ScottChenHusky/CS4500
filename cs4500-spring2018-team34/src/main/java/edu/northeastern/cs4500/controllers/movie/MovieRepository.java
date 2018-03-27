@@ -23,6 +23,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
   boolean existsByOmdbreference(String omdbreference);
 
+
   long count();
 
   @Transactional
