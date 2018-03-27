@@ -2,11 +2,11 @@
 	angular.module('webapp').controller('movieDetailsController',
 			movieDetailsController);
 
-	function movieDetailsController($http, $routeParams, $scope) {
+	function movieDetailsController($sce, $http, $routeParams, $scope) {
 		var vm = this;
 		vm.movieId = $routeParams.mid;
 		vm.userId = sessionStorage.getItem("currentUserId");
-		vm.trailerUrl = "";
+		vm.trailerId = "";
 
 		vm.initMovie = initMovie;
 		// post review
@@ -15,10 +15,18 @@
 		vm.getUserForComment = getUserForComment;
 		// get rate from stars
 		vm.giveRate = giveRate;
+		
+		// get trail url
+		vm.getUrl = getUrl;
 
 		vm.comments = [];
 		vm.actors = [];
 
+		function getUrl() {
+            var url = "https://www.youtube.com/embed/" + vm.trailerId;
+            return $sce.trustAsResourceUrl(url);
+        }
+		
 		function initMovie() {
 			var url = '/api/movie/get?id=' + vm.movieId;
 			return $http.get(url, vm.movieId).then(response, error);
@@ -26,8 +34,6 @@
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
 				vm.trailerId = res.data.movie.t1;
-				console.log(vm.trailerId);
-				vm.trailerUrl = "https://www.youtube.com/embed/" + vm.trailerId;
 				// give a list of actors
 				var string = vm.movie.actors;
 				if (string != undefined || string != null) {

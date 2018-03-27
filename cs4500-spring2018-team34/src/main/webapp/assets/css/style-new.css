@@ -904,7 +904,8 @@ star {
 
 .xzw_starBox {
 	position: relative;
-	width: 150px;
+	heigh: 40px;
+	width: 100%;
 }
 
 .star li a:hover {

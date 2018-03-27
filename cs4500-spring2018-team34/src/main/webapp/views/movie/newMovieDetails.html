@@ -31,7 +31,7 @@ body {
 		
 		<div class="m_right">
 			<iframe width="420" height="315"
-				ng-src="{{model.trailerUrl}}"
+				ng-src="{{model.getUrl()}}"
 				frameborder="0" allowfullscreen></iframe>
 
 		</div>
@@ -54,38 +54,6 @@ body {
 		</ul>
 	</div>
 </div>
-<!-- <div class="container dy_main">
-	<div class="title">Post Your Review</div>
-	<div class="row">
-		<div class="col-md-12 col-sm-12">
-			Reviews FORM HERE
-			<div class="fadeInUp">
-				<form id="review-form">
-					<div class="col-md-12 col-sm-12 botn">
-						<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
-					</div>
-					<div class="col-md-4 col-sm-4">
-						<input type="number" class="form-control" name="rate"
-							placeholder="Rate" min="0" max="5" ng-model="rating">
-					</div>
-					<div class="col-md-4 col-sm-4">
-							<input type="text" class="form-control" name="summary"
-								placeholder="Summary" ng-model="summary">
-						</div>
-
-					<div class="col-md-12 col-sm-12">
-						<textarea class="form-control" rows="5" name="reviews"
-							placeholder="Reviews" ng-model="review"></textarea>
-					</div>
-					<button id="submit" type="button" class="post" name="submit"
-						ng-click="model.review(rating, review)">submit</button>
-					<div class="col-md-offset-9 col-md-3 col-sm-offset-3 col-sm-6">
-							<button id="submit" type="button" class="post" name="submit"
-								ng-click="model.review(rating, review)">submit</button>
-			</div>
-			</form>
-		</div>
-	</div> -->
 <div class="dy_main">
 	<div class="title">Movie Reviews</div>
 	<div class="pj">
@@ -105,7 +73,6 @@ body {
 					title="4" class="four-stars">4</a></li>
 				<li><a ng-click="model.giveRate(5)" href="javascript:void(0)"
 					title="5" class="five-stars">5</a></li>
-				<li>{{model.rate}}</li>
 			</ul>
 			<div class="current-rating showb"></div>
 		</div>
@@ -130,8 +97,6 @@ body {
 		<a href="https://www.amctheatres.com/">AMC</a>
 	</div>
 </div>
-
-{{model.movie}}
 
 <script type="text/javascript" src="../../assets/js/jquery-carousel.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper.min.js"></script>
