@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.customer;
+package edu.northeastern.cs4500.repositories;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

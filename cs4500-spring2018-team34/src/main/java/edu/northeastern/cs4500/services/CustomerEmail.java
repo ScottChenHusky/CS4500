@@ -1,4 +1,4 @@
-package edu.northeastern.cs4500.controllers.customer;
+package edu.northeastern.cs4500.services;
 
 import java.util.Properties;
 
