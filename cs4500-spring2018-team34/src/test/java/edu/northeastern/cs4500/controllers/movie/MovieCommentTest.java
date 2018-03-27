@@ -55,18 +55,18 @@ public class MovieCommentTest {
   @Test
   public void testCustomerId() {
     MovieComment mc = new MovieComment();
-    mc.setCustomer_id(1);
-    int customer_id = mc.getCustomer_id();
-    assertEquals(1, mc.getCustomer_id());
+    mc.setCustomerId(1);
+    int customer_id = mc.getCustomerId();
+    assertEquals(1, mc.getCustomerId());
     assertEquals(1, customer_id);
   }
 
   @Test
   public void testMovieId() {
     MovieComment mc = new MovieComment();
-    mc.setMovie_id(1);
-    int movie_id = mc.getMovie_id();
-    assertEquals(1, mc.getMovie_id());
+    mc.setMovieId(1);
+    int movie_id = mc.getMovieId();
+    assertEquals(1, mc.getMovieId());
     assertEquals(1, movie_id);
   }
 
