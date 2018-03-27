@@ -136,9 +136,14 @@ public class MovieController {
 
   public JSONObject mainSearch(String searchby) {
     JSONObject movieJSON = apiConnector(0, searchby);
-    Movie m = tmdbParser(movieJSON);
     JSONObject finalR = new JSONObject();
-    finalR.put("Results", m.toMap());
+    if(Integer.parseInt(movieJSON.get("total_results").toString()) == 0){
+      finalR.put("message", "Not Found");
+    } else {
+      Movie m = tmdbParser(movieJSON);
+      finalR.put("Results" , new JSONObject(m.toMap()));
+      finalR.put("message", "Found");
+    }
     return finalR;
   }
 
