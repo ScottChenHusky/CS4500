@@ -8,7 +8,7 @@
         .controller('userProfileController', userProfileController);
         
     function HomeController ($http) {
-    		var vm = this;
+    	var vm = this;
         vm.search = search;
         
         
@@ -231,10 +231,13 @@
 				.then(response, error);
 
 			function response(res) {
-                initProfile();
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
 			}
 
 			function error(err) {
+                vm.success = null;
 				vm.error = err.data.message;
 				return;
 			}
@@ -416,10 +419,14 @@
                 .then(response, error);
 
             function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
 
             }
 
             function error(err) {
+                vm.success = null;
                 vm.error = err.data.message;
             }
         }
@@ -436,10 +443,13 @@
                 .then(response, error);
 
             function response(res) {
-
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
             }
 
             function error(err) {
+                vm.success = null;
                 vm.error = err.data.message;
             }
 

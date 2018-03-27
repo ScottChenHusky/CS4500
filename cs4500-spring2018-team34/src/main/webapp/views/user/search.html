@@ -31,14 +31,14 @@
 								<a href="#!/movie/{{movie.id}}">
                                     <p align="left" class="tit">{{movie.name}}</p>
                                     <p align="left" class="keywords">{{movie.actors}}</p>
-                                    <button ng-show="model.currentUserLevel == '0'"
-                                            style="float: right"
-                                            class="btn btn-danger"
-                                            ng-click="model.deleteMovie(movie.id)">
-                                        Delete Movie
-                                    </button>
                                     <p align="left" class="rate">{{movie.score}}</p>
                                 </a>
+								<button ng-show="model.currentUserLevel == '0'"
+										style="float: right"
+										class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">
+									Delete Movie
+								</button>
 
 							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
 								<a href="javascript:;" class="delete-btn">Delete</a> -->

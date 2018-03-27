@@ -216,6 +216,9 @@
 			<div ng-if="model.error" class="alert alert-danger">
 				{{model.error}}
 			</div>
+			<div ng-if="model.success" class="alert alert-success alert-dismissible" role="alert">
+				{{model.success}}
+			</div>
 			<div class="form-group">
 				<input ng-model="password1" class="form-control"
 					placeholder="old password" type="password" />
