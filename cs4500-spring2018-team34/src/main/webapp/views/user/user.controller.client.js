@@ -1,15 +1,19 @@
-(function() {
-	angular.module('webapp').controller('HomeController', HomeController)
-			.controller('LoginController', LoginController).controller(
-					'RegisterController', RegisterController).controller(
-					'SearchController', SearchController).controller(
-					'userProfileController', userProfileController);
-
-	function HomeController($http) {
-		var vm = this;
-		vm.search = search;
-
-		function search(searchTerm) {
+<<<<<<< HEAD
+(function () {
+    angular
+        .module('webapp')
+        .controller('HomeController', HomeController)
+        .controller('LoginController', LoginController)
+        .controller('RegisterController', RegisterController)
+        .controller('SearchController', SearchController)
+        .controller('userProfileController', userProfileController);
+        
+    function HomeController ($http) {
+    	var vm = this;
+        vm.search = search;
+        
+        
+        function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
 		// vm.addMovieToDB = addMovieToDB;
@@ -235,10 +239,14 @@
 			return $http.post(url, user).then(response, error);
 
 			function response(res) {
-				initProfile();
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
+
 			}
 
 			function error(err) {
+                vm.success = null;
 				vm.error = err.data.message;
 				return;
 			}
@@ -461,15 +469,17 @@
 
 			$http.post(url, movie).then(response, error);
 
-			function response(res) {
+            function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
 
-			}
-
-			function error(err) {
-				vm.error = err.data.message;
-			}
-		}
-
+            function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+            }
+        }
+		
 		function deleteUser(userId) {
 
 			var url = "/api/deleteUser";
@@ -480,15 +490,16 @@
 
 			$http.post(url, user).then(response, error);
 
-			function response(res) {
+            function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
+            }
 
-			}
-
-			function error(err) {
-				vm.error = err.data.message;
-			}
-
-		}
+            function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+            }
 
 		function search(searchTerm) {
 			vm.keyword = searchTerm;
