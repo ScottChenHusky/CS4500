@@ -43,7 +43,7 @@
                     }
         			})
         			.when('/movie/:mid', {
-        				templateUrl: 'views/movie/movieDetails.view.client.html',
+        				templateUrl: 'views/movie/newMovieDetails.html',
             			controller: 'movieDetailsController',
             			controllerAs: 'model',
             			resolve: {

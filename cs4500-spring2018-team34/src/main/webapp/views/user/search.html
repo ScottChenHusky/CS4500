@@ -1,181 +1,160 @@
-	<style type="text/css">
-		.m-tab-bd li{
-			width: 100%;
-		}
-	</style>
-
+<style type="text/css">
+.m-tab-bd li {
+	width: 100%;
+}
+</style>
 <!-- content -->
-<div style="padding-bottom:5%">
-	<div class="w-1000 font-14">SEARCH RESULTS FOR: "<span class="color-green">{{model.keyword}}</span>”</div>
+<div style="padding-bottom: 5%">
+	<div class="w-1000 font-14">
+		SEARCH RESULTS FOR: "<span class="color-green">{{model.keyword}}</span>”
+	</div>
 	<!-- Menu Buttons -->
 	<div class="m-tab clearfix w-1000">
 		<ul class="">
 			<li class="on">All({{model.sum}})</li>
-			<li>Moves({{model.movieNum}})</li>
+			<li>Movies({{model.movieNum}})</li>
 			<li>Users({{model.userNum}})</li>
-			<li>Actor(0)</li>
-			<li>Director(0)</li>
 		</ul>
 	</div>
-	
+
 	<!-- All Results Start -->
 	<ul class="m-tab-bd w-1000">
 		<li class="item">
 			<div class="m-search-list">
 				<div class="list-tit">Movies</div>
-				<ul class="list-ul clearfix" ng-repeat="movie in model.movies">
-					<li ng-show="movie != 'found'">
-						<dl class="clearfix">
-							<dt><a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a></dt>
+				<div class="list-ul"></div>
+				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
+				<ul class="clearfix">
+					<li>
+						<dl class="list-ul clearfix">
+							<dt>
+								<a href="#!/movie/{{movie.id}}"><img src="{{model.exactMovie.poster}}"></a>
+							</dt>
 							<dd>
 								<a href="#!/movie/{{movie.id}}">
-                                    <p align="left" class="tit">{{movie.name}}</p>
-                                    <p align="left" class="keywords">{{movie.actors}}</p>
-                                    <p align="left" class="rate">{{movie.score}}</p>
-                                </a>
-								<button ng-show="model.currentUserLevel == '0'"
-										style="float: right"
-										class="btn btn-danger"
-										ng-click="model.deleteMovie(movie.id)">
-									Delete Movie
-								</button>
-
-							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
-								<a href="javascript:;" class="delete-btn">Delete</a> -->
+									<p align="left" class="tit">{{model.exactMovie.name}}</p>
+									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{model.exactMovie.score}}</p>
+								</a>
 							</dd>
 						</dl>
 					</li>
 				</ul>
-				<!-- <a href="javascript:;" target="_blank" class="more">more movies &gt;</a> -->
+				<ul class="clearfix" ng-repeat="movie in model.movies">
+					<li>
+						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
+							<dt>
+								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
+							</dt>
+							<dd>
+								<a href="#!/movie/{{movie.id}}">
+									<p align="left" class="tit">{{movie.name}}</p>
+									<p align="left" class="keywords">{{movie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{movie.score}}</p>
+								</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+				<a href="" ng-click="model.moreMovies()"
+					ng-show="model.movieCap + 1 < model.movieNum" class="more">more
+					movies &gt;</a>
 			</div>
 			<div class="m-search-list">
 				<div class="list-tit">Users</div>
-				<ul class="list-ul clearfix">
-					<li>
-						<dl class="clearfix" ng-repeat="user in model.users">
+				<h2 ng-show="model.userNum == 0" class="noResult">No Result!</h2>
+				<ul class="list-ul clearfix" ng-repeat="user in model.users">
+					<li ng-show="$index <= model.userCap">
+						<dl class="clearfix">
 							<dt>
-                                <a href="#!/user/{{user.id}}">
-                                    <img src="{{user.image}}">
-                                </a>
-                            </dt>
+								<a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a>
+							</dt>
 							<dd>
 								<a href="#!/user/{{user.id}}">
-                                    <p class="tit">
-                                        {{user.username}}
-                                    </p>
-                                </a>
-                                <button ng-show="model.currentUserLevel == '0'"
-                                        style="float: right"
-                                        class="btn btn-danger"
-                                        ng-click="model.deleteUser(user.id)">
-                                    Delete User
-                                </button>
+									<p class="tit">{{user.username}}</p>
+								</a>
+								<button ng-show="model.currentUserLevel == '0'"
+									style="float: right" class="btn btn-danger"
+									ng-click="model.deleteUser(user.id)">Delete User</button>
 								<!-- <a href="javascript:;" class="edit-btn">Edit</a>
 								<a href="javascript:;" class="delete-btn">Delete</a> -->
 							</dd>
 						</dl>
 					</li>
 				</ul>
-			<!-- 	<a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
-			</div>
-			
-			<div class="m-search-list">
-				<div class="list-tit">Actor</div>
-			</div>
-			
-			<div class="m-search-list">
-				<div class="list-tit">Director</div>
+				<a href="" ng-click="model.moreUsers()"
+					ng-show="model.userCap + 1 < model.userNum" class="more">more
+					users &gt;</a>
 			</div>
 		</li>
 		<!-- All Results End -->
-		
+
 		<li class="item" style="display: none;">
 			<div class="m-search-list">
 				<div class="list-tit">Movies</div>
-				<ul class="list-ul clearfix" ng-repeat="movie in model.movies">
-					<li ng-show="movie != 'found'">
-						<dl class="clearfix">
-							<dt><a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a></dt>
+				<div class="list-ul"></div>
+				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
+				<ul class="clearfix" ng-repeat="movie in model.movies">
+					<li
+						ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
+						<dl class="list-ul clearfix">
+							<dt>
+								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
+							</dt>
 							<dd>
 								<a href="#!/movie/{{movie.id}}"><p class="tit">{{movie.name}}</p></a>
 								<p class="keywords">{{movie.actors}}</p>
 								<p class="rate">{{movie.score}}</p>
-							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
+								<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
 								<a href="javascript:;" class="delete-btn">Delete</a> -->
 							</dd>
 						</dl>
 					</li>
 				</ul>
-	<!-- 			<a href="javascript:;" target="_blank" class="more">more movies &gt;</a> -->
+				<a href="" ng-click="model.moreMoviesTab()"
+					ng-show="model.movieCapTab + 2 < model.movieNum" class="more">more
+					movies &gt;</a>
 			</div>
 		</li>
 		<li class="item" style="display: none;">
 			<div class="m-search-list w-1000">
 				<div class="list-tit">Users</div>
+				<h2 ng-show="model.userNum == 0" class="noResult">No Result!</h2>
 				<ul class="list-ul clearfix" ng-repeat="user in model.users">
-					<li>
-						<dl class="clearfix">
-							<dt><a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a></dt>
-							<dd>
-								<a href="#!/user/{{user.id}}"><p class="tit">{{user.username}}</p></a>
-							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
-								<a href="javascript:;" class="delete-btn">Delete</a> -->
-							</dd>
-						</dl>
-					</li>
-				</ul>
-				<!-- <a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
-			</div>
-		</li>
-		<li class="item" style="display: none;">
-			<div class="m-search-list w-1000">
-				<div class="list-tit">Actor</div>
-				<ul class="list-ul clearfix" ng-repeat="user in model.users">
-					<li>
-						<dl class="clearfix">
-							<dt><a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a></dt>
-							<dd>
-								<a href="#!/user/{{user.id}}"><p class="tit">{{user.username}}</p></a>
-							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
-								<a href="javascript:;" class="delete-btn">Delete</a> -->
-							</dd>
-						</dl>
-					</li>
-				</ul>
-				<!-- <a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
-			</div>
-		</li>
-		<li class="item" style="display: none;">
-			<div class="m-search-list w-1000">
-				<div class="list-tit">Director</div>
-				<ul class="list-ul clearfix" ng-repeat="user in model.users">
-					<li>
+					<li ng-show="$index <= model.userCapTab">
 						<dl class="clearfix">
 							<dt>
-                                <a href="#!/user/{{user.id}}">
-                                    <img src="{{user.image}}">
-                                </a>
-                            </dt>
+								<a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a>
+							</dt>
 							<dd>
-								<a href="#!/user/{{user.id}}">
-                                    <p class="tit">{{user.username}}</p>
-                                </a>
-							<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
+								<a href="#!/user/{{user.id}}"><p class="tit">{{user.username}}</p></a>
+								<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
 								<a href="javascript:;" class="delete-btn">Delete</a> -->
 							</dd>
 						</dl>
 					</li>
 				</ul>
-				<!-- <a href="javascript:;" target="_blank" class="more">more users &gt;</a> -->
+				<a href="" ng-click="model.moreUsersTab()"
+					ng-show="model.userCapTab < model.userNum" class="more">more
+					movies &gt;</a>
 			</div>
 		</li>
 	</ul>
 </div>
-	
-	<script>
-		$(".m-tab li").bind('click', function() {
-			var index = $(this).index();
-			$(this).addClass("on").siblings().removeClass("on");
-			$(this).parents(".m-tab").next(".m-tab-bd").find("li.item").eq(index).show().siblings().hide();
-		})
-	</script>
+
+<script>
+	$(".m-tab li").bind(
+			'click',
+			function() {
+				var index = $(this).index();
+				$(this).addClass("on").siblings().removeClass("on");
+				$(this).parents(".m-tab").next(".m-tab-bd").find("li.item").eq(
+						index).show().siblings().hide();
+			})
+</script>
