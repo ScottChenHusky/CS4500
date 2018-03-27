@@ -23,10 +23,11 @@ public class MovieComment {
   private int customerId;
   private int movieId;
 
-  public MovieComment(){
+  public MovieComment() {
 
   }
-  public MovieComment(String review, String score, Date date, Integer customerId, Integer movieId){
+
+  public MovieComment(String review, String score, Date date, Integer customerId, Integer movieId) {
     this.review = review;
     this.score = score;
     this.date = date;
@@ -47,12 +48,12 @@ public class MovieComment {
     this.date = date;
   }
 
-  public void setCustomer_id(int customer_id) {
-    this.customerId = customer_id;
+  public void setCustomerId(int customerId) {
+    this.customerId = customerId;
   }
 
-  public void setMovie_id(int movie_id) {
-    this.movieId = movie_id;
+  public void setMovieId(int movieId) {
+    this.movieId = movieId;
   }
 
   public String getReview() {
@@ -67,18 +68,17 @@ public class MovieComment {
     return date;
   }
 
-  public int getCustomer_id() {
+  public int getCustomerId() {
     return customerId;
   }
 
-  public int getMovie_id() {
+  public int getMovieId() {
     return movieId;
   }
 
 
-  public Map<String, String> toMap(){
+  public Map<String, String> toMap() {
     Map<String, String> map = new HashMap<>();
-
 
     Field[] fields = this.getClass().getDeclaredFields();
 

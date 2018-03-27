@@ -87,18 +87,19 @@
     		}
     		
     		function logout() {
-    			sessionStorage.removeItem("currentUserId");
-                sessionStorage.removeItem("currentUserLevel");
+    			var userId = sessionStorage.getItem("currentUserId");
     			var url = "/api/logout";
     			var user = {
-                    loggedInUserId: sessionStorage.getItem("currentUserId"),
-                    userId: vm.userId
+                    loggedInUserId: userId,
+                    userId: userId
 				};
 
     			return $http.post(url, user)
 					.then(response);
 
     			function response(res) {
+                    sessionStorage.removeItem("currentUserId");
+                    sessionStorage.removeItem("currentUserLevel");
     				return;
 				}
     		}
@@ -226,7 +227,7 @@
 				newPassword: new1
 			};
 
-			return $http.update(url, user)
+			return $http.post(url, user)
 				.then(response, error);
 
 			function response(res) {
