@@ -521,6 +521,9 @@
 				vm.test = response.data;
 				// number of movies
 				if (response != null || resposne != undefined) {
+					if (response.data.Movie.message == "Not Found") {
+						return;
+					}
 					for (m in response.data) {
 						if (m == "Movie") {
 							vm.movieNum++;
