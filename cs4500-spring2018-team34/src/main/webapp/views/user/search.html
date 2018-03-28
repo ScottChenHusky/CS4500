@@ -27,11 +27,11 @@
 					<li>
 						<dl class="list-ul clearfix">
 							<dt>
-								<a href="#!/movie/{{model.exactMovie.movie.id}}"><img
+								<a href="#!/movie/{{model.exactMovie.id}}"><img
 									src="{{model.exactMovie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{movie.id}}">
+								<a href="#!/movie/{{model.exactMovie.id}}">
 									<p align="left" class="tit">{{model.exactMovie.name}}</p>
 									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
 									<button ng-show="model.currentUserLevel == '0'"
@@ -113,7 +113,7 @@
 									src="{{model.exactMovie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{movie.id}}">
+								<a href="#!/movie/{{model.exactMovie.id}}">
 									<p align="left" class="tit">{{model.exactMovie.name}}</p>
 									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
 									<button ng-show="model.currentUserLevel == '0'"
