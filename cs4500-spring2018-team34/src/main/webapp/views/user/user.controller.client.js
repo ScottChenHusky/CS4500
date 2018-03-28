@@ -1,18 +1,15 @@
-(function () {
-    angular
-        .module('webapp')
-        .controller('HomeController', HomeController)
-        .controller('LoginController', LoginController)
-        .controller('RegisterController', RegisterController)
-        .controller('SearchController', SearchController)
-        .controller('userProfileController', userProfileController);
-        
-    function HomeController ($http) {
-    		var vm = this;
-        vm.search = search;
-        
-        
-        function search(searchTerm) {
+(function() {
+	angular.module('webapp').controller('HomeController', HomeController)
+			.controller('LoginController', LoginController).controller(
+					'RegisterController', RegisterController).controller(
+					'SearchController', SearchController).controller(
+					'userProfileController', userProfileController);
+
+	function HomeController($http) {
+		var vm = this;
+		vm.search = search;
+
+		function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
 //        vm.addMovieToDB = addMovieToDB;
@@ -90,19 +87,18 @@
     		}
     		
     		function logout() {
-    			var userId = sessionStorage.getItem("currentUserId");
+    			sessionStorage.removeItem("currentUserId");
+                sessionStorage.removeItem("currentUserLevel");
     			var url = "/api/logout";
     			var user = {
-                    loggedInUserId: userId,
-                    userId: userId
+                    loggedInUserId: sessionStorage.getItem("currentUserId"),
+                    userId: vm.userId
 				};
 
     			return $http.post(url, user)
 					.then(response);
 
     			function response(res) {
-                    sessionStorage.removeItem("currentUserId");
-                    sessionStorage.removeItem("currentUserLevel");
     				return;
 				}
     		}
@@ -205,7 +201,20 @@
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
+		// For Admin
+		vm.deleteUser = deleteUser;
+		vm.deleteMovie = deleteMovie;
 
+		if (vm.currentUserLevel == 0) {
+            var url = '/api/system';
+            
+            $http.get(url)
+                .then(response);
+            
+            function response(res) {
+            		vm.overallInfo = res.data;
+            }
+		}
 		function updatePassword(old, new1, new2) {
 			if (!old) {
 				vm.error = "Please enter the old password";
@@ -227,7 +236,7 @@
 				newPassword: new1
 			};
 
-			return $http.post(url, user)
+			return $http.update(url, user)
 				.then(response, error);
 
 			function response(res) {
@@ -240,65 +249,101 @@
 			}
 		}
 		
+		function deleteMovie(movieId) {
+            var url = "/api/deleteMovie";
+            var movie = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                movieId: movieId
+            };
+
+            $http.post(url, movie)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+        }
 		
-        //$(".profile-section").hide(); //Hide all content
-        $(".profile-section").hide();
-   	    $(".action-section").hide();
-   	    $(".follower-section").hide();
-   	    $(".following-section").hide();
-//        $("ul.tabs li:first").addClass("cur").show(); //Activate first tab  
-//        $(".movie-section:first").show(); //Show first tab content  
-          
-        //On Click Event  
-        // Show Movie Section
-        $("ul.tabs li").click(function() {  
-            $("ul.tabs li").removeClass("cur");
-            $(this).addClass("cur");
-            $(".movie-section").hide(); 
-            $(".profile-section").hide();
-            $(".action-section").hide();
-            $(".follower-section").hide();
-            $(".following-section").hide();
-            var activeTab = $(this).find("a").attr("href"); 
-            $(activeTab).fadeIn();
-            return false;  
-        });
-        
-        // Show All Movie Sections
-        $("ul li.block").click(function() {
-        	 $("ul.tabs li").removeClass("cur");
-        	 $(".movie-section").show(); 
-        	 $(".profile-section").hide();
-        	 $(".action-section").hide();
-        	 $(".follower-section").hide();
-         $(".following-section").hide();
-        });
-        
-        // Show Following Section
-        $("div ul li.following").click(function() {
-        	 $(".movie-section").hide(); 
-        	 $(".profile-section").hide();
-        	 $(".action-section").hide();
-       	 $(".follower-section").hide();
-        });
-        
-        // Show Follower Section
-        $("div ul li.follower").click(function() {
-       	 $(".movie-section").hide(); 
-       	 $(".profile-section").hide();
-       	 $(".action-section").hide();
-      	 $(".following-section").hide();
-        });
-        
-        // Cancel Button
-        $("section button.btn-danger").click(function() {
-        	 $("ul.tabs li").removeClass("cur");
-        	 $(".movie-section").show(); 
-        	 $(".profile-section").hide();
-        	 $(".action-section").hide();
-        	 $(".follower-section").hide();
-         $(".following-section").hide();
-        })
+		function deleteUser(userId) {
+
+		    var url = "/api/deleteUser";
+            var user = {
+                loggedInUserId: sessionStorage.getItem("currentUserId"),
+                userId: userId
+            };
+
+            $http.post(url, user)
+                .then(response, error);
+
+            function response(res) {
+
+            }
+
+            function error(err) {
+                vm.error = err.data.message;
+            }
+
+        }
+		
+		$(".profile-section").hide(); // Hide all content
+		$(".profile-section").hide();
+		$(".action-section").hide();
+		$(".follower-section").hide();
+		$(".following-section").hide();
+		$(".dash-section").hide();
+		// $("ul.tabs li:first").addClass("cur").show(); //Activate first tab
+		// $(".movie-section:first").show(); //Show first tab content
+
+		// On Click Event
+		// Show Movie Section
+		$("ul.tabs li").click(function() {
+			$("ul.tabs li").removeClass("cur");
+			$(this).addClass("cur");
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".follower-section").hide();
+			$(".following-section").hide();
+			$(".dash-section").hide();
+			var activeTab = $(this).find("a").attr("href");
+			$(activeTab).fadeIn();
+			return false;
+		});
+
+		// Show Following Section
+		$("div ul li.following").click(function() {
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".follower-section").hide();
+			$(".dash-section").hide();
+		});
+
+		// Show Follower Section
+		$("div ul li.follower").click(function() {
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".following-section").hide();
+			$(".follower-section").show();
+			$(".dash-section").hide();
+		});
+
+		// Cancel Button
+		$("section button.cancel").click(function() {
+			window.location.reload();
+//			$("ul.tabs li").removeClass("cur");
+//			$(".movie-section").show();
+//			$(".profile-section").hide();
+//			$(".action-section").hide();
+//			$(".follower-section").hide();
+//			$(".following-section").hide();
+//			$(".dash-section").hide();
+		});
 
 		function initProfile() {
         	
@@ -387,11 +432,26 @@
         }
 	}
 
-    function SearchController($http, $routeParams) {
+	function SearchController($http, $routeParams) {
 		var vm = this;
+
+		vm.term = $routeParams['term'];
+
+		// Capacity of movie/user result lists
+		vm.movieCap = 9;
+		vm.movieCapTab = 19;
+		vm.userCap = 4;
+		vm.userCapTab = 9;
+
+		// Functions
         vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
 		vm.deleteUser = deleteUser;
         vm.deleteMovie = deleteMovie;
+        
+        vm.moreUsers = moreUsers;
+		vm.moreUsersTab = moreUsersTab;
+		vm.moreMovies = moreMovies;
+		vm.moreMoviesTab = moreMoviesTab;
 		
 		// Count Result numbers
 		
@@ -399,9 +459,8 @@
 		vm.movieNum = 0;
 		vm.sum = 0;
 		
-		vm.term = $routeParams['term']; 
 		vm.search = search;
-		if(vm.term !== undefined && vm.term != '') {
+		if (vm.term !== undefined && vm.term != '') {
 			search(vm.term);
 		}
 
@@ -448,49 +507,74 @@
 		function search(searchTerm) {
 			vm.keyword = searchTerm;
 			var mUrl = "api/movie/search?name=" + searchTerm;
-			var uUrl = "api/user?username=" + searchTerm;	
-			vm.defaultView = false;
-			vm.hasMResults = false;
-			vm.hasUResults = false;
-			vm.movies = [{poster: ''}];
-			vm.users = [{image: ''}];
+			var uUrl = "api/user?username=" + searchTerm;
+
+			vm.movies = [];
+			vm.users = [];
+
+			// number of all results
+			vm.sum = 0;
+			vm.movieNum = 0;
 			
+			// Movie Search Results
 			$http.get(mUrl).then(function(response) {
-				if(response.data != undefined) {		
-					for (var m in response.data) {
-						if(m != "message") {
+				vm.test = response.data;
+				// number of movies
+				if (response != null || resposne != undefined) {
+					if (response.data.Movie.message == "Not Found") {
+						return;
+					}
+					for (m in response.data) {
+						if (m == "Movie") {
 							vm.movieNum++;
 							vm.sum++;
-						} 
+							vm.exactMovie = response.data.Movie.Results;
+						}
+						if (m == "Name") {
+							vm.movies = response.data.Name;
+							vm.movieNum = vm.movieNum + vm.movies.length;
+							vm.sum = vm.sum + vm.movies.length;
+						}
 					}
-					vm.movies = response.data;
-					if(vm.movies.Movie0 != null) {
-						vm.hasMResults = true;
-					}	
 				}
 			});
-			
-			$http.get(uUrl).then(function(response) {
-				if(response.data != undefined) {
-					vm.users = response.data.result;
-					vm.userNum = vm.users.length;
-					vm.sum = vm.sum + vm.userNum;
 
-					if(vm.users[0] != null) {
-						for (var n = 0; n < vm.users.length; n++) {
-							vm.users[n].image = "../../assets/images/user-photo.png";
-						}
-						vm.hasUResults = true;						
-					}
-					
-				} 
-			});
-			
-			//FOR TESTING
-			//vm.hasMResults = true;
-			//vm.hasUResults = true;
-			//vm.movies[0].name = searchTerm;
-			//vm.users[0].name = searchTerm;
+			// User Search Results
+			$http
+					.get(uUrl)
+					.then(
+							function(response) {
+								vm.userNum = 0;
+								if (response.data != undefined) {
+									vm.users = response.data.result;
+									vm.userNum = vm.users.length;
+									vm.sum = vm.sum + vm.userNum;
+
+									if (vm.users[0] != null) {
+										for (var n = 0; n < vm.users.length; n++) {
+											vm.users[n].image = "../../assets/images/user-photo.png";
+										}
+										vm.hasUResults = true;
+									}
+
+								}
+							});
+		}
+
+		function moreMovies() {
+			vm.movieCap = vm.movieCap + 10;
+		}
+
+		function moreMoviesTab() {
+			vm.movieCapTab = vm.movieCapTab + 10;
+		}
+
+		function moreUsers() {
+			vm.userCap = vm.userCap + 5;
+		}
+
+		function moreUsersTab() {
+			vm.userCapTab = vm.userCapTab + 10;
 		}
 	}
 })();
