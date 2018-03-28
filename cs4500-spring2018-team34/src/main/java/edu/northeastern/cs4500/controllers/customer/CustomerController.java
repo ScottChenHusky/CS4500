@@ -199,8 +199,52 @@ public class CustomerController{
                     putMessage(logInfo, response, "username already exists");
                     break;
                 case "code":
-                    //TODO: admin registration
-                    putMessage(logInfo, response, "admin registration currently not supported");
+                    putMessage(logInfo, response, "invalid admin code");
+                    break;
+                default:
+                    putMessage(logInfo, response, "unknown error");
+                    break;
+            }
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @RequestMapping(path = "/api/applyAdminCode", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> applyAdminCode(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logInfo.put("Task", "applyAdminCode");
+        logInfo.put("request", request.toString());
+        JSONObject response = new JSONObject();
+        Object username = request.get("username");
+        Object email = request.get("email");
+        Object phone = request.getOrDefault("phone", ""); // optional
+        if (username == null || email == null || phone == null) {
+            putMessage(logInfo, response, "insufficient or undefined input");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        String usernameStr = username.toString();
+        String emailStr = email.toString();
+        String phoneStr = phone.toString();
+        if (usernameStr.equals("") || emailStr.equals("")) {
+            putMessage(logInfo, response, "application request not complete");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            customerService.applyAdminCode(usernameStr, emailStr, phoneStr);
+            putMessage(logInfo, response, "application succeeded");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            switch (message) {
+                case "username":
+                    putMessage(logInfo, response, "username already exists");
+                    break;
+                case "code":
+                    putMessage(logInfo, response, "admin code temporary unavailable");
                     break;
                 default:
                     putMessage(logInfo, response, "unknown error");
