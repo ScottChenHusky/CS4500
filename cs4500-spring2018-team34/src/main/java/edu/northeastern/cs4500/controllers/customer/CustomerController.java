@@ -169,8 +169,8 @@ public class CustomerController{
         Object username = request.get("username");
         Object password = request.get("password");
         Object email = request.get("email");
-        Object phone = request.get("phone");
-        Object code = request.get("adminCode");
+        Object phone = request.getOrDefault("phone", ""); // optional
+        Object code = request.getOrDefault("adminCode", ""); // optional
         if (username == null || password == null || email == null || phone == null || code == null) {
             putMessage(logInfo, response, "insufficient or undefined input");
             CustomerController.log.warning(logInfo.toString());
@@ -179,8 +179,8 @@ public class CustomerController{
         String usernameStr = username.toString();
         String passwordStr = password.toString();
         String emailStr = email.toString();
-        String phoneStr = phone.toString(); // optional
-        String codeStr = code.toString(); // admin
+        String phoneStr = phone.toString();
+        String codeStr = code.toString();
         if (usernameStr.equals("") || passwordStr.equals("") || emailStr.equals("")) {
             putMessage(logInfo, response, "registration request not complete");
             CustomerController.log.warning(logInfo.toString());
