@@ -343,6 +343,7 @@ public class MovieController {
               .withT3(trailers.get(2));
       if (!movieRepository.existsByOmdbreference(imdbId)) {
         movieRepository.save(movie);
+        movie = movieRepository.findByOmdbreference(imdbId).get(0);
       }
 
     } catch (NullPointerException e) {
