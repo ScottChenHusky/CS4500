@@ -16,7 +16,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.min.js"></script>
 <script src="app.js"></script>
 <script src="config.js"></script>
-<script src="views/user/user.controller.client.js"></script>
+<script src="views/user/user.controller.client.js"></script> 
 
 <!-- movie controller -->
 <script src="views/movie/movie.controller.client.js"></script>
@@ -58,51 +58,37 @@
 				<li><a href="index.html">Regular Page Placeholder</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li ng-if="$root.currentUserId == null">
-					<a href="#!/register">
-						<span class="glyphicon glyphicon-user"></span> 
-						Sign Up
-					</a>
-				</li>
-				<li ng-if="$root.currentUserId == null">
-					<a href="#!/login">
-						<span class="glyphicon glyphicon-log-in"></span> 
-						Login
-					</a>
-				</li>
-				<li ng-if="$root.currentUserId != null">
-					<a href="#!/user/{{$root.currentUserId}}">
-						<span class="glyphicon glyphicon-user"></span> 
-						Home
-					</a>
-				</li>
-				<li ng-if="$root.currentUserId != null">
- 					<a href="#!/login">
-						<span class="glyphicon glyphicon-log-in"></span> 
-						Logout
-					</a>
-				</li>
+				<li ng-if="$root.currentUserId == null"><a href="#!/register">
+						<span class="glyphicon glyphicon-user"></span> Sign Up
+				</a></li>
+				<li ng-if="$root.currentUserId == null"><a href="#!/login">
+						<span class="glyphicon glyphicon-log-in"></span> Login
+				</a></li>
+				<li ng-if="$root.currentUserId != null"><a
+					href="#!/user/{{$root.currentUserId}}"> <span
+						class="glyphicon glyphicon-user"></span> Home
+				</a></li>
+				<li ng-if="$root.currentUserId != null"><a href="#!/login">
+						<span class="glyphicon glyphicon-log-in"></span> Logout
+				</a></li>
 			</ul>
 		</div>
 	</nav>
-	
+
 	<div class="m-search clearfix">
 		<div class="m-search-gatebox">
 			<select class="m-search-gate">
-			    <option value="1">Movie</option>
-				<option value="0">Actor</option>
-				<option value="1">Year</option>
-				<option value="1">User</option>
+				<option value="1">All</option>
 			</select>
 		</div>
-		<input type="text" class="m-search-input" ng-model="searchTerm" 
-		placeholder="Please enter movie name or actor names...">
-		<a href='#!/search/{{searchTerm}}' class="m-search-btn">
-			<i class="icon-search"></i>
+		<input type="text" class="m-search-input" ng-model="searchTerm"
+			placeholder="Please enter movie name or actor names..."> <a
+			href='#!/search/{{searchTerm}}' class="m-search-btn"> <i
+			class="icon-search"></i>
 		</a>
 	</div>
 
-	<div class="container" style="padding-bottom:5%">
+	<div class="container" style="padding-bottom: 5%">
 		<div ng-view></div>
 	</div>
 

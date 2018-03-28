@@ -27,7 +27,7 @@ public class CustomerService {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     CustomerService.SESSION.clear();
-                    return;
+                    Thread.currentThread().interrupt();
                 }
                 for (Map.Entry<Integer, Integer[]> session : CustomerService.SESSION.entrySet()) {
                     session.getValue()[1] -= 1;

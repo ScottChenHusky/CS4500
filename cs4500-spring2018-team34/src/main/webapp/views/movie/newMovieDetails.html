@@ -1,0 +1,168 @@
+<style type="text/css">
+body {
+	background: #f7f7f7;
+}
+</style>
+<link rel="stylesheet" href="assets/css/swiper.min.css">
+<div class="content">
+	<div class="dy_main">
+		<div class="name">
+			<span>{{model.movie.name}}</span> <label>{{model.movie.score}}</label>
+		</div>
+		<div class="m_left">
+
+			<div class="dy_info">
+				<img class="poster" src="{{model.movie.poster}}">
+				<div class="tetx">
+					<span>Director: {{model.movie.director}}</span> <span>Year:
+						{{model.movie.date}}</span> <span>Duration: {{model.movie.time}}
+						min</span> <span>Language: {{model.movie.language}}</span><span>Level:
+						{{model.movie.level}}</span><span>Country: {{model.movie.country}}</span>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="botn">
+				<a href=""><img src="../../assets/img/add.png">Add to
+					favorite</a> <a href=""><img src="../../assets/img/add.png">Add
+					to playlist</a> <a href="">Recommend to Friend</a>
+			</div>
+		</div>
+
+		
+		<div class="m_right">
+			<iframe width="420" height="315"
+				ng-src="{{model.getUrl()}}"
+				frameborder="0" allowfullscreen></iframe>
+
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="dy_main">
+	<div class="title" id="overview">Description</div>
+	<p>{{model.movie.description}}</p>
+</div>
+<div class="dy_main">
+	<div class="title">CAST+CREW</div>
+	<div class="slide">
+		<a href="" class="slide_left"><img src="assets/img/slide_left.png"></a>
+		<a href="" class="slide_right"><img
+			src="assets/img/slide_right.png"></a>
+		<ul class="slide_ul">
+			<li ng-repeat="actor in model.actors track by $index"><img
+				src="assets/img/slide_img1.png"><span>{{actor}}</span></li>
+		</ul>
+	</div>
+</div>
+<div class="dy_main">
+	<div class="title">Movie Reviews</div>
+	<div class="pj">
+		<div class="col-md-12 col-sm-12 botn">
+			<div ng-if="model.reviewError" class="alert alert-danger">{{model.reviewError}}</div>
+		</div>
+		<span>Add Your Review</span>
+		<div class="xzw_starBox">
+			<ul class="star stars">
+				<li><a ng-click="model.giveRate(1)" href="javascript:void(0)"
+					title="1" class="one-star">1</a></li>
+				<li><a ng-click="model.giveRate(2)" href="javascript:void(0)"
+					title="2" class="two-stars">2</a></li>
+				<li><a ng-click="model.giveRate(3)" href="javascript:void(0)"
+					title="3" class="three-stars">3</a></li>
+				<li><a ng-click="model.giveRate(4)" href="javascript:void(0)"
+					title="4" class="four-stars">4</a></li>
+				<li><a ng-click="model.giveRate(5)" href="javascript:void(0)"
+					title="5" class="five-stars">5</a></li>
+			</ul>
+			<div class="current-rating showb"></div>
+		</div>
+		<textarea ng-model="review" class="textarea"></textarea>
+		<button ng-click="model.review(review)" type="button" class="post">Post</button>
+	</div>
+
+	<div class="mo_info fl comment_line"
+		ng-repeat="comment in model.comments">
+		<div class="date">
+			{{comment.date}} <label>{{comment.score}}</label>
+		</div>
+		<p class="wrap">{{comment.review}}</p>
+		<img src="assets/img/s_img.png"><a href="">{{comment.username}}</a>
+
+	</div>
+	<div class="clear"></div>
+</div>
+<div class="dy_main" style="margin-bottom: 25px;">
+	<div class="title">Movie Time&Tickets</div>
+	<div class="link">
+		<a href="https://www.amctheatres.com/">AMC</a>
+	</div>
+</div>
+
+<script type="text/javascript" src="../../assets/js/jquery-carousel.js"></script>
+<script type="text/javascript" src="../../assets/js/swiper.min.js"></script>
+<script type="text/javascript">
+	$(".slide").thumbnailImg({
+		small_elem : ".small_list",
+		left_btn : ".slide_left",
+		right_btn : ".slide_right"
+	});
+	var viewSwiper, previewSwiper;
+	$(document).ready(function() {
+		var stepW = 30;
+		var stars = $(".stars > li");
+		$(".showb").css("width", 0);
+		stars.each(function(i) {
+			$(stars[i]).click(function(e) {
+				var n = i + 1;
+				$(".showb").css({
+					"width" : stepW * n
+				});
+				$(this).find('a').blur();
+				return stopDefault(e);
+				return descriptionTemp;
+			});
+		});
+
+		viewSwiper = new Swiper('.view .swiper-container', {
+			// autoplay : 3000,
+			loop : true,
+			onSlideChangeStart : function() {
+				updateNavPosition()
+			}
+		});
+
+		previewSwiper = new Swiper('.preview .swiper-container', {
+			visibilityFullFit : true,
+			slidesPerView : 'auto',
+			onlyExternal : true,
+			onSlideClick : function() {
+				viewSwiper.swipeTo(previewSwiper.clickedSlideIndex)
+			}
+
+		});
+	});
+
+	function updateNavPosition() {
+		$('.preview .active-nav').removeClass('active-nav')
+		var activeNav = $('.preview .swiper-slide').eq(
+				viewSwiper.activeIndex - 1).addClass('active-nav')
+		if (!activeNav.hasClass('swiper-slide-visible')) {
+			if (activeNav.index() > previewSwiper.activeIndex) {
+				var thumbsPerNav = Math.floor(previewSwiper.width
+						/ activeNav.width()) - 1
+				previewSwiper.swipeTo(activeNav.index() - thumbsPerNav)
+			} else {
+				previewSwiper.swipeTo(activeNav.index())
+			}
+		}
+
+	}
+
+	function stopDefault(e) {
+		if (e && e.preventDefault)
+			e.preventDefault();
+		else
+			window.event.returnValue = false;
+		return false;
+	};
+</script>

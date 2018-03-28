@@ -19,9 +19,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
   List<Movie> findByCountryContaining(String country);
 
+  List<Movie> findByOmdbreference(String omdbreference);
+
   boolean existsById(Integer Id);
 
   boolean existsByOmdbreference(String omdbreference);
+
 
   long count();
 

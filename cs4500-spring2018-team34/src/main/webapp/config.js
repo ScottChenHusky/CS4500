@@ -32,7 +32,10 @@
         			.when('/search/:term', {
         				templateUrl: 'views/user/search.html',
         				controller: 'SearchController',
-        				controllerAs: 'model'
+        				controllerAs: 'model',
+                        resolve: {
+                            loggedIn: checkLoggedIn
+                        }
         			})
         			.when('/user/:uid', {
         				templateUrl: 'views/user/userProfile.view.client.html',
@@ -40,15 +43,15 @@
             			controllerAs: 'model',
             			resolve: {
                             loggedIn: checkLoggedIn
-                    }
+                    	}
         			})
         			.when('/movie/:mid', {
-        				templateUrl: 'views/movie/movieDetails.view.client.html',
+        				templateUrl: 'views/movie/newMovieDetails.html',
             			controller: 'movieDetailsController',
             			controllerAs: 'model',
             			resolve: {
                             loggedIn: checkLoggedIn
-                    }
+                    	}
         			});
   
         
