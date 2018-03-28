@@ -33,10 +33,10 @@ public class CustomerController{
     }
 
     private Integer[] extractExecutorIdAndTargetId(JSONObject logInfo, JSONObject response, JSONObject request) {
-        Object executor = request.getOrDefault("loggedInUserId", "");
-        Object target = request.getOrDefault("userId", "");
+        Object executor = request.get("loggedInUserId");
+        Object target = request.get("userId");
         if (executor == null || target == null) {
-            putMessage(logInfo, response, "input value cannot be undefined");
+            putMessage(logInfo, response, "insufficient or undefined input");
             return null;
         }
         String executorStr = executor.toString();
@@ -98,10 +98,10 @@ public class CustomerController{
         logInfo.put("Task", "login");
         logInfo.put("request", request.toString());
         JSONObject response = new JSONObject();
-        Object username = request.getOrDefault("username", "");
-        Object password = request.getOrDefault("password", "");
+        Object username = request.get("username");
+        Object password = request.get("password");
         if (username == null || password == null) {
-            putMessage(logInfo, response, "input value cannot be undefined");
+            putMessage(logInfo, response, "insufficient or undefined input");
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -166,13 +166,13 @@ public class CustomerController{
         logInfo.put("Task", "register");
         logInfo.put("request", request.toString());
         JSONObject response = new JSONObject();
-        Object username = request.getOrDefault("username", "");
-        Object password = request.getOrDefault("password", "");
-        Object email = request.getOrDefault("email", "");
-        Object phone = request.getOrDefault("phone", "");
-        Object code = request.getOrDefault("adminCode", "");
+        Object username = request.get("username");
+        Object password = request.get("password");
+        Object email = request.get("email");
+        Object phone = request.get("phone");
+        Object code = request.get("adminCode");
         if (username == null || password == null || email == null || phone == null || code == null) {
-            putMessage(logInfo, response, "input value cannot be undefined");
+            putMessage(logInfo, response, "insufficient or undefined input");
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -222,10 +222,10 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
-        Object oldPassword = request.getOrDefault("oldPassword", "");
-        Object newPassword = request.getOrDefault("newPassword", "");
+        Object oldPassword = request.get("oldPassword");
+        Object newPassword = request.get("newPassword");
         if (oldPassword == null || newPassword == null) {
-            putMessage(logInfo, response, "input value cannot be undefined");
+            putMessage(logInfo, response, "insufficient or undefined input");
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -459,11 +459,11 @@ public class CustomerController{
     }
 
     private Integer[] extractExecutorIdAndFromIdAndToId(JSONObject logInfo, JSONObject response, JSONObject request) {
-        Object executor = request.getOrDefault("loggedInUserId", "");
-        Object from = request.getOrDefault("from", "");
-        Object to = request.getOrDefault("to", "");
+        Object executor = request.get("loggedInUserId");
+        Object from = request.get("from");
+        Object to = request.get("to");
         if (executor == null || from == null || to == null) {
-            putMessage(logInfo, response, "input value cannot be undefined");
+            putMessage(logInfo, response, "insufficient or undefined input");
             return null;
         }
         String executorStr = executor.toString();
