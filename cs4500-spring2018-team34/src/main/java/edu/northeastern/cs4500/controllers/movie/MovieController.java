@@ -352,7 +352,12 @@ public class MovieController {
     }
     log.finest(logInfo.toString());
     movie = movieRepository.findByOmdbreference(imdbId).get(0);
-    return movie;
+    if(movie.getRtreference() == null || !movie.getRtreference().equals("Banned")){
+      return movie;
+    } else {
+      return null;
+    }
+
 
   }
 
