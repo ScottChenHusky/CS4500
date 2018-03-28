@@ -44,7 +44,7 @@ public class MovieController {
     JSONArray result = new JSONArray();
     for (Object o : input) {
       Movie m = (Movie)o;
-      if(m.getRtreference() != "Banned"){
+      if(m.getRtreference() == null || !m.getRtreference().equals("Banned")){
         result.add(new JSONObject(m.toMap()));
       }
 
