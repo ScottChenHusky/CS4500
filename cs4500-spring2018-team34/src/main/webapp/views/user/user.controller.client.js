@@ -213,6 +213,7 @@
             
             function response(res) {
             		vm.overallInfo = res.data;
+            		vm.root = vm.overallInfo.Root[0];
             }
 		}
 		function updatePassword(old, new1, new2) {
