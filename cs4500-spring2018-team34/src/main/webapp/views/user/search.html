@@ -20,18 +20,18 @@
 	<!-- All Results Start -->
 	<ul class="m-tab-bd w-1000">
 		<li class="item">
-			<div class="m-search-list">
-				<div class="list-tit">Movies</div>
+			<div class="m-search-list" ng-show="model.movieNum != 0">
+				<div class="list-tit">Most Related Movie</div>
 				<div class="list-ul"></div>
-				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
 				<ul class="clearfix" ng-show="model.movieNum != 0">
 					<li>
 						<dl class="list-ul clearfix">
 							<dt>
-								<a href="#!/movie/{{movie.id}}"><img src="{{model.exactMovie.poster}}"></a>
+								<a href="#!/movie/{{model.exactMovie.id}}"><img
+									src="{{model.exactMovie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{movie.id}}">
+								<a href="#!/movie/{{model.exactMovie.id}}">
 									<p align="left" class="tit">{{model.exactMovie.name}}</p>
 									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
 									<button ng-show="model.currentUserLevel == '0'"
@@ -43,6 +43,11 @@
 						</dl>
 					</li>
 				</ul>
+			</div>
+			<div class="m-search-list">
+				<div class="list-tit">Movies</div>
+				<div class="list-ul"></div>
+				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
 				<ul class="clearfix" ng-repeat="movie in model.movies">
 					<li>
 						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
@@ -96,23 +101,50 @@
 		<!-- All Results End -->
 
 		<li class="item" style="display: none;">
+			<div class="m-search-list" ng-show="model.movieNum != 0">
+				<div class="list-tit">Most Related Movie</div>
+				<div class="list-ul"></div>
+				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
+				<ul class="clearfix" ng-show="model.movieNum != 0">
+					<li>
+						<dl class="list-ul clearfix">
+							<dt>
+								<a href="#!/movie/{{model.exactMovie.id}}"><img
+									src="{{model.exactMovie.poster}}"></a>
+							</dt>
+							<dd>
+								<a href="#!/movie/{{model.exactMovie.id}}">
+									<p align="left" class="tit">{{model.exactMovie.name}}</p>
+									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{model.exactMovie.score}}</p>
+								</a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
 			<div class="m-search-list">
 				<div class="list-tit">Movies</div>
 				<div class="list-ul"></div>
 				<h2 ng-show="model.movieNum == 0" class="noResult">No Result!</h2>
 				<ul class="clearfix" ng-repeat="movie in model.movies">
-					<li
-						ng-show="movie != 'found' && movie != 'not found' && movie.Response != 'True' && movie.Response !='False'">
-						<dl class="list-ul clearfix">
+					<li>
+						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
 							<dt>
 								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{movie.id}}"><p class="tit">{{movie.name}}</p></a>
-								<p class="keywords">{{movie.actors}}</p>
-								<p class="rate">{{movie.score}}</p>
-								<!-- 	<a href="javascript:;" class="edit-btn">Edit</a>
-								<a href="javascript:;" class="delete-btn">Delete</a> -->
+								<a href="#!/movie/{{movie.id}}">
+									<p align="left" class="tit">{{movie.name}}</p>
+									<p align="left" class="keywords">{{movie.actors}}</p>
+									<button ng-show="model.currentUserLevel == '0'"
+										style="float: right" class="btn btn-danger"
+										ng-click="model.deleteMovie(movie.id)">Delete Movie</button>
+									<p align="left" class="rate">{{movie.score}}</p>
+								</a>
 							</dd>
 						</dl>
 					</li>

@@ -63,8 +63,8 @@ public class MovieController {
     JSONObject json = new JSONObject();
     logInfo.put("Task", "MovieSearch");
     logInfo.put("SearchBy", searchby);
-    JSONObject movieResult = new JSONObject();
-    if (movie.size() == 0) {
+    JSONObject movieResult;
+    if (movie.isEmpty()) {
       movieResult = mainSearch(searchby);
     } else {
       movieResult = new JSONObject(movie.get(0).toMap());
@@ -343,6 +343,7 @@ public class MovieController {
               .withT3(trailers.get(2));
       if (!movieRepository.existsByOmdbreference(imdbId)) {
         movieRepository.save(movie);
+
       }
 
     } catch (NullPointerException e) {
@@ -350,7 +351,7 @@ public class MovieController {
       log.warning(logInfo.toString());
     }
     log.finest(logInfo.toString());
-
+    movie = movieRepository.findByOmdbreference(imdbId).get(0);
     return movie;
 
   }
