@@ -33,6 +33,8 @@ public class MovieController {
   String[] filterList = {
           "arse", "asshole", "bitch", "cunt", "fuck", "nigga", "nigger", " ass ", "ass hole"
   };
+  
+  
   @Autowired
   private MovieRepository movieRepository;
   @Autowired
@@ -40,6 +42,16 @@ public class MovieController {
 
   @Autowired
   private MovieCommentRepository movieCommentRepository;
+  
+  public MovieController(MovieRepository m, CustomerRepository c, MovieCommentRepository mcr) {
+	  this.movieRepository = m;
+	  this.customerRepository = c;
+	  this.movieCommentRepository = mcr;
+  }
+  
+  public MovieController() {
+	  
+  }
 
   public Map<String, JSONObject> createMap(String type, List input, String who) {
     Map<String, JSONObject> map = new HashMap();
