@@ -87,18 +87,20 @@
     		}
     		
     		function logout() {
-    			sessionStorage.removeItem("currentUserId");
-                sessionStorage.removeItem("currentUserLevel");
+    			var userId = sessionStorage.getItem("currentUserId");
+
     			var url = "/api/logout";
     			var user = {
-                    loggedInUserId: sessionStorage.getItem("currentUserId"),
-                    userId: vm.userId
+                    loggedInUserId: userId,
+                    userId: userId
 				};
 
     			return $http.post(url, user)
 					.then(response);
 
     			function response(res) {
+                    sessionStorage.removeItem("currentUserId");
+                    sessionStorage.removeItem("currentUserLevel");
     				return;
 				}
     		}
@@ -237,15 +239,18 @@
 				newPassword: new1
 			};
 
-			return $http.update(url, user)
+			return $http.post(url, user)
 				.then(response, error);
 
 			function response(res) {
-                initProfile();
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
 			}
 
 			function error(err) {
-				vm.error = err.data.message;
+                vm.success = null;
+                vm.error = err.data.message;
 				return;
 			}
 		}
@@ -476,10 +481,13 @@
                 .then(response, error);
 
             function response(res) {
-
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
             }
 
             function error(err) {
+                vm.success = null;
                 vm.error = err.data.message;
             }
         }
@@ -496,10 +504,13 @@
                 .then(response, error);
 
             function response(res) {
-
+                vm.error = null;
+                vm.success = res.data.message;
+                search(vm.term);
             }
 
             function error(err) {
+                vm.success = null;
                 vm.error = err.data.message;
             }
 
