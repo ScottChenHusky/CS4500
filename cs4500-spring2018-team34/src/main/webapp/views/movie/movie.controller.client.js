@@ -7,7 +7,7 @@
 		vm.movieId = $routeParams.mid;
 		vm.userId = sessionStorage.getItem("currentUserId");
 		vm.trailerId = "";
-
+		
 		vm.initMovie = initMovie;
 		// post review
 		vm.review = review;
@@ -61,11 +61,14 @@
 		function review(review) {
 
 			if (vm.rate == null || vm.rate == undefined) {
-				vm.reviewError = "Please give a rate."
+				vm.reviewError = "Please give a rate.";
+				return;
 			}
-			if (review == null || review == undefined) {
-				vm.reviewError = "Please give some comments."
+			if (review == null || review == undefined || review == "") {
+				vm.reviewError = "Please give some comments.";
+				return;
 			} else {
+				console.log(review);
 				var rR = {
 					movieId : vm.movieId,
 					customerId : vm.userId,
