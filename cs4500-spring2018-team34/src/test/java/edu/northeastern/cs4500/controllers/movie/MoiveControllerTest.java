@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MoiveControllerTest {
 	
 	MovieRepository mR;
-	MovieRepository mR1;
+	//MovieRepository mR1;
 	CustomerRepository cR;
 	MovieCommentRepository mCR;
 	
@@ -51,32 +52,51 @@ public class MoiveControllerTest {
 		when(mR.findByActorsContaining("test")).thenReturn(lN);
 		when(mR.findByCountryContaining("test")).thenReturn(lN);
 		when(mR.findById(1)).thenReturn(new Movie());
+		when(mR.findById(0)).thenReturn(null);
 		when(mR.existsById(1)).thenReturn(true);
+		when(mR.existsById(0)).thenReturn(false);
+		when(mR.findByOmdbreference("tt3498820")).thenReturn(lN);
 		
-		mR1 = mock(MovieRepository.class);
 		List lN1 = new ArrayList<Movie>();
-		when(mR1.findByName("t")).thenReturn(lN1);
-		when(mR1.findByNameContaining("t")).thenReturn(lN1);
-		when(mR1.findByLanguageContaining("t")).thenReturn(lN1);
-		when(mR1.findByActorsContaining("t")).thenReturn(lN1);
-		when(mR1.findByCountryContaining("t")).thenReturn(lN1);
+		List lN2 = new ArrayList<Movie>();
+		Movie m = new Movie();
+		m.setRtreference("Banned");
+		lN2.add(m);
+		when(mR.findByName("t")).thenReturn(lN1);
+		when(mR.findByNameContaining("t")).thenReturn(lN1);
+		when(mR.findByLanguageContaining("t")).thenReturn(lN1);
+		when(mR.findByActorsContaining("t")).thenReturn(lN1);
+		when(mR.findByCountryContaining("t")).thenReturn(lN1);
+		when(mR.existsByOmdbreference("tt0349047")).thenThrow(NullPointerException.class);
+		when(mR.findByOmdbreference("tt0349047")).thenReturn(lN);
 		
 		cR = mock(CustomerRepository.class);
+		Customer c = new Customer();
+		when(cR.findById(1)).thenReturn(c);
 		
 		mCR = mock(MovieCommentRepository.class);
 		MovieComment com = new MovieComment();
+		com.setCustomerId(1);
+		List lC = new ArrayList<MovieComment>();
+		lC.add(com);
 		when(mCR.getOne(1)).thenReturn(com);
+		when(mCR.getOne(0)).thenReturn(null);
 		when(mCR.existsMovieCommentByCustomerIdAndMovieId(1, 1)).thenReturn(true);
+		when(mCR.findMovieCommentByMovieIdOrderByDate(1)).thenReturn(lC);
 	}
 	
 	@Test
 	public void testCreateMap(){
 		MovieController mc = new MovieController();
 		Movie m = new Movie();
+		Movie m1 = new Movie();
+		m1.setRtreference("Banned");
 		List l1 = new ArrayList();
 		l1.add(m);
+		l1.add(m1);
 		JSONArray map = new JSONArray();
 		map.add(new JSONObject(m.toMap()));
+		
 		assertEquals(map, mc.createMap(l1));
 		
 	}
@@ -86,25 +106,23 @@ public class MoiveControllerTest {
 		MovieController mc = new MovieController(mR, cR, mCR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		mock.perform(get("/api/movie/search/").param("name", "test")).andExpect(status().isOk());
-		
-		//assertEquals(ResponseEntity.ok().body(new JSONObject()), 
-		//		mock.perform(get("api/movie/search?name=test")).andExpect(status().isOk()));
-	}
-	
-	/*
-	@Test
-	public void testSearchMovies1() throws Exception{
-		MovieController mc = new MovieController(mR1, cR, mCR);
-		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		mock.perform(get("/api/movie/search/").param("name", "t")).andExpect(status().isOk());
 		
-	}*/
+	}
+	
+	@Test
+	public void testAPIConnector() throws Exception{
+		MovieController mc = new MovieController();
+		assertEquals(new JSONObject(), mc.apiConnector(4, "test"));
+		
+	}
 	
 	@Test
 	public void testGetMovie() throws Exception{
 		MovieController mc = new MovieController(mR, cR, mCR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		mock.perform(get("/api/movie/get/").param("id", "1")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/get/").param("id", "0")).andExpect(status().isOk());
 		//assertEquals(ResponseEntity.ok().body(new JSONObject()), 
 		//		mock.perform(get("api/movie/search?name=test")).andExpect(status().isOk()));
 	}
@@ -133,6 +151,17 @@ public class MoiveControllerTest {
 		mock.perform(post("/api/movie/addComment/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json1.toJSONString())
+				).andExpect(status().isOk());
+		
+		JSONObject json2 = new JSONObject();
+		json2.put("customerId", "0");
+		json2.put("movieId", "0");
+		json2.put("review", "arse");
+		json2.put("score", "3");
+		
+		mock.perform(post("/api/movie/addComment/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json2.toJSONString())
 				).andExpect(status().isOk());
 	}
 	
@@ -171,6 +200,16 @@ public class MoiveControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json.toJSONString())
 				).andExpect(status().isOk());
+		
+		JSONObject json1 = new JSONObject();
+		json1.put("id", "0");
+		json1.put("review", "test");
+		json1.put("score", "3");
+		
+		mock.perform(post("/api/movie/updateComment/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json1.toJSONString())
+				).andExpect(status().isOk());
 	}
 	
 	@Test
@@ -185,9 +224,18 @@ public class MoiveControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json.toJSONString())
 				).andExpect(status().isOk());
+		
+		JSONObject json1 = new JSONObject();
+		json1.put("movieId", "0");
+		json1.put("loggedInUserId", "0");
+		
+		mock.perform(post("/api/deleteMovie/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json1.toJSONString())
+				).andExpect(status().isOk());
 	}
 	
-	/*
+	
 	@Test
 	public void testMainSearch() {
 		MovieController mc = new MovieController(mR, cR, mCR);
@@ -218,9 +266,13 @@ public class MoiveControllerTest {
 		item.put("t3", "");
 		results.put("Results", item);
 		
-		assertEquals(false, mc.mainSearch("Captain America: Civil War").isEmpty());
+		JSONObject nF = new JSONObject();
+		nF.put("message", "Not Found");
 		
-	}*/
+		assertEquals(false, mc.mainSearch("Captain America: Civil War").isEmpty());
+		assertEquals(nF, mc.mainSearch("qiu3rb[q[54pu9nbpiebv9qp34bp9gqb3uvyboiqrubvoiqbgybviyrbi"));
+		
+	}
 }
 
 

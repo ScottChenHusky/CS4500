@@ -75,7 +75,7 @@ public class MovieController {
     JSONObject json = new JSONObject();
     logInfo.put("Task", "MovieSearch");
     logInfo.put("SearchBy", searchby);
-    JSONObject movieResult;
+    JSONObject movieResult = new JSONObject();
     if (movie.isEmpty()) {
       movieResult = mainSearch(searchby);
     } else {
@@ -90,7 +90,7 @@ public class MovieController {
     return ResponseEntity.ok().body(json);
   }
 
-  private JSONObject apiConnector(int type, String searchBy) {
+  protected JSONObject apiConnector(int type, String searchBy) {
     JSONObject logInfo = new JSONObject();
     String requestUrl = "";
     switch (type) {
@@ -353,6 +353,7 @@ public class MovieController {
               .withT1(trailers.get(0))
               .withT2(trailers.get(1))
               .withT3(trailers.get(2));
+      System.out.println(imdbId);
       if (!movieRepository.existsByOmdbreference(imdbId)) {
         movieRepository.save(movie);
 
@@ -363,6 +364,7 @@ public class MovieController {
       log.warning(logInfo.toString());
     }
     log.finest(logInfo.toString());
+    System.out.println(imdbId);
     movie = movieRepository.findByOmdbreference(imdbId).get(0);
     if(movie.getRtreference() == null || !movie.getRtreference().equals("Banned")){
       return movie;
