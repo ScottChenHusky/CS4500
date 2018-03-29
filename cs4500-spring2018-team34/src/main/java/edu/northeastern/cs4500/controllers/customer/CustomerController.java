@@ -65,6 +65,9 @@ public class CustomerController{
             case "id":
                 putMessage(logInfo, response, "userId not found");
                 break;
+            case "admin":
+                putMessage(logInfo, response, "admin access not granted");
+                break;
         }
     }
 
@@ -310,16 +313,50 @@ public class CustomerController{
         logInfo.put("id", id);
         logInfo.put("username", username);
         JSONObject json = new JSONObject();
-        JSONArray array = new JSONArray();
-        json.put("result", array);
         Integer idAsInt = id != null ? myParseInt(id) : null;
         if (id != null && idAsInt == null) {
             putMessage(logInfo, json, "incorrect id format");
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(json);
         }
-        List<Object[]> result = customerService.getCustomers(idAsInt, username);
-        for (Object[] each : result) {
+        List<Object[]> customers = customerService.getCustomers(idAsInt, username);
+        JSONArray result = processCustomers(customers);
+        json.put("result", result);
+        putMessage(logInfo, json, "results fetched");
+        CustomerController.log.finest(logInfo.toString());
+        return ResponseEntity.ok().body(json);
+    }
+
+    @RequestMapping(path = "/api/getAllUsers/{adminId}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getAllCustomers(@PathVariable(name = "adminId") String adminId) {
+        JSONObject logInfo = new JSONObject();
+        logInfo.put("Task", "getAllCustomers");
+        logInfo.put("adminId", adminId);
+        JSONObject json = new JSONObject();
+        Integer adminIdAsInt = myParseInt(adminId);
+        if (adminIdAsInt == null) {
+            putMessage(logInfo, json, "incorrect id format");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(json);
+        }
+        try {
+            List<Object[]> customers = customerService.getAllCustomers(adminIdAsInt);
+            JSONArray result = processCustomers(customers);
+            json.put("result", result);
+            putMessage(logInfo, json, "results fetched");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(json);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            processAccessException(logInfo, json, message);
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(json);
+        }
+    }
+
+    private JSONArray processCustomers(List<Object[]> customers) {
+        JSONArray array = new JSONArray();
+        for (Object[] each : customers) {
             Customer customer = (Customer) each[0];
             Boolean isOnline = (Boolean) each[1];
             JSONObject object = new JSONObject();
@@ -336,9 +373,7 @@ public class CustomerController{
             object.put("isOnline", isOnline);
             array.add(object);
         }
-        putMessage(logInfo, json, "results fetched");
-        CustomerController.log.finest(logInfo.toString());
-        return ResponseEntity.ok().body(json);
+        return array;
     }
 
     @RequestMapping(path = "/api/updateUser", method = RequestMethod.POST)

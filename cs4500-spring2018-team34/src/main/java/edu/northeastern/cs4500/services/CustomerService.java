@@ -152,6 +152,17 @@ public class CustomerService {
         return result;
     }
 
+    public List<Object[]> getAllCustomers(Integer adminId) throws Exception {
+        ensureAdminAccess(adminId);
+        List<Object[]> result = new ArrayList<>();
+        List<Customer> customers = customerRepository.findAll();
+        for (Customer customer : customers) {
+            Boolean isOnline = CustomerService.SESSION.containsKey(customer.getId());
+            result.add(new Object[]{customer, isOnline});
+        }
+        return result;
+    }
+
     public void updateCustomer(Integer executor, Integer target, Map<String, Object> kwargs) throws Exception {
         ensureAccess(executor, target);
         Customer customer = internalFindTheCustomer(target);
@@ -199,6 +210,18 @@ public class CustomerService {
         Integer level = access[0];
         if (! executor.equals(target) && ! level.equals(0)) {
             throw new IllegalAccessException("target");
+        }
+        access[1] = CustomerService.AUTO_LOGOUT_TIME;
+    }
+
+    private void ensureAdminAccess(Integer executor) throws Exception {
+        Integer[] access = CustomerService.SESSION.get(executor);
+        if (access == null) {
+            throw new IllegalStateException("executor");
+        }
+        Integer level = access[0];
+        if (! level.equals(0)) {
+            throw new IllegalAccessException("admin");
         }
         access[1] = CustomerService.AUTO_LOGOUT_TIME;
     }
