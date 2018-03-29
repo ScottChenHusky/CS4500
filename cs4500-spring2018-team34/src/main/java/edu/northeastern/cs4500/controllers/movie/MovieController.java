@@ -75,7 +75,7 @@ public class MovieController {
     JSONObject json = new JSONObject();
     logInfo.put("Task", "MovieSearch");
     logInfo.put("SearchBy", searchby);
-    JSONObject movieResult;
+    JSONObject movieResult = new JSONObject();
     if (movie.isEmpty()) {
       movieResult = mainSearch(searchby);
     } else {
@@ -90,7 +90,7 @@ public class MovieController {
     return ResponseEntity.ok().body(json);
   }
 
-  private JSONObject apiConnector(int type, String searchBy) {
+  protected JSONObject apiConnector(int type, String searchBy) {
     JSONObject logInfo = new JSONObject();
     String requestUrl = "";
     switch (type) {
@@ -152,9 +152,14 @@ public class MovieController {
     if(Integer.parseInt(movieJSON.get("total_results").toString()) == 0){
       finalR.put("message", "Not Found");
     } else {
-      Movie m = tmdbParser(movieJSON);
-      finalR.put("Results" , new JSONObject(m.toMap()));
-      finalR.put("message", "Found");
+    	try {
+    		Movie m = tmdbParser(movieJSON);
+    	    finalR.put("Results" , new JSONObject(m.toMap()));
+    	    finalR.put("message", "Found");
+    	} catch (Exception e) {
+    		finalR.put("message", "Not Found");
+    	}
+      
     }
     return finalR;
   }
