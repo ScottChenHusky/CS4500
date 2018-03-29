@@ -68,7 +68,7 @@ public class MoiveControllerTest {
 		when(mR.findByActorsContaining("t")).thenReturn(lN1);
 		when(mR.findByCountryContaining("t")).thenReturn(lN1);
 		when(mR.existsByOmdbreference("tt0349047")).thenThrow(NullPointerException.class);
-		when(mR.findByOmdbreference("tt0349047")).thenReturn(lN);
+		when(mR.findByOmdbreference("tt0349047")).thenReturn(lN2);
 		
 		cR = mock(CustomerRepository.class);
 		Customer c = new Customer();

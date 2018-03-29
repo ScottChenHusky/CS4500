@@ -152,9 +152,14 @@ public class MovieController {
     if(Integer.parseInt(movieJSON.get("total_results").toString()) == 0){
       finalR.put("message", "Not Found");
     } else {
-      Movie m = tmdbParser(movieJSON);
-      finalR.put("Results" , new JSONObject(m.toMap()));
-      finalR.put("message", "Found");
+    	try {
+    		Movie m = tmdbParser(movieJSON);
+    	    finalR.put("Results" , new JSONObject(m.toMap()));
+    	    finalR.put("message", "Found");
+    	} catch (Exception e) {
+    		finalR.put("message", "Not Found");
+    	}
+      
     }
     return finalR;
   }
@@ -353,7 +358,6 @@ public class MovieController {
               .withT1(trailers.get(0))
               .withT2(trailers.get(1))
               .withT3(trailers.get(2));
-      System.out.println(imdbId);
       if (!movieRepository.existsByOmdbreference(imdbId)) {
         movieRepository.save(movie);
 
@@ -364,7 +368,6 @@ public class MovieController {
       log.warning(logInfo.toString());
     }
     log.finest(logInfo.toString());
-    System.out.println(imdbId);
     movie = movieRepository.findByOmdbreference(imdbId).get(0);
     if(movie.getRtreference() == null || !movie.getRtreference().equals("Banned")){
       return movie;
