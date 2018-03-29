@@ -11,8 +11,6 @@
 		vm.initMovie = initMovie;
 		// post review
 		vm.review = review;
-		// get the user info for each comment
-		vm.getUserForComment = getUserForComment;
 		// get rate from stars
 		vm.giveRate = giveRate;
 		
@@ -54,7 +52,6 @@
 			}
 		}
 		initMovie();
-		getUserForComment(vm.userId);
 
 		// post review
 		vm.rate = null;
@@ -86,16 +83,6 @@
 					}
 				});
 			}
-		}
-
-		// get the user info for each comment
-		function getUserForComment(userId) {
-			var url = '/api/user?id=' + userId;
-			$http.get(url, vm.userId).then(response);
-			function response(res) {
-				vm.user = res.data.result[0];
-			}
-			vm.username = vm.user.username;
 		}
 	}
 })();
