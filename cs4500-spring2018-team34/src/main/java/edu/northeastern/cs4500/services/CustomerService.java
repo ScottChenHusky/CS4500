@@ -30,15 +30,6 @@ public class CustomerService {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    CustomerService.SESSION.clear();
-                    List<AdminCode> codes = new ArrayList<>();
-                    for (Object[] registration : CustomerService.ADMIN_REGISTRATION.values()) {
-                        codes.add((AdminCode) registration[0]);
-                    }
-                    CustomerService.ADMIN_REGISTRATION.clear();
-                    if (! codes.isEmpty()) {
-                        adminCodeRepository.save(codes);
-                    }
                     Thread.currentThread().interrupt();
                 }
                 for (Map.Entry<Integer, Integer[]> session : CustomerService.SESSION.entrySet()) {
@@ -47,17 +38,12 @@ public class CustomerService {
                         CustomerService.SESSION.remove(session.getKey());
                     }
                 }
-                List<AdminCode> codes = new ArrayList<>();
                 for (Map.Entry<String, Object[]> adminRegistration : CustomerService.ADMIN_REGISTRATION.entrySet()) {
                     Integer remaining = (Integer) adminRegistration.getValue()[1] - 1;
                     adminRegistration.getValue()[1] = remaining;
                     if (remaining <= 0) {
-                        codes.add((AdminCode) adminRegistration.getValue()[0]);
                         CustomerService.ADMIN_REGISTRATION.remove(adminRegistration.getKey());
                     }
-                }
-                if (! codes.isEmpty()) {
-                    adminCodeRepository.save(codes);
                 }
             }
         }).start();
@@ -71,13 +57,9 @@ public class CustomerService {
         if (adminCode == null) {
             throw new IllegalStateException("code");
         }
-        Object[] current = CustomerService.ADMIN_REGISTRATION.get(username);
         CustomerService.ADMIN_REGISTRATION.put(username, new Object[]{adminCode, CustomerService.CODE_EXPIRE_TIME});
         adminCodeRepository.delete(adminCode);
         CustomerEmail.sendAdminCodeEmail(email, username, adminCode.getCode());
-        if (current != null) {
-            adminCodeRepository.save((AdminCode) current[0]);
-        }
     }
 
     public Integer register(String username, String password, String email, String phone, String code) {
@@ -92,7 +74,6 @@ public class CustomerService {
                 throw new IllegalArgumentException("code");
             }
             CustomerService.ADMIN_REGISTRATION.remove(username);
-            adminCodeRepository.save(adminCode); // can we re-use the code in the future?
             level = 0;
         }
         Date now = new Date();
