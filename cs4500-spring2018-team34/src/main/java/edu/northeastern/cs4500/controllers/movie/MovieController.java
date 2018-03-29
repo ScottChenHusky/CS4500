@@ -44,7 +44,7 @@ public class MovieController {
     JSONArray result = new JSONArray();
     for (Object o : input) {
       Movie m = (Movie)o;
-      if(m.getRtreference() != "Banned"){
+      if(m.getRtreference() == null || !m.getRtreference().equals("Banned")){
         result.add(new JSONObject(m.toMap()));
       }
 
@@ -352,7 +352,12 @@ public class MovieController {
     }
     log.finest(logInfo.toString());
     movie = movieRepository.findByOmdbreference(imdbId).get(0);
-    return movie;
+    if(movie.getRtreference() == null || !movie.getRtreference().equals("Banned")){
+      return movie;
+    } else {
+      return null;
+    }
+
 
   }
 
