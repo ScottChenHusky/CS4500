@@ -1,32 +1,24 @@
 package edu.northeastern.cs4500.controllers.movie;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -235,7 +227,7 @@ public class MoiveControllerTest {
 				).andExpect(status().isOk());
 	}
 	
-	
+
 	@Test
 	public void testMainSearch() {
 		MovieController mc = new MovieController(mR, cR, mCR);
@@ -273,6 +265,7 @@ public class MoiveControllerTest {
 		assertEquals(nF, mc.mainSearch("qiu3rb[q[54pu9nbpiebv9qp34bp9gqb3uvyboiqrubvoiqbgybviyrbi"));
 		
 	}
+
 }
 
 
