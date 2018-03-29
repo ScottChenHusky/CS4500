@@ -52,7 +52,7 @@ public class MovieController {
 	  
   }
 
-  private JSONArray createMap(List input) {
+  protected JSONArray createMap(List input) {
     JSONArray result = new JSONArray();
     for (Object o : input) {
       Movie m = (Movie)o;
