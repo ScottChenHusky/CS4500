@@ -133,11 +133,12 @@
 			return $http.post(url, user).then(response, error);
 
 			function response(res) {
-				$location.url("/user/" + res.data.id);
-				sessionStorage.setItem("currentUserId", res.data.id);
+                vm.error = null;
+				vm.success = "Code Has Been Sent to Your Email."
 			}
 
 			function error(err) {
+                vm.success = null;
 				vm.error = err.data.message;
 
 			}
@@ -173,8 +174,9 @@
 
 			return $http.post(url, user).then(response, error);
 			function response(res) {
-				$location.url("/user/" + res.data.id);
 				sessionStorage.setItem("currentUserId", res.data.id);
+                sessionStorage.setItem("currentUserLevel", res.data.level);
+                $location.url("/user/" + res.data.id);
 
 			}
 
