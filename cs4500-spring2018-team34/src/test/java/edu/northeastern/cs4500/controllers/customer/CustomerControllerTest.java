@@ -54,8 +54,10 @@ public class CustomerControllerTest {
         String password = "pass1";
 
         Integer id = 27;
+        Integer level = 1;
 
-        Mockito.when(customerService.login(username, password)).thenReturn(id);
+        Mockito.when(customerService.login(username, password))
+                .thenReturn(new Integer[]{id, level});
 
         JSONObject request = new JSONObject();
         request.put("username", username);
@@ -63,6 +65,7 @@ public class CustomerControllerTest {
 
         JSONObject response = new JSONObject();
         response.put("id", id);
+        response.put("level", level);
         response.put("message", "login succeeded");
 
         mockMvc.perform(post("/api/login")
@@ -104,8 +107,10 @@ public class CustomerControllerTest {
         String code = "";
 
         Integer id = 26;
+        Integer level = 1;
 
-        Mockito.when(customerService.register(username, password, email, phone, code)).thenReturn(id);
+        Mockito.when(customerService.register(username, password, email, phone, code))
+                .thenReturn(new Integer[]{id, level});
 
         JSONObject request = new JSONObject();
         request.put("username", username);

@@ -116,8 +116,9 @@ public class CustomerController{
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            Integer result = customerService.login(usernameStr, passwordStr);
-            response.put("id", result);
+            Integer[] result = customerService.login(usernameStr, passwordStr);
+            response.put("id", result[0]);
+            response.put("level", result[1]);
             putMessage(logInfo, response, "login succeeded");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);
@@ -190,8 +191,9 @@ public class CustomerController{
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            Integer result = customerService.register(usernameStr, passwordStr, emailStr, phoneStr, codeStr);
-            response.put("id", result);
+            Integer[] result = customerService.register(usernameStr, passwordStr, emailStr, phoneStr, codeStr);
+            response.put("id", result[0]);
+            response.put("level", result[1]);
             putMessage(logInfo, response, "registration succeeded");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);

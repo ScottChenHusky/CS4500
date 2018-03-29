@@ -62,7 +62,7 @@ public class CustomerService {
         CustomerEmail.sendAdminCodeEmail(email, username, adminCode.getCode());
     }
 
-    public Integer register(String username, String password, String email, String phone, String code) {
+    public Integer[] register(String username, String password, String email, String phone, String code) {
         if (customerRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("username");
         }
@@ -91,10 +91,10 @@ public class CustomerService {
         CustomerEmail.sendRegistrationEmail(customer.getEmail(), customer.getUsername());
         Integer id = customer.getId();
         CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT_TIME});
-        return id;
+        return new Integer[]{id, level};
     }
 
-    public Integer login(String username, String password) {
+    public Integer[] login(String username, String password) {
         List<Customer> result = customerRepository.findByUsername(username);
         if (result.isEmpty()) {
             throw new IllegalArgumentException("username");
@@ -109,7 +109,7 @@ public class CustomerService {
         Integer id = found.getId();
         Integer level = found.getLevel();
         CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT_TIME});
-        return id;
+        return new Integer[]{id, level};
     }
 
     public void logout(Integer executor, Integer target) throws Exception {
