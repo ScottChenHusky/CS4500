@@ -1,32 +1,35 @@
 package edu.northeastern.cs4500.services;
 
-import edu.northeastern.cs4500.repositories.Customer;
-import edu.northeastern.cs4500.repositories.CustomerFollowing;
-import edu.northeastern.cs4500.repositories.CustomerFollowingRepository;
-import edu.northeastern.cs4500.repositories.CustomerRepository;
+import edu.northeastern.cs4500.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service
 public class CustomerService {
 
     private static final Map<Integer, Integer[]> SESSION = new HashMap<>();
-    private static final Integer AUTO_LOGOUT = 1800;
+    private static final Integer AUTO_LOGOUT_TIME = 1800;
+
+    private static final Map<String, Object[]> ADMIN_REGISTRATION = new HashMap<>();
+    private static final Integer CODE_EXPIRE_TIME = 600;
 
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private CustomerFollowingRepository customerFollowingRepository;
+    @Autowired
+    private AdminCodeRepository adminCodeRepository;
 
-    static {
-        Thread thread = new Thread(() -> {
+    @PostConstruct
+    private void background() {
+        new Thread(() -> {
             while (true) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    CustomerService.SESSION.clear();
                     Thread.currentThread().interrupt();
                 }
                 for (Map.Entry<Integer, Integer[]> session : CustomerService.SESSION.entrySet()) {
@@ -35,18 +38,43 @@ public class CustomerService {
                         CustomerService.SESSION.remove(session.getKey());
                     }
                 }
+                for (Map.Entry<String, Object[]> adminRegistration : CustomerService.ADMIN_REGISTRATION.entrySet()) {
+                    Integer remaining = (Integer) adminRegistration.getValue()[1] - 1;
+                    adminRegistration.getValue()[1] = remaining;
+                    if (remaining <= 0) {
+                        CustomerService.ADMIN_REGISTRATION.remove(adminRegistration.getKey());
+                    }
+                }
             }
-        });
-        thread.start();
+        }).start();
+    }
+
+    public void applyAdminCode(String username, String email, String phone) {
+        if (customerRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("username");
+        }
+        AdminCode adminCode = adminCodeRepository.selectRandom();
+        if (adminCode == null) {
+            throw new IllegalStateException("code");
+        }
+        CustomerService.ADMIN_REGISTRATION.put(username, new Object[]{adminCode, CustomerService.CODE_EXPIRE_TIME});
+        adminCodeRepository.delete(adminCode);
+        CustomerEmail.sendAdminCodeEmail(email, username, adminCode.getCode());
     }
 
     public Integer register(String username, String password, String email, String phone, String code) {
         if (customerRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("username");
         }
-        //TODO: admin registration
+        Integer level = 1;
         if (code != null && ! code.equals("")) {
-            throw new IllegalArgumentException("code");
+            Object[] applied = CustomerService.ADMIN_REGISTRATION.get(username);
+            AdminCode adminCode = applied == null ? null : (AdminCode) applied[0];
+            if (adminCode == null || ! adminCode.getCode().equals(code)) {
+                throw new IllegalArgumentException("code");
+            }
+            CustomerService.ADMIN_REGISTRATION.remove(username);
+            level = 0;
         }
         Date now = new Date();
         Customer customer = new Customer()
@@ -57,14 +85,12 @@ public class CustomerService {
                 .withCreateDate(now)
                 .withLastLogin(now)
                 .withPrivacyLevel(1)
-                .withLevel(1)
+                .withLevel(level)
                 .withScore(0);
         customerRepository.save(customer);
-        Thread thread = new Thread(() -> CustomerEmail.sendEmail(customer.getUsername(), customer.getEmail()));
-        thread.start();
+        CustomerEmail.sendRegistrationEmail(customer.getEmail(), customer.getUsername());
         Integer id = customer.getId();
-        Integer level = customer.getLevel();
-        CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT});
+        CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT_TIME});
         return id;
     }
 
@@ -82,7 +108,7 @@ public class CustomerService {
         customerRepository.save(found);
         Integer id = found.getId();
         Integer level = found.getLevel();
-        CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT});
+        CustomerService.SESSION.put(id, new Integer[]{level, CustomerService.AUTO_LOGOUT_TIME});
         return id;
     }
 
@@ -122,6 +148,17 @@ public class CustomerService {
                 Boolean isOnline = CustomerService.SESSION.containsKey(customer.getId());
                 result.add(new Object[]{customer, isOnline});
             }
+        }
+        return result;
+    }
+
+    public List<Object[]> getAllCustomers(Integer adminId) throws Exception {
+        ensureAdminAccess(adminId);
+        List<Object[]> result = new ArrayList<>();
+        List<Customer> customers = customerRepository.findAll();
+        for (Customer customer : customers) {
+            Boolean isOnline = CustomerService.SESSION.containsKey(customer.getId());
+            result.add(new Object[]{customer, isOnline});
         }
         return result;
     }
@@ -174,7 +211,19 @@ public class CustomerService {
         if (! executor.equals(target) && ! level.equals(0)) {
             throw new IllegalAccessException("target");
         }
-        access[1] = CustomerService.AUTO_LOGOUT;
+        access[1] = CustomerService.AUTO_LOGOUT_TIME;
+    }
+
+    private void ensureAdminAccess(Integer executor) throws Exception {
+        Integer[] access = CustomerService.SESSION.get(executor);
+        if (access == null) {
+            throw new IllegalStateException("executor");
+        }
+        Integer level = access[0];
+        if (! level.equals(0)) {
+            throw new IllegalAccessException("admin");
+        }
+        access[1] = CustomerService.AUTO_LOGOUT_TIME;
     }
 
     private Customer internalFindTheCustomer(Integer id) {

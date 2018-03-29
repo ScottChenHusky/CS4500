@@ -728,3 +728,18 @@ td.dataTables_empty {
 		padding: 30px;
 	}
 }
+
+
+.blinking{
+	animation:blinkingText 1.5s infinite;
+	animation-duration: 3s;
+}
+
+
+@keyframes blinkingText{
+	0%{     color: #8cc63f;    }
+	49%{    color: transparent; }
+	50%{    color: transparent; }
+	99%{    color:transparent;  }
+	100%{   color: #8cc63f;    }
+}
