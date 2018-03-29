@@ -32,6 +32,8 @@ public class MovieController {
   String[] filterList = {
           "arse", "asshole", "bitch", "cunt", "fuck", "nigga", "nigger", " ass ", "ass hole"
   };
+  
+  
   @Autowired
   private MovieRepository movieRepository;
   @Autowired
@@ -39,8 +41,18 @@ public class MovieController {
 
   @Autowired
   private MovieCommentRepository movieCommentRepository;
+  
+  public MovieController(MovieRepository m, CustomerRepository c, MovieCommentRepository mcr) {
+	  this.movieRepository = m;
+	  this.customerRepository = c;
+	  this.movieCommentRepository = mcr;
+  }
+  
+  public MovieController() {
+	  
+  }
 
-  private JSONArray createMap(List input) {
+  protected JSONArray createMap(List input) {
     JSONArray result = new JSONArray();
     for (Object o : input) {
       Movie m = (Movie)o;
