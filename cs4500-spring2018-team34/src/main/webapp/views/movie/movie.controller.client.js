@@ -91,7 +91,7 @@
 		// get the user info for each comment
 		function getUserForComment(userId) {
 			var url = '/api/user?id=' + userId;
-			return $http.get(url, vm.userId).then(response);
+			$http.get(url, vm.userId).then(response);
 			function response(res) {
 				vm.user = res.data.result[0];
 			}
