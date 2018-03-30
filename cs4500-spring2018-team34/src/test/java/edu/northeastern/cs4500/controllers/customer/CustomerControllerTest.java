@@ -1,7 +1,9 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -11,10 +13,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CustomerController.class)
@@ -25,6 +32,11 @@ public class CustomerControllerTest {
 
     @MockBean
     private CustomerService customerService;
+    
+    @Before
+    public void setup() throws Exception {
+    	//mockMvc = MockMvcBuilders.standaloneSetup(new CustomerController()).build();
+    }
 
     @Test
     public void testKeepAliveShouldSucceed() throws Exception {
@@ -39,13 +51,35 @@ public class CustomerControllerTest {
 
         JSONObject response = new JSONObject();
         response.put("message", "keep alive succeeded");
-
+        
         mockMvc.perform(post("/api/keepAlive")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        request.put("loggedInUserId", "");
+        request.put("userId", "");
+        
+        mockMvc.perform(post("/api/keepAlive")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+                .andExpect(status().isBadRequest());
+        
+        Exception e = new RuntimeException();
+        
+        Mockito.doThrow(e).when(customerService).ensureAccess(1, 1);
+        
+        request.put("loggedInUserId", "1");
+        request.put("userId", "1");
+        
+        mockMvc.perform(post("/api/keepAlive")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+                .andExpect(status().isBadRequest());
+        
+        
     }
 
     @Test
@@ -74,6 +108,29 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        request.put("username", "");
+        request.put("password", "");
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("username", null);
+        request.put("password", null);
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        Mockito.when(customerService.login("1", "1"))
+        	.thenThrow(new IllegalArgumentException());
+        request.put("username", "1");
+        request.put("password", "1");
+        mockMvc.perform(post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -96,6 +153,24 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        request.put("loggedInUserId", "");
+        request.put("userId", "");
+        
+        mockMvc.perform(post("/api/logout")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        Mockito.doThrow(new Exception()).when(customerService).logout(1, 1);
+        
+        request.put("loggedInUserId", "1");
+        request.put("userId", "1");
+        
+        mockMvc.perform(post("/api/logout")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -129,6 +204,25 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        Mockito.when(customerService.register(username, password, email, phone, code))
+        	.thenThrow(Exception.class);
+        mockMvc.perform(post("/api/register")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("username", null);
+        mockMvc.perform(post("/api/register")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("username", "");
+        mockMvc.perform(post("/api/register")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -153,6 +247,24 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        Mockito.doThrow(Exception.class).when(customerService).applyAdminCode(username, email, phone);
+        mockMvc.perform(post("/api/applyAdminCode")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("username", null);
+        mockMvc.perform(post("/api/applyAdminCode")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("username", "");
+        mockMvc.perform(post("/api/applyAdminCode")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -179,8 +291,152 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(response.toJSONString()));
+        
+        Mockito.doThrow(Exception.class).when(customerService)
+        	.changePassword(loggedInUserId, userId, oldPassword, newPassword);
+        
+        mockMvc.perform(post("/api/updateUserPassword")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("oldPassword", null);
+        request.put("newPassword", null);
+        mockMvc.perform(post("/api/updateUserPassword")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("oldPassword", "");
+        request.put("newPassword", "");
+        mockMvc.perform(post("/api/updateUserPassword")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+        
+        request.put("loggedInUserId", "");
+        request.put("userId", "");
+        mockMvc.perform(post("/api/updateUserPassword")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testGetCustomers() throws Exception {
+    	//Mockito.doNothing().when(customerService).getCustomers(1, "");
+    	mockMvc.perform(get("/api/user").param("id", "1")).andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testGetAllUsers() throws Exception {
+    	//Mockito.doNothing().when(customerService).getCustomers(1, "");
+    	mockMvc.perform(get("/api/getAllUsers/{adminId}", 1)).andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testUpdateUser() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
     }
 
+    @Test
+    public void testDeleteUser() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/deleteUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/deleteUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	request.put("loggedInUserId", "");
+    	request.put("userId", "");
+    	
+    	mockMvc.perform(post("/api/deleteUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "$");
+    	request.put("userId", "$");
+    	
+    	mockMvc.perform(post("/api/deleteUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
     
-
+    @Test
+    public void testGetFollowing() throws Exception {
+    	List l1 = new ArrayList();
+    	l1.add(new Customer());
+    	Mockito.when(customerService.getFollowing(1)).thenReturn(l1);
+    	mockMvc.perform(get("/api/user/following/{id}", 1)).andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testGetFollowers() throws Exception {
+    	List l1 = new ArrayList();
+    	l1.add(new Customer());
+    	Mockito.when(customerService.getFollowers(1)).thenReturn(l1);
+    	mockMvc.perform(get("/api/user/followers/{id}", 1)).andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testFollow() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/user/follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("from", "1");
+    	request.put("to", "2");
+    	
+    	mockMvc.perform(post("/api/user/follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    }
+    
+    @Test
+    public void testUnFollow() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/user/un-follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("from", "1");
+    	request.put("to", "2");
+    	
+    	mockMvc.perform(post("/api/user/un-follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    }
 }
