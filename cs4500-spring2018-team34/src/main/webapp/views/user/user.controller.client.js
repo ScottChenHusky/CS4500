@@ -525,7 +525,6 @@
 						} else {
 							vm.exactMovie = response.data.Movie.Results;
 						}
-						console.log("vm.exactMovie: " + vm.exactMovie)
 					}
 					if (m == "Name") {
 						vm.movies = response.data.Name;
