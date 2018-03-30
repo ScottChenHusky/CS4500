@@ -54,7 +54,7 @@
 					<li>
 						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
 							<dt>
-								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
+								<a href="#!/movie/{{movie.id}}"><img ng-src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
 								<a href="#!/movie/{{movie.id}}">
@@ -82,7 +82,7 @@
 					<li ng-show="$index <= model.userCap">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a>
+								<a href="#!/user/{{user.id}}"><img src="../../assets/images/user-photo.png" alt=""/></a>
 							</dt>
 							<dd>
 								<a href="#!/user/{{user.id}}">
@@ -138,7 +138,7 @@
 					<li>
 						<dl class="list-ul clearfix" ng-show="$index <= model.movieCap">
 							<dt>
-								<a href="#!/movie/{{movie.id}}"><img src="{{movie.poster}}"></a>
+								<a href="#!/movie/{{movie.id}}"><img ng-src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
 								<a href="#!/movie/{{movie.id}}">
@@ -166,7 +166,7 @@
 					<li ng-show="$index <= model.userCapTab">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{user.id}}"><img src="{{user.image}}"></a>
+								<a href="#!/user/{{user.id}}"><img src="../../assets/images/user-photo.png" alt=""/></a>
 							</dt>
 							<dd>
 								<a href="#!/user/{{user.id}}"><p class="tit">{{user.username}}</p></a>
