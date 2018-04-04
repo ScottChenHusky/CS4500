@@ -89,6 +89,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "executor";
+            }
             processAccessException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -124,6 +127,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (IllegalArgumentException e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "unknown";
+            }
             switch (message) {
                 case "username":
                     putMessage(logInfo, response, "username not found");
@@ -158,6 +164,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "target";
+            }
             processAccessException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -199,6 +208,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "unknown";
+            }
             switch (message) {
                 case "username":
                     putMessage(logInfo, response, "username already exists");
@@ -244,6 +256,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "unknown";
+            }
             switch (message) {
                 case "username":
                     putMessage(logInfo, response, "username already exists");
@@ -292,6 +307,9 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
+            if(message == null) {
+            	message = "admin";
+            }
             processAccessException(logInfo, response, message);
             switch (message) {
                 case "oldPassword":
