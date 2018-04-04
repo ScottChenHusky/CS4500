@@ -8,10 +8,79 @@
 	function HomeController($http) {
 		var vm = this;
 		vm.search = search;
+		
+		// get Lists of movies
+		vm.init = init;
+		
+		// Lists of movies
+		vm.newMovies = [];
+		vm.numberOfNewMovies = 0;
+		
+		vm.hotMovies = [];
+		vm.numberOfHotMovies = 0;
+		
+		vm.recomMovies = [];
+		vm.numberOfRecomMovies = 0;
 
 		function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
+		
+		function init() {
+			// get hot movie list
+			var new_url = '/api/movies/hotMovies';
+			$http.get(hot_url).then(response);
+			function response(res) {
+				vm.hotMovies = res.data;
+				vm.numberOfHotMovies = vm.hotMovies.length;
+			}
+			// get new movie list
+			var new_url = '/api/movies/newMovies';
+			$http.get(new_url).then(response);
+			function response(res) {
+				vm.newMovies = res.data;
+				vm.numberOfNewMovies = vm.newMovies.length;
+			}
+			// get recommend movie list
+			var recom_url = '/api/movies/recomMovies';
+			$http.get(recom_url).then(response);
+			function response(res) {
+				vm.recomMovies = res.data;
+				vm.numberOfNewMovies = vm.recomMovies.length;
+			}
+		}
+		
+		// html style control
+		$("h2 a.new-movies").click(function() {
+			var eachLine = Math.floor($("ul.new_movies").width() / 155.97);
+			var lines = 1 + Math.floor(($("ul.new_movies").height() - 212)/ 254);
+			if (vm.numberOfNewMovies/eachLine > lines) {
+				$("ul.new_movies").css("height",function(){  
+					  return $(this).height() + 255 + "px";  
+				});
+			}
+		});
+		
+		$("h2 a.hot-movies").click(function() {
+			var eachLine = Math.floor($("ul.hot_movies").width() / 155.97);
+			var lines = 1 + Math.floor(($("ul.hot_movies").height() - 212)/ 254);
+			if (vm.numberOfNewMovies/eachLine > lines) {
+				$("ul.hot_movies").css("height",function(){  
+					  return $(this).height() + 255 + "px";  
+				});
+			}
+		});
+		
+		$("h2 a.recom-movies").click(function() {
+			var eachLine = Math.floor($("ul.recom_movies").width() / 155.97);
+			var lines = 1 + Math.floor(($("ul.recom_movies").height() - 212)/ 254);
+			if (vm.numberOfNewMovies/eachLine > lines) {
+				$("ul.recom_movies").css("height",function(){  
+					  return $(this).height() + 255 + "px";  
+				});
+			}
+		});
+		
 		// vm.addMovieToDB = addMovieToDB;
 
 		// var id_prefix = "tt0";
