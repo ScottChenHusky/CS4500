@@ -51,7 +51,7 @@
 		}
 		
 		// html style control
-		$("h2 a.new-movies").click(function() {
+		$("a.new-movies").click(function() {
 			var eachLine = Math.floor($("ul.new_movies").width() / 155.97);
 			var lines = 1 + Math.floor(($("ul.new_movies").height() - 212)/ 254);
 			if (vm.numberOfNewMovies/eachLine > lines) {
@@ -61,7 +61,7 @@
 			}
 		});
 		
-		$("h2 a.hot-movies").click(function() {
+		$("a.hot-movies").click(function() {
 			var eachLine = Math.floor($("ul.hot_movies").width() / 155.97);
 			var lines = 1 + Math.floor(($("ul.hot_movies").height() - 212)/ 254);
 			if (vm.numberOfNewMovies/eachLine > lines) {
@@ -71,7 +71,7 @@
 			}
 		});
 		
-		$("h2 a.recom-movies").click(function() {
+		$("a.recom-movies").click(function() {
 			var eachLine = Math.floor($("ul.recom_movies").width() / 155.97);
 			var lines = 1 + Math.floor(($("ul.recom_movies").height() - 212)/ 254);
 			if (vm.numberOfNewMovies/eachLine > lines) {

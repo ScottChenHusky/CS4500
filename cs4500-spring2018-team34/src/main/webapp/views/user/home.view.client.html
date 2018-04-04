@@ -4,47 +4,49 @@
 
 		<section class="movie-section">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> New <a href=""
-					class="more new-movies">View More</a>
+				<i class="glyphicon glyphicon-film"></i> New
 			</h2>
 
 			<ul class="new_movies" ng-repeat="movie in model.newMovies">
-				<li class="item"><img class="cover img-responsive"
+				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
 					ng-src="{{movie.poster}}">
 					<h5>
 						<span>{{movie.score}}</span>{{movie.name}}
-					</h5></li>
+					</h5></a></li>
 			</ul>
+			<a href="" class="more new-movies">View More</a>
 		</section>
 
 		<section class="movie-section">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Hot <a href=""
-					class="more hot-movies">View More</a>
+				<i class="glyphicon glyphicon-film"></i> Hot 
 			</h2>
 
 			<ul class="hot_movies" ng-repeat="movie in model.hotMovies">
-				<li class="item"><img class="cover img-responsive"
+				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
 					ng-src="{{movie.poster}}">
 					<h5>
 						<span>{{movie.score}}</span>{{movie.name}}
-					</h5></li>
+					</h5></a></li>
 			</ul>
+			<a href=""
+					class="more hot-movies">View More</a>
 		</section>
 
 		<section class="movie-section">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> New <a href=""
-					class="more recom-movies">View More</a>
+				<i class="glyphicon glyphicon-film"></i> New 
 			</h2>
 
 			<ul class="recom_movies" ng-repeat="movie in model.recomMovies">
-				<li class="item"><img class="cover img-responsive"
+				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
 					ng-src="{{movie.poster}}">
 					<h5>
 						<span>{{movie.score}}</span>{{movie.name}}
-					</h5></li>
+					</h5></a></li>
 			</ul>
+			<a href=""
+					class="more recom-movies">View More</a>
 		</section>
 
 	</div>
