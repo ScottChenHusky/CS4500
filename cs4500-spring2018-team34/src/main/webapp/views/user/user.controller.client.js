@@ -8,17 +8,21 @@
 	function HomeController($http) {
 		var vm = this;
 		vm.search = search;
-		
+
 		// get Lists of movies
 		vm.init = init;
+
+		// control the length of movie names
+		vm.cutString = cutString;
+		vm.len = 28;
 		
 		// Lists of movies
 		vm.newMovies = [];
 		vm.numberOfNewMovies = 0;
-		
+
 		vm.hotMovies = [];
 		vm.numberOfHotMovies = 0;
-		
+
 		vm.recomMovies = [];
 		vm.numberOfRecomMovies = 0;
 
@@ -26,6 +30,29 @@
 			SearchController.search(searchTerm);
 		}
 		
+		function cutString(str) {
+		    if(str.length*2 <= vm.len) {
+		        return str;
+		    }
+		    var strlen = 0;
+		    var s = "";
+		    for(var i = 0;i < str.length; i++) {
+		        s = s + str.charAt(i);
+		        if (str.charCodeAt(i) > 128) {
+		            strlen = strlen + 2;
+		            if(strlen >= vm.len){
+		                return s.substring(0,s.length-1) + "…";
+		            }
+		        } else {
+		            strlen = strlen + 1;
+		            if(strlen >= vm.len){
+		                return s.substring(0,s.length-2) + "…";
+		            }
+		        }
+		    }
+		    return s;
+		}
+
 		function init() {
 			// get hot movie list
 			var new_url = '/api/movies/hotMovies';
@@ -49,38 +76,51 @@
 				vm.numberOfNewMovies = vm.recomMovies.length;
 			}
 		}
-		
+
 		// html style control
-		$("a.new-movies").click(function() {
-			var eachLine = Math.floor($("ul.new_movies").width() / 155.97);
-			var lines = 1 + Math.floor(($("ul.new_movies").height() - 212)/ 254);
-			if (vm.numberOfNewMovies/eachLine > lines) {
-				$("ul.new_movies").css("height",function(){  
-					  return $(this).height() + 255 + "px";  
+		$("section a.new-movies").click(
+				function() {
+					var eachLine = Math
+							.floor($("ul.new_movies").width() / 155.97);
+					var lines = 1 + Math
+							.floor(($("ul.new_movies").height() - 212) / 254);
+					console.log("eachLine: " + eachLine);
+					console.log("lines: " + lines);
+					if (vm.numberOfNewMovies / eachLine > lines) {
+						console.log("here");
+						$("ul.new_movies").css("height", function() {
+							return $(this).height() + 255 + "px";
+						});
+					}
 				});
-			}
-		});
-		
-		$("a.hot-movies").click(function() {
-			var eachLine = Math.floor($("ul.hot_movies").width() / 155.97);
-			var lines = 1 + Math.floor(($("ul.hot_movies").height() - 212)/ 254);
-			if (vm.numberOfNewMovies/eachLine > lines) {
-				$("ul.hot_movies").css("height",function(){  
-					  return $(this).height() + 255 + "px";  
+
+		$("section a.hot-movies").click(
+				function() {
+					var eachLine = Math
+							.floor($("ul.hot_movies").width() / 155.97);
+					var lines = 1 + Math
+							.floor(($("ul.hot_movies").height() - 212) / 254);
+					if (vm.numberOfNewMovies / eachLine > lines) {
+						$("ul.hot_movies").css("height", function() {
+							return $(this).height() + 255 + "px";
+						});
+					}
 				});
-			}
-		});
-		
-		$("a.recom-movies").click(function() {
-			var eachLine = Math.floor($("ul.recom_movies").width() / 155.97);
-			var lines = 1 + Math.floor(($("ul.recom_movies").height() - 212)/ 254);
-			if (vm.numberOfNewMovies/eachLine > lines) {
-				$("ul.recom_movies").css("height",function(){  
-					  return $(this).height() + 255 + "px";  
-				});
-			}
-		});
-		
+
+		$("section a.recom-movies")
+				.click(
+						function() {
+							var eachLine = Math.floor($("ul.recom_movies")
+									.width() / 155.97);
+							var lines = 1 + Math.floor(($("ul.recom_movies")
+									.height() - 212) / 254);
+							if (vm.numberOfNewMovies / eachLine > lines) {
+								$("ul.recom_movies").css("height", function() {
+									return $(this).height() + 255 + "px";
+								});
+							}
+						});
+
 		// vm.addMovieToDB = addMovieToDB;
 
 		// var id_prefix = "tt0";
@@ -202,12 +242,12 @@
 			return $http.post(url, user).then(response, error);
 
 			function response(res) {
-                vm.error = null;
+				vm.error = null;
 				vm.success = "Code Has Been Sent to Your Email."
 			}
 
 			function error(err) {
-                vm.success = null;
+				vm.success = null;
 				vm.error = err.data.message;
 
 			}
@@ -244,8 +284,8 @@
 			return $http.post(url, user).then(response, error);
 			function response(res) {
 				sessionStorage.setItem("currentUserId", res.data.id);
-                sessionStorage.setItem("currentUserLevel", res.data.level);
-                $location.url("/user/" + res.data.id);
+				sessionStorage.setItem("currentUserLevel", res.data.level);
+				$location.url("/user/" + res.data.id);
 
 			}
 
@@ -261,12 +301,29 @@
 		var vm = this;
 		vm.isOwner = false;
 		vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
+		vm.user = null;
+		vm.favoriteMovies = [];
+		vm.favoriteMoviesNum = 0;
+		vm.wantToSeeMovies = [];
+		vm.wantToSeeMoviesNum = 0;
+		vm.FriendRecomMovies = [];
+		vm.FriendRecomMoviesNum = 0;
+		
+		// functions
+		vm.initProfile = initProfile;
 		vm.isFollowing = false;
 		vm.userId = $routeParams.uid;
-		vm.initProfile = initProfile;
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
+		// control capacity of each list
+//		vm.viewMore = viewMore;
+//		vm.capacity = 40;
+		// control the length of movie names
+		vm.cutString = cutString;
+		vm.len = 28;
+		vm.testName = "Movie Section Starts Movie Section Starts";
+		
 		// For Admin
 		vm.deleteUser = deleteUser;
 		vm.deleteMovie = deleteMovie;
@@ -281,6 +338,51 @@
 				vm.root = vm.overallInfo.Root[0];
 			}
 		}
+		
+		function initProfile() {
+			var url = '/api/user?id=' + vm.userId;
+			$http.get(url, vm.userId).then(response);
+
+			function response(res) {
+				// get current User Info
+				vm.user = res.data.result[0];
+				
+				// get following info
+				url = '/api/user/following/' + vm.userId;
+				
+				$http.get(url).then(following_response);
+				function following_response(res) {
+					vm.following = res.data.result;
+				}
+				// get followers info
+				url = '/api/user/followers/' + vm.userId;
+				$http.get(url).then(followers_response);
+
+				function followers_response(res) {
+					vm.follower = res.data.result;
+					//
+					if ($location.path().includes(
+							"/user/" + sessionStorage.getItem("currentUserId"))) {
+						vm.isOwner = true;
+					} else {
+						vm.isOwner = false;
+						vm.isFollowing = false;
+						for (var i = 0; i < vm.follower.length; i++) {
+							if (vm.follower[i].follower == sessionStorage
+									.getItem("currentUserId")) {
+								vm.isFollowing = true;
+							}
+						}
+					}
+				}
+				
+				// get Favorite Movie list
+//				vm.favoriteMovies = res.data.result[0].favoriteList;
+			}
+
+		}
+		initProfile();
+
 		function updatePassword(old, new1, new2) {
 			if (!old) {
 				vm.error = "Please enter the old password";
@@ -354,103 +456,6 @@
 
 		}
 
-		$(".profile-section").hide(); // Hide all content
-		$(".profile-section").hide();
-		$(".action-section").hide();
-		$(".follower-section").hide();
-		$(".following-section").hide();
-		$(".dash-section").hide();
-		// $("ul.tabs li:first").addClass("cur").show(); //Activate first tab
-		// $(".movie-section:first").show(); //Show first tab content
-
-		// On Click Event
-		// Show Movie Section
-		$("ul.tabs li").click(function() {
-			$("ul.tabs li").removeClass("cur");
-			$(this).addClass("cur");
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".following-section").hide();
-			$(".dash-section").hide();
-			var activeTab = $(this).find("a").attr("href");
-			$(activeTab).fadeIn();
-			return false;
-		});
-
-		// Show Following Section
-		$("div ul li.following").click(function() {
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".follower-section").hide();
-			$(".dash-section").hide();
-		});
-
-		// Show Follower Section
-		$("div ul li.follower").click(function() {
-			$(".movie-section").hide();
-			$(".profile-section").hide();
-			$(".action-section").hide();
-			$(".following-section").hide();
-			$(".follower-section").show();
-			$(".dash-section").hide();
-		});
-
-		// Cancel Button
-		$("section button.cancel").click(function() {
-			window.location.reload();
-			// $("ul.tabs li").removeClass("cur");
-			// $(".movie-section").show();
-			// $(".profile-section").hide();
-			// $(".action-section").hide();
-			// $(".follower-section").hide();
-			// $(".following-section").hide();
-			// $(".dash-section").hide();
-		});
-
-		function initProfile() {
-
-			var url = '/api/user?id=' + vm.userId;
-
-			$http.get(url, vm.userId).then(response);
-
-			function response(res) {
-				vm.user = res.data.result[0];
-
-				url = '/api/user/following/' + vm.userId;
-				$http.get(url).then(following_response);
-
-				function following_response(res) {
-					vm.following = res.data.result;
-				}
-
-				url = '/api/user/followers/' + vm.userId;
-				$http.get(url).then(followers_response);
-
-				function followers_response(res) {
-					vm.follower = res.data.result;
-					//
-					if ($location.path().includes(
-							"/user/" + sessionStorage.getItem("currentUserId"))) {
-						vm.isOwner = true;
-					} else {
-						vm.isOwner = false;
-						vm.isFollowing = false;
-						for (var i = 0; i < vm.follower.length; i++) {
-							if (vm.follower[i].follower == sessionStorage
-									.getItem("currentUserId")) {
-								vm.isFollowing = true;
-							}
-						}
-					}
-				}
-			}
-
-		}
-		initProfile();
-
 		function follow() {
 			var url = "/api/user/follow";
 			var obj = {
@@ -490,6 +495,94 @@
 				return;
 			}
 		}
+		
+//		function viewMore() {
+//			vm.capacity = vm.capacity + 40;
+//		}
+		
+		function cutString(str) {
+		    if(str.length*2 <= vm.len) {
+		        return str;
+		    }
+		    var strlen = 0;
+		    var s = "";
+		    for(var i = 0;i < str.length; i++) {
+		        s = s + str.charAt(i);
+		        if (str.charCodeAt(i) > 128) {
+		            strlen = strlen + 2;
+		            if(strlen >= vm.len){
+		                return s.substring(0,s.length-1) + "…";
+		            }
+		        } else {
+		            strlen = strlen + 1;
+		            if(strlen >= vm.len){
+		                return s.substring(0,s.length-2) + "…";
+		            }
+		        }
+		    }
+		    return s;
+		}
+
+		// html control
+		$(".profile-section").hide(); // Hide all content
+		$(".profile-section").hide();
+		$(".action-section").hide();
+		$(".follower-section").hide();
+		$(".following-section").hide();
+		$(".dash-section").hide();
+		$(".movie-section").hide();
+		// $("ul.tabs li:first").addClass("cur").show(); //Activate first tab
+		// $(".movie-section:first").show(); //Show first tab content
+
+		// On Click Event
+		// Show Movie Section
+		$("ul.tabs li").click(function() {
+			$("ul.tabs li").removeClass("cur");
+			$(this).addClass("cur");
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".follower-section").hide();
+			$(".following-section").hide();
+			$(".dash-section").hide();
+			$(".movieSummary-section").hide();
+			var activeTab = $(this).find("a").attr("href");
+			$(activeTab).fadeIn();
+			return false;
+		});
+
+		// Show Following Section
+		$("div ul li.following").click(function() {
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".follower-section").hide();
+			$(".dash-section").hide();
+			$(".movieSummary-section").hide();
+		});
+
+		// Show Follower Section
+		$("div ul li.follower").click(function() {
+			$(".movie-section").hide();
+			$(".profile-section").hide();
+			$(".action-section").hide();
+			$(".following-section").hide();
+			$(".follower-section").show();
+			$(".dash-section").hide();
+			$(".movieSummary-section").hide();
+		});
+
+		// Cancel Button
+		$("section button.cancel").click(function() {
+			window.location.reload();
+			// $("ul.tabs li").removeClass("cur");
+			// $(".movie-section").show();
+			// $(".profile-section").hide();
+			// $(".action-section").hide();
+			// $(".follower-section").hide();
+			// $(".following-section").hide();
+			// $(".dash-section").hide();
+		});
 	}
 
 	function SearchController($http, $routeParams) {
@@ -582,7 +675,6 @@
 
 			// Movie Search Results
 			$http.get(mUrl).then(function(response) {
-				vm.test = response.data;
 				// number of movies
 				if (response.data.Movie.message == "Not Found") {
 					return;

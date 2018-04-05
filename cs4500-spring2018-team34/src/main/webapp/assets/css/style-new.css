@@ -566,6 +566,44 @@
 	font-size: 22px;
 }
 
+.dy_main .movieList {
+	width: 100%;
+	height: 265px;
+	overflow: hidden;
+}
+.dy_main .moreRlated {
+	float: right;
+}
+.dy_main .movies {
+	margin-top: 20px;
+	width: 100%;
+}
+
+.dy_main .movies li {
+	float: left;
+	width: 140px;
+	height: 260px;
+	margin-right: 15px;
+}
+
+.dy_main ul li h5 {
+	margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #2d7788;
+    text-align: center;
+    width: 140px;
+    height: 39px;
+    overflow: hidden;
+}
+
+.dy_main ul li h5 span {
+    font-size: 16px;
+	color: #e09015;
+	float: right;
+}
+
 .m_left {
 	width: 40%;
 	float: left;

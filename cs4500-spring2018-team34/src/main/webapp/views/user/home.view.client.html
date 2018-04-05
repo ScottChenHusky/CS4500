@@ -1,17 +1,47 @@
 
 <div style="padding-bottom: 5%" class="wraper">
-	<div class="container">
+	<div class="container homePage">
 
 		<section class="movie-section">
 			<h2 class="section-title">
 				<i class="glyphicon glyphicon-film"></i> New
 			</h2>
 
+			<!-- <ul class="new_movies">
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title"><span>4.0</span>{{model.cutString(model.testName)}}</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name2</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name3</h5>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name4</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name5</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name6</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name7</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name8</h5></li>
+				<li class="item"><img class="cover img-responsive"
+					src="../../assets/images/Death_Note.jpg" alt="" />
+					<h5 class="movie-title">Movie Name9</h5></li>
+				</li>
+			</ul> -->
 			<ul class="new_movies" ng-repeat="movie in model.newMovies">
 				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
 					ng-src="{{movie.poster}}">
 					<h5>
-						<span>{{movie.score}}</span>{{movie.name}}
+						<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
 					</h5></a></li>
 			</ul>
 			<a href="" class="more new-movies">View More</a>
@@ -19,34 +49,32 @@
 
 		<section class="movie-section">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Hot 
+				<i class="glyphicon glyphicon-film"></i> Hot
 			</h2>
 
 			<ul class="hot_movies" ng-repeat="movie in model.hotMovies">
-				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
-					ng-src="{{movie.poster}}">
-					<h5>
-						<span>{{movie.score}}</span>{{movie.name}}
-					</h5></a></li>
+				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img
+						class="cover img-responsive" ng-src="{{movie.poster}}">
+						<h5>
+							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+						</h5></a></li>
 			</ul>
-			<a href=""
-					class="more hot-movies">View More</a>
+			<a href="" class="more hot-movies">View More</a>
 		</section>
 
 		<section class="movie-section">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> New 
+				<i class="glyphicon glyphicon-film"></i> New
 			</h2>
 
 			<ul class="recom_movies" ng-repeat="movie in model.recomMovies">
-				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img class="cover img-responsive"
-					ng-src="{{movie.poster}}">
-					<h5>
-						<span>{{movie.score}}</span>{{movie.name}}
-					</h5></a></li>
+				<li class="item"><a href="#!/movie/{{model.movie.id}}"><img
+						class="cover img-responsive" ng-src="{{movie.poster}}">
+						<h5>
+							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+						</h5></a></li>
 			</ul>
-			<a href=""
-					class="more recom-movies">View More</a>
+			<a href="" class="more recom-movies">View More</a>
 		</section>
 
 	</div>

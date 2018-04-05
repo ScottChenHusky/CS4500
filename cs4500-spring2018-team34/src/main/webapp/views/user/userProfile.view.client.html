@@ -27,7 +27,6 @@
 
 		<!-- //profile-container -->
 		<ul class="option-menu">
-
 			<li ng-show="model.currentUserLevel == 0" class="block dashHome"><input
 				type="checkbox" name="item" id="item3" /> <label for="item3"><i
 					aria-hidden="true"></i> Dashboard </label>
@@ -64,8 +63,8 @@
 							Favorite Movies </a></li>
 					<li><a href="#movie2"><i aria-hidden="true"></i> Want to
 							See Movies </a></li>
-					<li><a href="#movie3"><i aria-hidden="true"></i> Action
-							Movies </a></li>
+					<li><a href="#movie3"><i aria-hidden="true"></i> Friends
+							Recommended Movies </a></li>
 				</ul></li>
 		</ul>
 	</div>
@@ -886,10 +885,80 @@
 		<!-- END DASHBOARD SECTION -->
 
 		<!-- Movie Section Starts -->
+		<!-- Summary Section Starts -->
+		<section class="movieSummary-section">
+			<ul class="tabs">
+				<li><a href="#movie1"><h2 class="section-title">
+							<i class="glyphicon glyphicon-film"></i> My Favorite Movies
+							<p>
+								Total: <span>{{model.favoriteMoviesNum}}</span>
+							</p>
+						</h2></a></li>
+			</ul>
+			<ul class="movies" ng-repaeat="movie in favoriteMovies">
+				<li class="item"><img class="cover img-responsive"
+					ng-src="{{movie.poster}}" />
+					<h5 class="movie-title">
+						<span>{{movie.score}}</span>{{model.cutString(model.testName)}}
+					</h5></li>
+			</ul>
+
+		</section>
+		<section class="movieSummary-section">
+			<ul class="tabs">
+				<li><a href="#movie2"><h2 class="section-title">
+							<i class="glyphicon glyphicon-film"></i> Want to See Movies
+							<p>
+								Total: <span>{{model.wantToSeeMoviesNum}}</span>
+							</p>
+						</h2></a></li>
+			</ul>
+			<ul class="movies" ng-repaeat="movie in wantToSeeMovies">
+				<li class="item"><img class="cover img-responsive"
+					ng-src="{{movie.poster}}" />
+					<h5 class="movie-title">
+						<span>{{movie.score}}</span>{{model.cutString(model.testName)}}
+					</h5></li>
+			</ul>
+		</section>
+
+		<div class="bottom"></div>
+
+		<section class="movieSummary-section">
+			<ul class="tabs">
+				<li><a href="#movie3"><h2 class="section-title">
+							<i class="glyphicon glyphicon-film"></i> Friends Recommended
+							Movies
+							<p>Total: <span>{{model.FriendRecomMoviesNum}}</span></p>
+						</h2></a></li>
+			</ul>
+			<!-- <h2 class="section-title">
+				<i class="glyphicon glyphicon-film"></i> Friends Recommended Movies
+			</h2> -->
+			<ul class="movies" ng-repaeat="movie in FriendRecomMovies">
+				<li class="item"><img class="cover img-responsive"
+					ng-src="{{movie.poster}}" />
+					<h5 class="movie-title">
+						<span>4.0</span>{{model.cutString(model.testName)}}
+					</h5></li>
+			</ul>
+		</section>
+		<!-- Summary Section Ends -->
+
 		<section class="movie-section" id="movie1">
 			<h2 class="section-title">
 				<i class="glyphicon glyphicon-film"></i> My Favorite Movies
+				<p>
+					Total: <span>{{model.favoriteMoviesNum}}</span>
+				</p>
 			</h2>
+			<!-- <ul class="movies" ng-repaeat="movie in favoriteMovies">
+				<li class="item"><img class="cover img-responsive"
+					ng-src="{{movie.poster}}"/>
+					<h5 class="movie-title">
+						<span>4.0</span>{{model.cutString(model.testName)}}
+					</h5></li>
+			</ul> -->
 			<ul class="movies">
 				<li>
 					<div class="item">
@@ -902,7 +971,9 @@
 					<div class="item">
 						<img class="cover img-responsive"
 							src="../../assets/images/Death_Note.jpg" alt="" />
-						<h5 class="movie-title">Movie Name</h5>
+						<h5 class="movie-title">
+							<span>4.0</span>Movie Name
+						</h5>
 					</div>
 				</li>
 			</ul>
@@ -914,13 +985,18 @@
 		<section class="movie-section" id="movie2">
 			<h2 class="section-title">
 				<i class="glyphicon glyphicon-film"></i> Want to See Movies
+				<p>
+					Total: <span>{{model.wantToSeeMoviesNum}}</span>
+				</p>
 			</h2>
 			<ul class="movies">
 				<li>
 					<div class="item">
 						<img class="cover img-responsive"
 							src="../../assets/images/Death_Note.jpg" alt="" />
-						<h5 class="movie-title">Movie Name</h5>
+						<h5 class="movie-title">
+							<span>4.0</span>Movie Name
+						</h5>
 					</div>
 				</li>
 			</ul>
@@ -930,14 +1006,19 @@
 
 		<section class="movie-section" id="movie3">
 			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Action Movies
+				<i class="glyphicon glyphicon-film"></i> Friends Recommended Movies
+				<p>
+					Total: <span>{{model.FriendRecomMoviesNum}}</span>
+				</p>
 			</h2>
 			<ul class="movies">
 				<li>
 					<div class="item">
 						<img class="cover img-responsive"
 							src="../../assets/images/Death_Note.jpg" alt="" />
-						<h5 class="movie-title">Movie Name</h5>
+						<h5 class="movie-title">
+							<span>4.0</span>Movie Name
+						</h5>
 					</div>
 				</li>
 			</ul>
