@@ -101,11 +101,11 @@ body {
 	<div class="title">Similar Movies</div>
 	<div class="movieList">
 		<ul class="movies" ng-repeat="movie in model.similarMovies">
-			<li class="item"><img class="cover img-responsive"
-				ng-src="{{movie.poster}}" />
-				<h5 class="movie-title">
-					<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-				</h5></li>
+			<li class="item"><a ng-click="$window.location.reload()" onclick="window.scrollTo(0,0)" href="#!/movie/{{movie.id}}"><img
+					class="cover img-responsive" ng-src="{{movie.poster}}" />
+					<h5 class="movie-title">
+						<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+					</h5></a></li>
 		</ul>
 
 	</div>

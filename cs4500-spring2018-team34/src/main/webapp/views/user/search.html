@@ -31,7 +31,7 @@
 									src="{{model.exactMovie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{model.exactMovie.id}}">
+								<a href="#!/movie/{{model.exactMovie.id}}" onclick="window.scrollTo(0,0)">
 									<p align="left" class="tit">{{model.exactMovie.name}}</p>
 									<p align="left" class="keywords">{{model.exactMovie.actors}}</p>
 									<p align="left" class="rate">{{model.exactMovie.score}}</p>
@@ -53,7 +53,7 @@
 					<li>
 						<dl class="list-ul clearfix space" ng-show="$index <= model.movieCap">
 							<dt>
-								<a href="#!/movie/{{movie.id}}"><img
+								<a href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
 									ng-src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
@@ -83,7 +83,7 @@
 					<li ng-show="$index <= model.userCap">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{user.id}}"><img class="user_img"
+								<a href="#!/user/{{user.id}}" onclick="window.scrollTo(0,0)"><img class="user_img"
 									src="../../assets/images/user-photo.png" alt="" /></a>
 							</dt>
 							<dd>
@@ -113,7 +113,7 @@
 					<li>
 						<dl class="list-ul clearfix">
 							<dt>
-								<a href="#!/movie/{{model.exactMovie.id}}"><img
+								<a href="#!/movie/{{model.exactMovie.id}}" onclick="window.scrollTo(0,0)"><img
 									src="{{model.exactMovie.poster}}"></a>
 							</dt>
 							<dd>
@@ -142,7 +142,7 @@
 									ng-src="{{movie.poster}}"></a>
 							</dt>
 							<dd>
-								<a href="#!/movie/{{movie.id}}">
+								<a href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)">
 									<p align="left" class="tit">{{movie.name}}</p>
 									<p align="left" class="keywords">{{movie.actors}}</p>
 									<button ng-show="model.currentUserLevel == '0'"
@@ -169,7 +169,7 @@
 					<li ng-show="$index <= model.userCapTab">
 						<dl class="clearfix">
 							<dt>
-								<a href="#!/user/{{user.id}}"><img class="user_img"
+								<a href="#!/user/{{user.id}}" onclick="window.scrollTo(0,0)"><img class="user_img"
 									src="../../assets/images/user-photo.png" alt="" /></a>
 							</dt>
 							<dd>

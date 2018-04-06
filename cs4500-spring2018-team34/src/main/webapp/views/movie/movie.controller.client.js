@@ -75,20 +75,30 @@
 		
 		function initSimilarMovies() {
 			// init similar movies
-			var sUrl = "api/movie/similar?id=" + vm.movieId;
-			
-			$http.get(sUrl).then(function(response) {
-				// number of movies
-				if (response.data.Movie.message == "Not Found") {
-					return;
-				}
-				for (m in response.data) {
-					if (m == "Name") {
-						vm.similarMovies = response.data.Name;
-						vm.similarMoviesNum = vm.similarMovies.length;
+//			var sUrl = "api/movie/similar?id=" + vm.movieId;
+			var sUrl = 'api/movie/search?name=ca';
+			$http.get(sUrl).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.similarMovies = res.data.Name;
+							vm.similarMoviesNum = vm.similarMovies.length;
+						}
 					}
 				}
 			});
+//			$http.get(sUrl).then(function(response) {
+//				// number of movies
+//				if (response.data.Movie.message == "Not Found") {
+//					return;
+//				}
+//				for (m in response.data) {
+//					if (m == "Name") {
+//						vm.similarMovies = response.data.Name;
+//						vm.similarMoviesNum = vm.similarMovies.length;
+//					}
+//				}
+//			});
 		}
 		initSimilarMovies();
 

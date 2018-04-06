@@ -5,6 +5,7 @@
 					'SearchController', SearchController).controller(
 					'userProfileController', userProfileController);
 
+	//**************************** STARTS HOME CONTROLLER **************************//
 	function HomeController($http) {
 		var vm = this;
 		vm.search = search;
@@ -15,7 +16,7 @@
 		// control the length of movie names
 		vm.cutString = cutString;
 		vm.len = 28;
-		
+
 		// Lists of movies
 		vm.newMovies = [];
 		vm.numberOfNewMovies = 0;
@@ -29,53 +30,74 @@
 		function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
-		
+
 		function cutString(str) {
-		    if(str.length*2 <= vm.len) {
-		        return str;
-		    }
-		    var strlen = 0;
-		    var s = "";
-		    for(var i = 0;i < str.length; i++) {
-		        s = s + str.charAt(i);
-		        if (str.charCodeAt(i) > 128) {
-		            strlen = strlen + 2;
-		            if(strlen >= vm.len){
-		                return s.substring(0,s.length-1) + "…";
-		            }
-		        } else {
-		            strlen = strlen + 1;
-		            if(strlen >= vm.len){
-		                return s.substring(0,s.length-2) + "…";
-		            }
-		        }
-		    }
-		    return s;
+			if (str.length * 2 <= vm.len) {
+				return str;
+			}
+			var strlen = 0;
+			var s = "";
+			for (var i = 0; i < str.length; i++) {
+				s = s + str.charAt(i);
+				if (str.charCodeAt(i) > 128) {
+					strlen = strlen + 2;
+					if (strlen >= vm.len) {
+						return s.substring(0, s.length - 1) + "…";
+					}
+				} else {
+					strlen = strlen + 1;
+					if (strlen >= vm.len) {
+						return s.substring(0, s.length - 2) + "…";
+					}
+				}
+			}
+			return s;
 		}
 
 		function init() {
 			// get hot movie list
-			var new_url = '/api/movies/hotMovies';
-			$http.get(hot_url).then(response);
-			function response(res) {
-				vm.hotMovies = res.data;
-				vm.numberOfHotMovies = vm.hotMovies.length;
-			}
+			var hot_url = 'api/movie/search?name=th';
+//			var hot_url = '/api/movies/hotMovies';
+			$http.get(hot_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.hotMovies = res.data.Name;
+							vm.numberOfHotMovies = vm.hotMovies.length;
+						}
+					}
+				}
+			});
+
 			// get new movie list
-			var new_url = '/api/movies/newMovies';
-			$http.get(new_url).then(response);
-			function response(res) {
-				vm.newMovies = res.data;
-				vm.numberOfNewMovies = vm.newMovies.length;
-			}
+			var new_url = 'api/movie/search?name=t';
+//			var new_url = '/api/movies/newMovies';
+			$http.get(new_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.newMovies = res.data.Name;
+							vm.numberOfNewMovies = vm.newMovies.length;
+						}
+					}
+				}
+			});
+			
 			// get recommend movie list
-			var recom_url = '/api/movies/recomMovies';
-			$http.get(recom_url).then(response);
-			function response(res) {
-				vm.recomMovies = res.data;
-				vm.numberOfNewMovies = vm.recomMovies.length;
-			}
+			var recom_url = 'api/movie/search?name=h';
+//			var recom_url = '/api/movies/recomMovies';
+			$http.get(recom_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.recomMovies = res.data.Name;
+							vm.numberOfRecomMovies = vm.recomMovies.length;
+						}
+					}
+				}
+			});
 		}
+		init();
 
 		// html style control
 		$("section a.new-movies").click(
@@ -84,12 +106,9 @@
 							.floor($("ul.new_movies").width() / 155.97);
 					var lines = 1 + Math
 							.floor(($("ul.new_movies").height() - 212) / 254);
-					console.log("eachLine: " + eachLine);
-					console.log("lines: " + lines);
 					if (vm.numberOfNewMovies / eachLine > lines) {
-						console.log("here");
 						$("ul.new_movies").css("height", function() {
-							return $(this).height() + 255 + "px";
+							return $(this).height() + 258 + "px";
 						});
 					}
 				});
@@ -100,8 +119,8 @@
 							.floor($("ul.hot_movies").width() / 155.97);
 					var lines = 1 + Math
 							.floor(($("ul.hot_movies").height() - 212) / 254);
-					if (vm.numberOfNewMovies / eachLine > lines) {
-						$("ul.hot_movies").css("height", function() {
+					if (vm.numberOfHotMovies / eachLine > lines) {
+						$("ul.hot_movies").css("height", function() {						
 							return $(this).height() + 255 + "px";
 						});
 					}
@@ -114,40 +133,16 @@
 									.width() / 155.97);
 							var lines = 1 + Math.floor(($("ul.recom_movies")
 									.height() - 212) / 254);
-							if (vm.numberOfNewMovies / eachLine > lines) {
+							if (vm.numberOfRecomMovies / eachLine > lines) {
 								$("ul.recom_movies").css("height", function() {
 									return $(this).height() + 255 + "px";
 								});
 							}
 						});
-
-		// vm.addMovieToDB = addMovieToDB;
-
-		// var id_prefix = "tt0";
-		// var id_end = 848228;
-		//
-
-		// function addMovieToDB() {
-		// for(var i =6; i < 100; i++){
-		// id_end += 1;
-		// var id = id_prefix + id_end;
-		// var url_front = "http://www.omdbapi.com/?i=";
-		// var url_end = "&apikey=a65196c5";
-		// var url = url_front + id + url_end;
-		//
-		//
-		// $.getJSON(url ,
-		// function(data) {
-		// return $http.post("/api/movie/addMovieFromOMDB", data)
-		// });
-		// }
-		//
-		//
-		// }
-		//
-		// addMovieToDB();
 	}
+	//**************************** ENDS HOME CONTROLLER **************************//
 
+	//**************************** STARTS LOGIN CONTROLLER **************************//
 	function LoginController($http, $location, $rootScope) {
 		var vm = this;
 		vm.login = login;
@@ -214,7 +209,9 @@
 		}
 
 	}
-
+	//**************************** ENDS LOGIN CONTROLLER **************************//
+	
+	//**************************** STARTS REGISTER CONTROLLER **************************//
 	function RegisterController($http, $location) {
 		var vm = this;
 		vm.register = register;
@@ -296,49 +293,279 @@
 		}
 
 	}
+	//**************************** ENDS REGISTER CONTROLLER **************************//
 
-	function userProfileController($http, $routeParams, $location) {
+	//**************************** STARTS USER PROFILE CONTROLLER **************************//
+	function userProfileController($http, $routeParams, $location, $scope) {
 		var vm = this;
 		vm.isOwner = false;
 		vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
+		vm.currentUserId = sessionStorage.getItem("currentUserId");
 		vm.user = null;
 		vm.favoriteMovies = [];
 		vm.favoriteMoviesNum = 0;
 		vm.wantToSeeMovies = [];
 		vm.wantToSeeMoviesNum = 0;
-		vm.FriendRecomMovies = [];
-		vm.FriendRecomMoviesNum = 0;
-		
+		vm.friendRecomMovies = [];
+		vm.friendRecomMoviesNum = 0;
+
 		// functions
 		vm.initProfile = initProfile;
+		vm.initMovieLists = initMovieLists;
 		vm.isFollowing = false;
 		vm.userId = $routeParams.uid;
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
 		// control capacity of each list
-//		vm.viewMore = viewMore;
-//		vm.capacity = 40;
+		// vm.viewMore = viewMore;
+		// vm.capacity = 40;
 		// control the length of movie names
 		vm.cutString = cutString;
 		vm.len = 28;
 		vm.testName = "Movie Section Starts Movie Section Starts";
-		
+
 		// For Admin
+		//======================== STARTS DASHBOARD ==========================//
+		vm.allUser = [];
+		vm.allMovie = [];
+		vm.userSum = 0;
+		vm.movieSum = 0;
+
 		vm.deleteUser = deleteUser;
 		vm.deleteMovie = deleteMovie;
+		vm.dividePages = dividePages;
 
-		if (vm.currentUserLevel == 0) {
+		$("ul li.system_man").click(function() {
 			var url = '/api/system';
 
 			$http.get(url).then(response);
 
 			function response(res) {
 				vm.overallInfo = res.data;
+				vm.userSum = vm.overallInfo['User Count'];
+				vm.movieSum = vm.overallInfo['Movie Count'];
 				vm.root = vm.overallInfo.Root[0];
+			}
+		});
+		
+
+		$("ul li.user_man").click(function() {
+			// get All users
+			var uUrl = "api/user?username=t";
+			// var uUrl = "api/user/allUser";
+			$http.get(uUrl).then(function(response) {
+				if (response.data != undefined) {
+					vm.allUser = response.data.result;
+					$scope.sumU = vm.allUser.length;
+					
+					dividePages('user', vm.allUser, $scope.sumU);
+				}
+			});
+		});
+		
+		
+		$("ul li.movie_man").click(function() {
+			// get all movies
+			var mUrl = "api/movie/search?name=th";
+			// var mUrl = "api/movie/allMovie";
+			$http.get(mUrl).then(function(response) {
+				if (response.data != undefined) {
+					for (m in response.data) {
+						if (m == "Name") {
+							vm.allMovie = response.data.Name;
+							$scope.sumM = vm.allMovie.length;
+							
+							dividePages('movie', vm.allMovie, $scope.sumM);
+						}
+					}
+				}
+			});
+		});
+		
+		function dividePages(type, data, sum) {
+			// Make page tabs
+	        $scope.pageSize = 7;
+	        $scope.pages = Math.ceil(sum / $scope.pageSize);
+	        $scope.newPages = $scope.pages > 5 ? 5 : $scope.pages;
+	        $scope.pageList = [];
+	        $scope.selPage = 1;
+	        
+	        // set each page
+	        $scope.setData = function () {
+	            $scope.uItems = data.slice(($scope.pageSize * ($scope.selPage - 1)), ($scope.selPage * $scope.pageSize));
+	            $scope.mItems = data.slice(($scope.pageSize * ($scope.selPage - 1)), ($scope.selPage * $scope.pageSize));
+	        }
+	        
+	        if (type == 'movie') {
+	        		$scope.mItems = data.slice(0, $scope.pageSize);
+	        } 
+	        if (type == 'user') {
+	        		$scope.uItems = data.slice(0, $scope.pageSize);
+	        }
+	        
+//	        $scope.items = data.slice(0, $scope.pageSize);
+	        // repeat page numbers
+	        for (var i = 0; i < $scope.newPages; i++) {
+	            $scope.pageList.push(i + 1);
+	        }
+	        $scope.selectPage = function (page) {
+	            if (page < 1 || page > $scope.pages) return;
+	            if (page > 2) {
+	                var newpageList = [];
+	                for (var i = (page - 3) ; i < ((page + 2) > $scope.pages ? $scope.pages : (page + 2)) ; i++) {
+	                    newpageList.push(i + 1);
+	                }
+	                $scope.pageList = newpageList;
+	            }
+	            $scope.selPage = page;
+	            $scope.setData();
+	            $scope.isActivePage(page);
+	        };
+	        $scope.isActivePage = function (page) {
+	            return $scope.selPage == page;
+	        };
+	        $scope.Previous = function () {
+	            $scope.selectPage($scope.selPage - 1);
+	        }
+	        $scope.Next = function () {
+	            $scope.selectPage($scope.selPage + 1);
+	        };
+		}
+		
+	
+
+		// for user manage dashboard
+		$scope.userHead = {
+			id : "ID",
+			username : "Name",
+			email : "Email",
+			phone : "Phone",
+			isOnline : "Online",
+			level : "Level",
+			lastLogin : "Last Login",
+		};
+		$scope.userSort = {
+			column : 'id',
+			descending : '+'
+		};
+		$scope.userOrder = $scope.userSort.descending + $scope.userSort.column;
+		$scope.selectedUserCls = function(column) {
+			return column == $scope.userSort.column
+					&& $scope.userSort.descending;
+		};
+
+		// for movie manage dashboard
+		$scope.movieHead = {
+			id : "ID",
+			name : "Name",
+			score : "Rate",
+			level : "Level",
+			date : "Year",
+			time: "Duration",
+			language : "Language",
+			country: "Country"
+		};
+		$scope.movieSort = {
+			column : 'id',
+			descending : '+'
+		};
+		$scope.movieOrder = $scope.movieSort.descending + $scope.movieSort.column;
+		$scope.selectedmovieCls = function(column) {
+			return column == $scope.movieSort.column
+					&& $scope.movieSort.descending;
+		};
+
+		$scope.changeSorting = function(type, column) {
+			if (type == 'user') {
+				if ($scope.userSort.column = column) {
+					if ($scope.userSort.descending == '+') {
+						$scope.userSort = {
+							column : column,
+							descending : '-'
+						}
+					} else {
+						$scope.userSort = {
+							column : column,
+							descending : '+'
+						}
+					}
+				} else {
+					$scope.userSort = {
+						column : column,
+						descending : '+'
+					}
+				}
+				return $scope.userOrder = $scope.userSort.descending
+						+ $scope.userSort.column;
+			}
+			if (type == 'movie') {
+				if ($scope.movieSort.column = column) {
+					if ($scope.movieSort.descending == '+') {
+						$scope.movieSort = {
+							column : column,
+							descending : '-'
+						}
+					} else {
+						$scope.movieSort = {
+							column : column,
+							descending : '+'
+						}
+					}
+				} else {
+					$scope.movieSort = {
+						column : column,
+						descending : '+'
+					}
+				}
+				return $scope.movieOrder = $scope.movieSort.descending
+						+ $scope.movieSort.column;
+			}
+		};
+		
+		function deleteMovie(movieId) {
+			var url = "/api/deleteMovie";
+			var movie = {
+				loggedInUserId : sessionStorage.getItem("currentUserId"),
+				movieId : movieId
+			};
+
+			$http.post(url, movie).then(response, error);
+
+			function response(res) {
+
+			}
+
+			function error(err) {
+				vm.error = err.data.message;
+			}
+
+		}
+
+		function deleteUser(userId) {
+
+			var url = "/api/deleteUser";
+			var user = {
+				loggedInUserId : sessionStorage.getItem("currentUserId"),
+				userId : userId
+			};
+
+			$http.post(url, user).then(response, error);
+
+			function response(res) {
+
+			}
+
+			function error(err) {
+				vm.error = err.data.message;
 			}
 		}
 		
+		
+		//======================== ENDS DASHBOARD ==========================//
+
+		
+		//======================== STARTS INITIAL ==========================//
 		function initProfile() {
 			var url = '/api/user?id=' + vm.userId;
 			$http.get(url, vm.userId).then(response);
@@ -346,10 +573,10 @@
 			function response(res) {
 				// get current User Info
 				vm.user = res.data.result[0];
-				
+
 				// get following info
 				url = '/api/user/following/' + vm.userId;
-				
+
 				$http.get(url).then(following_response);
 				function following_response(res) {
 					vm.following = res.data.result;
@@ -360,7 +587,7 @@
 
 				function followers_response(res) {
 					vm.follower = res.data.result;
-					//
+			
 					if ($location.path().includes(
 							"/user/" + sessionStorage.getItem("currentUserId"))) {
 						vm.isOwner = true;
@@ -375,14 +602,61 @@
 						}
 					}
 				}
-				
+
 				// get Favorite Movie list
-//				vm.favoriteMovies = res.data.result[0].favoriteList;
+				// vm.favoriteMovies = res.data.result[0].favoriteList;
 			}
 
 		}
 		initProfile();
+		
+		function initMovieLists() {
+			// get hot movie list
+			var fav_url = 'api/movie/search?name=ca';
+//			var hot_url = '/api/movies/hotMovies';
+			$http.get(fav_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.favoriteMovies = res.data.Name;
+							vm.favoriteMoviesNum = vm.favoriteMovies.length;
+						}
+					}
+				}
+			});
 
+			// get favorite movie list
+			var wan_url = 'api/movie/search?name=th';
+//			var new_url = '/api/movies/newMovies';
+			$http.get(wan_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.wantToSeeMovies = res.data.Name;
+							vm.wantToSeeMoviesNum = vm.wantToSeeMovies.length;
+						}
+					}
+				}
+			});
+			
+			// get recommend movie list
+			var fri_url = 'api/movie/search?name=don';
+//			var recom_url = '/api/movies/recomMovies';
+			$http.get(fri_url).then(function(res) {
+				if (res.data != undefined) {
+					for (m in res.data) {
+						if (m == "Name") {
+							vm.friendRecomMovies = res.data.Name;
+							vm.friendRecomMoviesNum = vm.friendRecomMovies.length;
+						}
+					}
+				}
+			});
+		}
+		initMovieLists();
+		//======================== ENDS INITIAL ==========================//
+		
+		//======================== STARTS PROFILE MODIFICATION ==========================//
 		function updatePassword(old, new1, new2) {
 			if (!old) {
 				vm.error = "Please enter the old password";
@@ -417,45 +691,10 @@
 				return;
 			}
 		}
-
-		function deleteMovie(movieId) {
-			var url = "/api/deleteMovie";
-			var movie = {
-				loggedInUserId : sessionStorage.getItem("currentUserId"),
-				movieId : movieId
-			};
-
-			$http.post(url, movie).then(response, error);
-
-			function response(res) {
-
-			}
-
-			function error(err) {
-				vm.error = err.data.message;
-			}
-		}
-
-		function deleteUser(userId) {
-
-			var url = "/api/deleteUser";
-			var user = {
-				loggedInUserId : sessionStorage.getItem("currentUserId"),
-				userId : userId
-			};
-
-			$http.post(url, user).then(response, error);
-
-			function response(res) {
-
-			}
-
-			function error(err) {
-				vm.error = err.data.message;
-			}
-
-		}
-
+		//======================== ENDS PROFILE MODIFICATION ==========================//
+		
+		
+		//======================== STARTS FOLLOW/UNFOLLOW ==========================//
 		function follow() {
 			var url = "/api/user/follow";
 			var obj = {
@@ -495,35 +734,37 @@
 				return;
 			}
 		}
+		//======================== ENDS FOLLOW/UNFOLLOW ==========================//
 		
-//		function viewMore() {
-//			vm.capacity = vm.capacity + 40;
-//		}
-		
+		//======================== STARTS LONG NAME CONTROL ==========================//
 		function cutString(str) {
-		    if(str.length*2 <= vm.len) {
-		        return str;
-		    }
-		    var strlen = 0;
-		    var s = "";
-		    for(var i = 0;i < str.length; i++) {
-		        s = s + str.charAt(i);
-		        if (str.charCodeAt(i) > 128) {
-		            strlen = strlen + 2;
-		            if(strlen >= vm.len){
-		                return s.substring(0,s.length-1) + "…";
-		            }
-		        } else {
-		            strlen = strlen + 1;
-		            if(strlen >= vm.len){
-		                return s.substring(0,s.length-2) + "…";
-		            }
-		        }
-		    }
-		    return s;
+			if (str == undefined) {
+				return "";
+			}
+			if (str.length * 2 <= vm.len) {
+				return str;
+			}
+			var strlen = 0;
+			var s = "";
+			for (var i = 0; i < str.length; i++) {
+				s = s + str.charAt(i);
+				if (str.charCodeAt(i) > 128) {
+					strlen = strlen + 2;
+					if (strlen >= vm.len) {
+						return s.substring(0, s.length - 1) + "…";
+					}
+				} else {
+					strlen = strlen + 1;
+					if (strlen >= vm.len) {
+						return s.substring(0, s.length - 2) + "…";
+					}
+				}
+			}
+			return s;
 		}
+		//======================== ENDS LONG NAME CONTROL ==========================//
 
-		// html control
+		//======================== STARTS HTML TABS CONTROL ==========================//
 		$(".profile-section").hide(); // Hide all content
 		$(".profile-section").hide();
 		$(".action-section").hide();
@@ -575,16 +816,12 @@
 		// Cancel Button
 		$("section button.cancel").click(function() {
 			window.location.reload();
-			// $("ul.tabs li").removeClass("cur");
-			// $(".movie-section").show();
-			// $(".profile-section").hide();
-			// $(".action-section").hide();
-			// $(".follower-section").hide();
-			// $(".following-section").hide();
-			// $(".dash-section").hide();
 		});
+		//======================== ENDS HTML TABS CONTROL ==========================//
 	}
+	//**************************** ENDS USER PROFILE CONTROLLER **************************//
 
+	//**************************** STARTS SEARCH CONTROLLER **************************//
 	function SearchController($http, $routeParams) {
 		var vm = this;
 
@@ -733,4 +970,5 @@
 			vm.userCapTab = vm.userCapTab + 10;
 		}
 	}
+	//**************************** ENDS SEARCH CONTROLLER **************************//
 })();
