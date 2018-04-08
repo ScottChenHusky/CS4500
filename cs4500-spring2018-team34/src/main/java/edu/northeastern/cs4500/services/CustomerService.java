@@ -21,6 +21,8 @@ public class CustomerService {
     @Autowired
     private CustomerFollowingRepository customerFollowingRepository;
     @Autowired
+    private CustomerPlaylistRepository customerPlaylistRepository;
+    @Autowired
     private AdminCodeRepository adminCodeRepository;
 
     @PostConstruct
@@ -270,6 +272,43 @@ public class CustomerService {
         if (! result.isEmpty()) {
             customerFollowingRepository.delete(result.get(0).getId());
         }
+    }
+
+    public void createPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+        ensureAccess(executor, target);
+        if (customerPlaylistRepository.existsByNameAndCustomerId(name, target)) {
+            throw new IllegalArgumentException("existed");
+        }
+        CustomerPlaylist customerPlaylist = new CustomerPlaylist()
+                .withName(name)
+                .withCustomerId(target)
+                .withMovieId(movieId);
+        customerPlaylistRepository.save(customerPlaylist);
+    }
+
+    public void addMovieToPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+        ensureAccess(executor, target);
+        if (! customerPlaylistRepository.existsByNameAndCustomerId(name, target)) {
+            throw new IllegalArgumentException("none");
+        }
+        if (customerPlaylistRepository.existsByNameAndCustomerIdAndMovieId(name, target, movieId)) {
+            throw new IllegalArgumentException("duplicated");
+        }
+        CustomerPlaylist customerPlaylist = new CustomerPlaylist()
+                .withName(name)
+                .withCustomerId(target)
+                .withMovieId(movieId);
+        customerPlaylistRepository.save(customerPlaylist);
+    }
+
+    public void removeMovieFromPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+        ensureAccess(executor, target);
+        customerPlaylistRepository.deleteAllByNameAndCustomerIdAndMovieId(name, target, movieId);
+    }
+
+    public void deletePlaylist(Integer executor, Integer target, String name) throws Exception {
+        ensureAccess(executor, target);
+        customerPlaylistRepository.deleteAllByNameAndCustomerId(name, target);
     }
 
 }

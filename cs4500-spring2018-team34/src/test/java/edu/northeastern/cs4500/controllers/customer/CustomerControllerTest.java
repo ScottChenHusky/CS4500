@@ -13,15 +13,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CustomerController.class)
@@ -39,7 +38,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testKeepAliveShouldSucceed() throws Exception {
+    public void testKeepAlive() throws Exception {
         Integer loggedInUserId = 25;
         Integer userId = 25;
 
@@ -83,7 +82,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testLoginShouldSucceed() throws Exception {
+    public void testLogin() throws Exception {
         String username = "user1";
         String password = "pass1";
 
@@ -134,7 +133,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testLogoutShouldSucceed() throws Exception {
+    public void testLogout() throws Exception {
         Integer loggedInUserId = 27;
         Integer userId = 27;
 
@@ -174,7 +173,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testRegisterShouldSucceed() throws Exception {
+    public void testRegister() throws Exception {
         String username = "user2";
         String password = "pass2";
         String email = "user2@neu.edu";
@@ -226,7 +225,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testApplyAdminCodeShouldSucceed() throws Exception {
+    public void testApplyAdminCode() throws Exception {
         String username = "user3";
         String email = "user3@neu.edu";
         String phone = "6177634215";
@@ -268,7 +267,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    public void testUpdateUserPasswordShouldSucceed() throws Exception {
+    public void testUpdateUserPassword() throws Exception {
         Integer loggedInUserId = 25;
         Integer userId = 25;
         String oldPassword = "oldP4ss";
