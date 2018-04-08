@@ -56,13 +56,13 @@
 
 		function init() {
 			// get hot movie list
-			var hot_url = 'api/movie/search?name=th';
+			var hot_url = 'api/movie/init?name=top';
 //			var hot_url = '/api/movies/hotMovies';
 			$http.get(hot_url).then(function(res) {
 				if (res.data != undefined) {
 					for (m in res.data) {
-						if (m == "Name") {
-							vm.hotMovies = res.data.Name;
+						if (m == "top") {
+							vm.hotMovies = res.data.top;
 							vm.numberOfHotMovies = vm.hotMovies.length;
 						}
 					}
@@ -70,32 +70,39 @@
 			});
 
 			// get new movie list
-			var new_url = 'api/movie/search?name=t';
+			var new_url = '/api/movie/init?name=new';
 //			var new_url = '/api/movies/newMovies';
 			$http.get(new_url).then(function(res) {
 				if (res.data != undefined) {
 					for (m in res.data) {
-						if (m == "Name") {
-							vm.newMovies = res.data.Name;
+						if (m == "new") {
+							vm.newMovies = res.data.new;
 							vm.numberOfNewMovies = vm.newMovies.length;
 						}
 					}
 				}
 			});
-			
+
+
 			// get recommend movie list
-			var recom_url = 'api/movie/search?name=h';
-//			var recom_url = '/api/movies/recomMovies';
-			$http.get(recom_url).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.recomMovies = res.data.Name;
-							vm.numberOfRecomMovies = vm.recomMovies.length;
-						}
-					}
-				}
-			});
+			var recom_url = '/api/movie/recommend';
+			if(sessionStorage.getItem("currentUserId") != null){
+                var userR = {
+                    userId : sessionStorage.getItem("currentUserId")
+                };
+                $http.post(recom_url, userR).then(function(res) {
+                    if (res.data != undefined) {
+                        for (m in res.data) {
+                            if (m == "recommend") {
+                                vm.recomMovies = res.data.recommend;
+                                vm.numberOfRecomMovies = vm.recomMovies.length;
+                            }
+                        }
+                    }
+                });
+			}
+
+
 		}
 		init();
 

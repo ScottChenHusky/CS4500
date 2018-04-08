@@ -21,6 +21,10 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
   List<Movie> findByOmdbreference(String omdbreference);
 
+  List<Movie> findTop5ByOrderByIdDesc();
+
+  List<Movie> findTop5ByOrderByScoreDesc();
+
   boolean existsById(Integer Id);
 
   boolean existsByOmdbreference(String omdbreference);

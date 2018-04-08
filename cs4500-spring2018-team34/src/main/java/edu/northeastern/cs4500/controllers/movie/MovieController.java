@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.northeastern.cs4500.controllers.csv.CsvApi;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 
 @RestController
@@ -32,7 +34,7 @@ public class MovieController {
   String[] filterList = {
           "arse", "asshole", "bitch", "cunt", "fuck", "nigga", "nigger", " ass ", "ass hole"
   };
-  
+  private final CsvApi csvApi = new CsvApi();
   
   @Autowired
   private MovieRepository movieRepository;
@@ -41,6 +43,9 @@ public class MovieController {
 
   @Autowired
   private MovieCommentRepository movieCommentRepository;
+
+  @Autowired
+  private MovieRecommendRepository movieRecommendRepository;
   
   public MovieController(MovieRepository m, CustomerRepository c, MovieCommentRepository mcr) {
 	  this.movieRepository = m;
@@ -62,6 +67,34 @@ public class MovieController {
 
     }
     return result;
+  }
+
+
+  @RequestMapping(path= "/api/movie/init", method = RequestMethod.GET)
+  public ResponseEntity<JSONObject> getMovieList(@RequestParam(name = "name") String name){
+    List<Movie> movies;
+    switch(name){
+      case "new" :
+        movies = movieRepository.findTop5ByOrderByIdDesc();
+        break;
+      case "top":
+        movies = movieRepository.findTop5ByOrderByScoreDesc();
+        break;
+      case "all":
+        movies = movieRepository.findAll();
+        break;
+      default:
+        JSONObject result = new JSONObject();
+        result.put("message", "wrong name in the url");
+        return ResponseEntity.ok(result);
+    }
+    JSONObject result = new JSONObject();
+    JSONArray jsonArray = new JSONArray();
+    for(Movie m : movies){
+      jsonArray.add(new JSONObject(m.toMap()));
+    }
+    result.put(name, jsonArray);
+    return ResponseEntity.ok(result);
   }
 
   @RequestMapping(path = "/api/movie/search", method = RequestMethod.GET)
@@ -188,9 +221,13 @@ public class MovieController {
       json.put("comment", array);
 
     }
+    JSONArray similar = getSimilarMovie(movie.getOmdbreference());
+    json.put("similar", similar);
     logInfo.put("Task", "getMovie");
     logInfo.put("id", searchId);
+
     log.finest(logInfo.toString());
+    this.updateTag(movie, 16);
     return ResponseEntity.ok().body(json);
 
   }
@@ -310,6 +347,67 @@ public class MovieController {
     return ResponseEntity.ok().body(jsonObject);
   }
 
+  @RequestMapping(path = "/api/movie/recommend", method = RequestMethod.POST)
+  public ResponseEntity<JSONObject> recommendMovie(@RequestBody JSONObject source){
+    String userId = source.get("userId").toString();
+    List<MovieRecommend> mrs = movieRecommendRepository.findTop2ByCustomerIdOrderByWeightsDesc(Integer.parseInt(userId));
+    String userTag = "";
+    String userTag1 = "";
+    int size = mrs.size();
+    int wantedResult = 5;
+    for(int i = 0; i < size; i++){
+      userTag = userTag + mrs.get(i).getTag() + "|";
+      userTag1 = userTag1 + mrs.get(size - 1 - i).getTag() + "|";
+    }
+    userTag = userTag.substring(0, userTag.length()-1);
+    userTag1 = userTag1.substring(0, userTag1.length() - 1);
+    JSONArray array = new JSONArray();
+    try {
+      List<String> movieNames = csvApi.recommendMovieIds(userTag,wantedResult);
+      if(movieNames.size() != wantedResult){
+        movieNames.addAll(csvApi.recommendMovieIds(userTag1, wantedResult - movieNames.size()));
+      }
+
+      for(String name : movieNames){
+        JSONObject result = mainSearch(name);
+        if(result.get("message").equals("Found")){
+          array.add(result.get("Results"));
+        }
+
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    JSONObject result = new JSONObject();
+    result.put("recommend", array);
+    return ResponseEntity.ok().body(result);
+  }
+
+  private JSONArray getSimilarMovie(String searchId){
+    searchId = searchId.substring(2, 9);
+    JSONArray array = new JSONArray();
+    try {
+      String id = csvApi.getMovieId(csvApi.search(searchId, "links"));
+      String[] tags = csvApi.parseMovieTag(csvApi.search(id, "movies"));
+      String finalTag = "";
+      for(String tag : tags){
+        finalTag = finalTag + tag + "|";
+      }
+      finalTag = finalTag.substring(0, finalTag.length() - 1);
+      List<String> movieNames = csvApi.recommendMovieIds(finalTag, 5);
+
+      for(String name : movieNames){
+        JSONObject result = mainSearch(name);
+        if(result.get("message").equals("Found")){
+          array.add(result.get("Results"));
+        }
+
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return array;
+  }
   public Movie tmdbParser(JSONObject source) {
     JSONObject logInfo = new JSONObject();
     logInfo.put("Task", "tmdbParser");
@@ -321,6 +419,7 @@ public class MovieController {
     String id = temp.get("id").toString();
     logInfo.put("id", id);
     JSONObject tmdb = apiConnector(1, id);
+
 
     String imdbId = tmdb.get("imdb_id").toString();
     logInfo.put("imdbId", imdbId);
@@ -347,7 +446,7 @@ public class MovieController {
               .withTime(tmdb.get("runtime").toString())
               .withOmdbreference(imdbId)
               .withLevel(omdb.get("Rated").toString())
-              .withTmdbreference("")
+              .withTmdbreference(id)
               .withRtreference("")
               .withDirector(omdb.get("Director").toString())
               .withActors(omdb.get("Actors").toString())
@@ -377,5 +476,28 @@ public class MovieController {
 
 
   }
+
+  public void updateTag(Movie movie, int userId){
+    try {
+      String id = csvApi.getMovieId(csvApi.search(movie.getOmdbreference().substring(2, 9),"links"));
+      String[] tags = csvApi.parseMovieTag(csvApi.search(id, "movies"));
+      if(tags != null){
+        for(String tag : tags){
+          if(movieRecommendRepository.existsMovieRecommendByCustomerIdAndAndTag(userId, tag)){
+            MovieRecommend mr = movieRecommendRepository.findMovieRecommendByCustomerIdAndTag(userId, tag);
+            mr.setWeights(mr.getWeights() + 1);
+            movieRecommendRepository.save(mr);
+          } else {
+            movieRecommendRepository.save(new MovieRecommend(1, userId, tag));
+          }
+
+        }
+      }
+
+    } catch (FileNotFoundException ignore) {
+
+    }
+  }
+
 
 }
