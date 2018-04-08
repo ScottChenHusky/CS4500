@@ -28,10 +28,9 @@ body {
 			</div>
 		</div>
 
-		
+
 		<div class="m_right">
-			<iframe width="420" height="315"
-				ng-src="{{model.getUrl()}}"
+			<iframe width="420" height="315" ng-src="{{model.getUrl()}}"
 				frameborder="0" allowfullscreen></iframe>
 
 		</div>
@@ -97,6 +96,23 @@ body {
 		<a href="https://www.amctheatres.com/">AMC</a>
 	</div>
 </div>
+<!-- {{model.similarMovies}} -->
+<div class="dy_main">
+	<div class="title">Similar Movies</div>
+	<div class="movieList">
+		<ul class="movies" ng-repeat="movie in model.similarMovies">
+			<li class="item"><a ng-click="$window.location.reload()" onclick="window.scrollTo(0,0)" href="#!/movie/{{movie.id}}"><img
+					class="cover img-responsive" ng-src="{{movie.poster}}" />
+					<h5 class="movie-title">
+						<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+					</h5></a></li>
+		</ul>
+
+	</div>
+	<a href="" class="more moreRlated">View More</a>
+	<div class="space"></div>
+</div>
+<div class="space"></div>
 
 <script type="text/javascript" src="../../assets/js/jquery-carousel.js"></script>
 <script type="text/javascript" src="../../assets/js/swiper.min.js"></script>
