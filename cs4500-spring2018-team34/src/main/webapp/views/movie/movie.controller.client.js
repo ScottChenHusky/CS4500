@@ -11,7 +11,6 @@
 		vm.similarMoviesNum = 0;
 
 		vm.initMovie = initMovie;
-		vm.initSimilarMovies = initSimilarMovies;
 		// post review
 		vm.review = review;
 		// get rate from stars
@@ -20,6 +19,8 @@
 		vm.getUrl = getUrl;
 		// control the length of movie names
 		vm.cutString = cutString;
+		// get similar movie
+        vm.initsimilar = initsimilar;
 		vm.len = 28;
 
 		vm.comments = [];
@@ -46,12 +47,18 @@
 
 		function initMovie() {
 			// init current movie
-			var url = '/api/movie/get?id=' + vm.movieId;
-			return $http.get(url, vm.movieId).then(response, error);
+			var url = '/api/movie/get';
+			var package = {
+				userId : vm.userId,
+				movieId : vm.movieId
+			};
+			return $http.post(url, package).then(response, error);
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
 				vm.trailerId = res.data.movie.t1;
+
+
 				// give a list of actors
 				var string = vm.movie.actors;
 				if (string != undefined || string != null) {
@@ -72,36 +79,19 @@
 			}
 		}
 		initMovie();
-		
-		function initSimilarMovies() {
-			// init similar movies
-//			var sUrl = "api/movie/similar?id=" + vm.movieId;
-			var sUrl = 'api/movie/search?name=ca';
-			$http.get(sUrl).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.similarMovies = res.data.Name;
-							vm.similarMoviesNum = vm.similarMovies.length;
-						}
-					}
-				}
-			});
-//			$http.get(sUrl).then(function(response) {
-//				// number of movies
-//				if (response.data.Movie.message == "Not Found") {
-//					return;
-//				}
-//				for (m in response.data) {
-//					if (m == "Name") {
-//						vm.similarMovies = response.data.Name;
-//						vm.similarMoviesNum = vm.similarMovies.length;
-//					}
-//				}
-//			});
-		}
-		initSimilarMovies();
 
+		function initsimilar(){
+            var url = '/api/movie/similar?id=' + vm.movieId;
+            $http.get(url).then(function(res) {
+                if (res.data != undefined) {
+                	if(res.data.message == "found"){
+                        vm.similarMovies = res.data.similar;
+                        vm.similarMoviesNum = vm.similarMovies.length;
+					}
+                }
+            });
+        }
+        initsimilar();
 		// post review
 		vm.rate = null;
 		function giveRate(num) {
