@@ -423,7 +423,6 @@ public class MovieController{
       Movie movie = movieRepository.findById(Integer.parseInt(id));
     try {
       String searchId = getTag(movie.getOmdbreference());
-      System.out.println("SearchID is ======" + searchId);
       List<String> movieNames = csvApi.recommendMovieIds(searchId, 5);
       JSONArray array = new JSONArray();
       for(String name : movieNames){

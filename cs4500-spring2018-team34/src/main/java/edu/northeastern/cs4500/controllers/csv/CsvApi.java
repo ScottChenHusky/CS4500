@@ -75,7 +75,6 @@ public class CsvApi {
     if(name.length() > 20){
       name = name.substring(0, 20);
     }
-    System.out.println("Input is-------" + name);
     List<String> result = tagsMap.get(name);
     while(result.size() > want){
       result.remove(result.size() - 1);

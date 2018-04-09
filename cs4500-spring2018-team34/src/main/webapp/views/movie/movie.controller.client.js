@@ -85,7 +85,6 @@
             $http.get(url).then(function(res) {
                 if (res.data != undefined) {
                 	if(res.data.message == "found"){
-                		console.log(res.data.similar);
                         vm.similarMovies = res.data.similar;
                         vm.similarMoviesNum = vm.similarMovies.length;
 					}
