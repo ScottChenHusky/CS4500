@@ -19,6 +19,8 @@
 		vm.getUrl = getUrl;
 		// control the length of movie names
 		vm.cutString = cutString;
+		// get similar movie
+        vm.initsimilar = initsimilar;
 		vm.len = 28;
 
 		vm.comments = [];
@@ -45,14 +47,17 @@
 
 		function initMovie() {
 			// init current movie
-			var url = '/api/movie/get?id=' + vm.movieId;
-			return $http.get(url, vm.movieId).then(response, error);
+			var url = '/api/movie/get';
+			var package = {
+				userId : vm.userId,
+				movieId : vm.movieId
+			};
+			return $http.post(url, package).then(response, error);
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
 				vm.trailerId = res.data.movie.t1;
-                vm.similarMovies = res.data.similar;
-                vm.similarMoviesNum = vm.similarMovies.length;
+
 
 				// give a list of actors
 				var string = vm.movie.actors;
@@ -75,7 +80,19 @@
 		}
 		initMovie();
 
-
+		function initsimilar(){
+            var url = '/api/movie/similar?id=' + vm.movieId;
+            $http.get(url).then(function(res) {
+                if (res.data != undefined) {
+                	if(res.data.message == "found"){
+                		console.log(res.data.similar);
+                        vm.similarMovies = res.data.similar;
+                        vm.similarMoviesNum = vm.similarMovies.length;
+					}
+                }
+            });
+        }
+        initsimilar();
 		// post review
 		vm.rate = null;
 		function giveRate(num) {

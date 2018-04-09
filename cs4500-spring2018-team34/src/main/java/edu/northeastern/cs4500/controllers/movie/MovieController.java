@@ -29,7 +29,7 @@ import edu.northeastern.cs4500.controllers.csv.CsvApi;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 
 @RestController
-public class MovieController {
+public class MovieController{
   final static Logger log = Logger.getLogger("MovieController");
   String[] filterList = {
           "arse", "asshole", "bitch", "cunt", "fuck", "nigga", "nigger", " ass ", "ass hole"
@@ -198,8 +198,10 @@ public class MovieController {
   }
 
 
-  @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
-  public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "id") String searchId) {
+  @RequestMapping(path = "/api/movie/get", method = RequestMethod.POST)
+  public ResponseEntity<JSONObject> getMovie(@RequestBody JSONObject source) throws FileNotFoundException {
+    String searchId = source.get("movieId").toString();
+    Integer userId = Integer.parseInt(source.get("userId").toString());
     JSONObject logInfo = new JSONObject();
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
     JSONObject json = new JSONObject();
@@ -221,17 +223,41 @@ public class MovieController {
       json.put("comment", array);
 
     }
-    JSONArray similar = getSimilarMovie(movie.getOmdbreference());
-    json.put("similar", similar);
+    try {
+      updateTag(getTag(movie.getOmdbreference()), userId);
+    } catch (NullPointerException ignore){
+
+    }
+
     logInfo.put("Task", "getMovie");
     logInfo.put("id", searchId);
 
     log.finest(logInfo.toString());
-    this.updateTag(movie, 16);
-    return ResponseEntity.ok().body(json);
 
+
+    return ResponseEntity.ok().body(json);
   }
 
+  public void updateTag(String movie, Integer userId){
+    if(movie != null){
+      String[] tags = movie.split("\\|");
+      for(int i = 0; i < tags.length - 1; i++){
+        String tag = tags[i];
+        if(movieRecommendRepository.existsMovieRecommendByCustomerIdAndAndTag(userId, tag)){
+          MovieRecommend mr = movieRecommendRepository.findMovieRecommendByCustomerIdAndTag(userId, tag);
+          mr.setWeights(mr.getWeights() + 1);
+          movieRecommendRepository.save(mr);
+        } else {
+          movieRecommendRepository.save(new MovieRecommend(1, userId, tag));
+        }
+
+      }
+    }
+  }
+  public String getTag(String omdbId) throws FileNotFoundException, NullPointerException {
+    String id = csvApi.search(omdbId.substring(2, 9), "links")[0];
+    return csvApi.search(id, "movies")[2];
+  }
   @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> addComment(@RequestBody JSONObject source) {
     JSONObject logInfo = new JSONObject();
@@ -362,11 +388,22 @@ public class MovieController {
     userTag = userTag.substring(0, userTag.length()-1);
     userTag1 = userTag1.substring(0, userTag1.length() - 1);
     JSONArray array = new JSONArray();
-    try {
-      List<String> movieNames = csvApi.recommendMovieIds(userTag,wantedResult);
-      if(movieNames.size() != wantedResult){
-        movieNames.addAll(csvApi.recommendMovieIds(userTag1, wantedResult - movieNames.size()));
+    List<String> movieNames = new ArrayList<>();
+      try{
+        movieNames.addAll(csvApi.recommendMovieIds(userTag,wantedResult));
+      }catch(NullPointerException ignore){
+
       }
+
+      try{
+
+        if(movieNames.size() != wantedResult){
+          movieNames.addAll(csvApi.recommendMovieIds(userTag1, wantedResult - movieNames.size()));
+        }
+      } catch(NullPointerException ignore){
+
+      }
+
 
       for(String name : movieNames){
         JSONObject result = mainSearch(name);
@@ -375,38 +412,33 @@ public class MovieController {
         }
 
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
+
     JSONObject result = new JSONObject();
     result.put("recommend", array);
     return ResponseEntity.ok().body(result);
   }
-
-  private JSONArray getSimilarMovie(String searchId){
-    searchId = searchId.substring(2, 9);
-    JSONArray array = new JSONArray();
+  @RequestMapping(path = "/api/movie/similar", method = RequestMethod.GET)
+  public ResponseEntity<JSONObject> getSimilarMovie(@RequestParam(name = "id") String id) {
+      JSONObject results = new JSONObject();
+      Movie movie = movieRepository.findById(Integer.parseInt(id));
     try {
-      String id = csvApi.getMovieId(csvApi.search(searchId, "links"));
-      String[] tags = csvApi.parseMovieTag(csvApi.search(id, "movies"));
-      String finalTag = "";
-      for(String tag : tags){
-        finalTag = finalTag + tag + "|";
-      }
-      finalTag = finalTag.substring(0, finalTag.length() - 1);
-      List<String> movieNames = csvApi.recommendMovieIds(finalTag, 5);
-
+      String searchId = getTag(movie.getOmdbreference());
+      System.out.println("SearchID is ======" + searchId);
+      List<String> movieNames = csvApi.recommendMovieIds(searchId, 5);
+      JSONArray array = new JSONArray();
       for(String name : movieNames){
         JSONObject result = mainSearch(name);
         if(result.get("message").equals("Found")){
           array.add(result.get("Results"));
         }
-
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      results.put("similar", array);
+      results.put("message", "found");
+    } catch (FileNotFoundException | NullPointerException e) {
+      results.put("message", "not found");
     }
-    return array;
+
+    return ResponseEntity.ok().body(results);
   }
   public Movie tmdbParser(JSONObject source) {
     JSONObject logInfo = new JSONObject();
@@ -477,27 +509,7 @@ public class MovieController {
 
   }
 
-  public void updateTag(Movie movie, int userId){
-    try {
-      String id = csvApi.getMovieId(csvApi.search(movie.getOmdbreference().substring(2, 9),"links"));
-      String[] tags = csvApi.parseMovieTag(csvApi.search(id, "movies"));
-      if(tags != null){
-        for(String tag : tags){
-          if(movieRecommendRepository.existsMovieRecommendByCustomerIdAndAndTag(userId, tag)){
-            MovieRecommend mr = movieRecommendRepository.findMovieRecommendByCustomerIdAndTag(userId, tag);
-            mr.setWeights(mr.getWeights() + 1);
-            movieRecommendRepository.save(mr);
-          } else {
-            movieRecommendRepository.save(new MovieRecommend(1, userId, tag));
-          }
 
-        }
-      }
-
-    } catch (FileNotFoundException ignore) {
-
-    }
-  }
 
 
 }
