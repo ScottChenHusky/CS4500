@@ -356,8 +356,7 @@
 
 		$("ul li.user_man").click(function() {
 			// get All users
-			var uUrl = "api/user?username=t";
-			// var uUrl = "api/user/allUser";
+			var uUrl = "api/getAllUsers/" + vm.userId;
 			$http.get(uUrl).then(function(response) {
 				if (response.data != undefined) {
 					vm.allUser = response.data.result;
@@ -371,18 +370,12 @@
 		
 		$("ul li.movie_man").click(function() {
 			// get all movies
-			var mUrl = "api/movie/search?name=th";
-			// var mUrl = "api/movie/allMovie";
+			var mUrl = "/api/movie/init?name=all";
 			$http.get(mUrl).then(function(response) {
 				if (response.data != undefined) {
-					for (m in response.data) {
-						if (m == "Name") {
-							vm.allMovie = response.data.Name;
-							$scope.sumM = vm.allMovie.length;
-							
-							dividePages('movie', vm.allMovie, $scope.sumM);
-						}
-					}
+					vm.allMovie = response.data.all;
+					$scope.sumM = vm.allMovie.length;
+					dividePages('movie', vm.allMovie, $scope.sumM);
 				}
 			});
 		});
@@ -667,30 +660,20 @@
 		
 		function initMovieLists() {
 			// get recommend movie list
-			var fri_url = 'api/movie/search?name=don';
-			// var recom_url = '/api/movies/recomMovies';
+			var fri_url = '/api/getUserRecommendationOfMovies/' + "27";
 			$http.get(fri_url).then(function(res) {
 				if (res.data.result != undefined) {
 					vm.friendRecomMovies = res.data.result;
+					vm.friendRecomMoviesNum = vm.friendRecomMovies.length;	
 				}
 			});
-
+			
 			// get userPlayLists:
             var url = "/api/getPlaylists/" + vm.userId;
             $http.get(url).then(function(res) {
             	if (res.data != undefined) {
             		vm.playLists = res.data.result;
-
-            		for (var i = 0; i < res.data.result.length; i ++) {
-                    	for (var j = 0; j < res.data.result[i].movieIds.length; j++) {
-                    		var tempId = res.data.result[i].movieIds[j];
-                            res.data.result[i].movieIds[j] = {
-                            	id: tempId
-							}
-						}
-					}
-
-				}
+            	}
 			});
 
 

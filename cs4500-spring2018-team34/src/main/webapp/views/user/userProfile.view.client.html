@@ -348,7 +348,6 @@
 		<!-- Summary Section Starts -->
 		<section class="movieSummary-section"
 			ng-repeat="playList in model.playLists">
-			{{model.playLists}}
 			<ul class="tabs">
 				<li>
 					<h2 class="section-title">
@@ -357,8 +356,8 @@
 				</li>
 			</ul>
 			<ul class="movies">
-				<li class="item" ng-repeat="movie in playList.movieIds"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"> <img
+				<li class="item" ng-repeat="movie in playList.movies"><a
+					href="#!/movie/{{movie.movieId}}" onclick="window.scrollTo(0,0)"> <img
 						class="cover img-responsive" ng-src="{{movie.poster}}" />
 						<h5 class="movie-title">
 							<span>{{movie.score}}</span> {{model.cutString(movie.name)}}
@@ -379,10 +378,10 @@
 			</ul>
 			<ul class="movies" ng-show="model.friendRecomMoviesNum != 0">
 				<li class="item" ng-repeat="movie in model.friendRecomMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
+					href="#!/movie/{{movie.movie.movieId}}" onclick="window.scrollTo(0,0)"><img
+						class="cover img-responsive" ng-src="{{movie.movie.poster}}" />
 						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+							<span>{{movie.movie.score}}</span>{{model.cutString(movie.movie.name)}}
 						</h5></a></li>
 			</ul>
 			<div class="movies empty" ng-show="model.friendRecomMoviesNum == 0">Empty
