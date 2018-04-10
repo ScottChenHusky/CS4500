@@ -321,6 +321,7 @@
 		vm.updatePassword = updatePassword;
 		vm.createPlayList = createPlayList;
 		vm.updateUserProfile = updateUserProfile;
+		vm.deletePlaylist = deletePlaylist;
 		// control capacity of each list
 		// vm.viewMore = viewMore;
 		// vm.capacity = 40;
@@ -675,11 +676,37 @@
             		vm.playLists = res.data.result;
             	}
 			});
-
-
-
 		}
-		initMovieLists();
+
+        initMovieLists();
+
+        function deletePlaylist(playlistId) {
+            var url = "/api/deletePlaylist";
+            var ob = {
+                loggedInUserId : vm.currentUserId,
+                userId: vm.currentUserId,
+                playlistId : playlistId
+            };
+
+            $http.post(url, ob).then(response, error);
+
+            function response(res) {
+                var url = "/api/getPlaylists/" + vm.userId;
+                $http.get(url).then(function(res) {
+                    if (res.data != undefined) {
+                        vm.playLists = res.data.result;
+                    }
+                });
+                return;
+            }
+
+            function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+            }
+        }
+
 		//======================== ENDS INITIAL ==========================//
 		
 		//======================== STARTS PROFILE MODIFICATION ==========================//
