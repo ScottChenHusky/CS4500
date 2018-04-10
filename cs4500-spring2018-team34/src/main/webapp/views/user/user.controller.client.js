@@ -309,12 +309,7 @@
 		vm.currentUserLevel = sessionStorage.getItem("currentUserLevel");
 		vm.currentUserId = sessionStorage.getItem("currentUserId");
 		vm.user = null;
-		vm.favoriteMovies = [];
-		vm.favoriteMoviesNum = 0;
-		vm.wantToSeeMovies = [];
-		vm.wantToSeeMoviesNum = 0;
 		vm.friendRecomMovies = [];
-		vm.friendRecomMoviesNum = 0;
 
 		// functions
 		vm.initProfile = initProfile;
@@ -671,45 +666,12 @@
 		initProfile();
 		
 		function initMovieLists() {
-			// get hot movie list
-			var fav_url = 'api/movie/search?name=ca';
-//			var hot_url = '/api/movies/hotMovies';
-			$http.get(fav_url).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.favoriteMovies = res.data.Name;
-							vm.favoriteMoviesNum = vm.favoriteMovies.length;
-						}
-					}
-				}
-			});
-
-			// get favorite movie list
-			var wan_url = 'api/movie/search?name=th';
-//			var new_url = '/api/movies/newMovies';
-			$http.get(wan_url).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.wantToSeeMovies = res.data.Name;
-							vm.wantToSeeMoviesNum = vm.wantToSeeMovies.length;
-						}
-					}
-				}
-			});
-			
 			// get recommend movie list
 			var fri_url = 'api/movie/search?name=don';
 			// var recom_url = '/api/movies/recomMovies';
 			$http.get(fri_url).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.friendRecomMovies = res.data.Name;
-							vm.friendRecomMoviesNum = vm.friendRecomMovies.length;
-						}
-					}
+				if (res.data.result != undefined) {
+					vm.friendRecomMovies = res.data.result;
 				}
 			});
 
