@@ -645,7 +645,7 @@
 			
 			// get recommend movie list
 //			var fri_url = 'api/movie/search?name=don';
-			var fri_url = '/api/getUserRecommendationOfMovies/' + vm.userId;
+			var fri_url = '/api/getUserRecommendationOfMovies/' + "27";
 			$http.get(fri_url).then(function(res) {
 				if (res.data.result != undefined) {
 					vm.friendRecomMovies = res.data.result;
