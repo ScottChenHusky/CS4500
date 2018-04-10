@@ -61,16 +61,27 @@
 					<a href="#tab8"></a>
 				</label>
 				<ul class="options tabs">
-					<li ng-show="model.isOwner"><a href="#addlist"><i
-							aria-hidden="true"></i><i class="glyphicon glyphicon-plus"></i>
-							Add New List </a></li>
-					<li><a href="#movie1"><i aria-hidden="true"></i> My
-							Favorite Movies </a></li>
-					<li><a href="#movie2"><i aria-hidden="true"></i> Want to
-							See Movies </a></li>
-					<li><a href="#movie3"><i aria-hidden="true"></i> Friends
-							Recommended Movies </a></li>
-				</ul></li>
+					<li ng-show="model.isOwner">
+						<a href="#addlist">
+							<i aria-hidden="true"></i>
+							<i class="glyphicon glyphicon-plus"></i>
+							Add New List
+						</a>
+					</li>
+					<li>
+						<a href="#movie3">
+							<i aria-hidden="true"></i>
+							Friends Recommended Movies
+						</a>
+					</li>
+					<li ng-repeat="playList in model.playLists">
+						<a href="#movie3">
+							<i aria-hidden="true"></i>
+							{{playList.name}}
+						</a>
+					</li>
+				</ul>
+			</li>
 		</ul>
 	</div>
 	<!-- side-wrapper -->
@@ -351,24 +362,31 @@
 		<!-- Movie Section Starts -->
 		<!-- Summary Section Starts -->
 		<section class="movieSummary-section">
-			<ul class="tabs">
-				<li><a href="#movie1"><h2 class="section-title">
-							<i class="glyphicon glyphicon-film"></i> My Favorite Movies
-							<p>
-								Total: <span>{{model.favoriteMoviesNum}}</span>
-							</p>
-						</h2></a></li>
-			</ul>
-			<div class="movies empty" ng-show="model.favoriteMoviesNum == 0">Empty
-				list.</div>
-			<ul class="movies" ng-show="model.favoriteMoviesNum != 0">
-				<li class="item" ng-repeat="movie in model.favoriteMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
-						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-						</h5></a></li>
-			</ul>
+			{{model.playLists}}
+			<li class="item" ng-repeat="playList in model.playLists">
+				<ul class="tabs">
+					<li>
+						<a href="#movie1">
+							<h2 class="section-title">
+								<i class="glyphicon glyphicon-film"></i>
+								{{playList.name}}
+							</h2>
+						</a>
+					</li>
+				</ul>
+				<ul class="movies">
+					<li class="item" ng-repeat="movie in playList.movieIds">
+						<a href="#!/movie/{{movie.id}}"
+						   onclick="window.scrollTo(0,0)">
+							<img class="cover img-responsive" ng-src="{{movie.poster}}" />
+							<h5 class="movie-title">
+								<span>{{movie.score}}</span>
+								{{model.cutString(movie.name)}}
+							</h5>
+						</a>
+					</li>
+				</ul>
+			</li>
 
 		</section>
 		<section class="movieSummary-section">
