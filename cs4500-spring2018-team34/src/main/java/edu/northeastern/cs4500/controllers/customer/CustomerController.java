@@ -3,6 +3,7 @@ package edu.northeastern.cs4500.controllers.customer;
 import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerPlaylist;
 import edu.northeastern.cs4500.repositories.CustomerPlaylistDetail;
+import edu.northeastern.cs4500.repositories.CustomerRecommend;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -749,6 +750,62 @@ public class CustomerController{
             return null;
         }
         return new Integer[]{playlistIdInt, movieIdInt};
+    }
+
+    @RequestMapping(path = "/api/getUserRecommendationOfMovies/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getUSerRecommendationOfMovies(@PathVariable(name = "userId") String userId) {
+        JSONObject logInfo = new JSONObject();
+        logInfo.put("Task", "getFriendRecommendationOfMovies");
+        logInfo.put("userId", userId);
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        json.put("result", array);
+        Integer userIdInt = myParseInt(userId);
+        if (userIdInt == null) {
+            putMessage(logInfo, json, "insufficient or undefined input");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(json);
+        }
+        List<CustomerRecommend> result = customerService.getCustomerRecommendationOfMovies(userIdInt);
+        for (CustomerRecommend recommendation : result) {
+            JSONObject object = new JSONObject();
+            object.put("from", recommendation.getCustomerFrom());
+            object.put("movieId", recommendation.getMovieId());
+            object.put("date", recommendation.getCreateDate().toString());
+            array.add(object);
+        }
+        putMessage(logInfo, json, "results fetched");
+        CustomerController.log.finest(logInfo.toString());
+        return ResponseEntity.ok().body(json);
+    }
+
+    @RequestMapping(path = "/api/recommendMovieToUser", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> recommendMovieToUser(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logRequest(logInfo, request, "recommendMovieToUser");
+        JSONObject response = new JSONObject();
+        Integer[] ids = extractExecutorIdAndFromIdAndToId(logInfo, response, request);
+        if (ids == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        Integer movieId = myParseInt(request.getOrDefault("movieId", "").toString());
+        if (movieId == null) {
+            putMessage(logInfo, response, "movie id is not properly given");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            customerService.recommendMovieToCustomer(ids[0], ids[1], ids[2], movieId);
+            putMessage(logInfo, response, "movie recommended to user");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            processCommonException(logInfo, response, message);
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
 }

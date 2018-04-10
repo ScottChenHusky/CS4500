@@ -25,6 +25,8 @@ public class CustomerService {
     @Autowired
     private CustomerPlaylistDetailRepository customerPlaylistDetailRepository;
     @Autowired
+    private CustomerRecommendRepository customerRecommendRepository;
+    @Autowired
     private AdminCodeRepository adminCodeRepository;
 
     @PostConstruct
@@ -325,6 +327,29 @@ public class CustomerService {
         ensureAccess(executor, target);
         customerPlaylistRepository.delete(playlistId);
         customerPlaylistDetailRepository.deleteAllByPlaylistId(playlistId);
+    }
+
+    public List<CustomerRecommend> getCustomerRecommendationOfMovies(Integer customerId) {
+        List<CustomerRecommend> result = customerRecommendRepository.findAllByCustomerTo(customerId);
+        result.sort(new Comparator<CustomerRecommend>() {
+            @Override
+            public int compare(CustomerRecommend o1, CustomerRecommend o2) {
+                return - o1.getCreateDate().compareTo(o2.getCreateDate());
+            }
+        });
+        return result;
+    }
+
+    public void recommendMovieToCustomer(Integer executor, Integer from, Integer to, Integer movieId) throws Exception {
+        ensureAccess(executor, from);
+        if (! customerRecommendRepository.existsByCustomerFromAndCustomerToAndMovieId(from, to, movieId)) {
+            CustomerRecommend customerRecommend = new CustomerRecommend()
+                    .withCustomerFrom(from)
+                    .withCustomerTo(to)
+                    .withMovieId(movieId)
+                    .withCreateDate(new Date());
+            customerRecommendRepository.save(customerRecommend);
+        }
     }
 
 }
