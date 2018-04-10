@@ -721,7 +721,7 @@ public class CustomerController{
 
     private String[] extractNameAndDescription(JSONObject logInfo, JSONObject response, JSONObject request, boolean descriptionRequired) {
         Object name = request.get("name");
-        Object description = request.get("description");
+        Object description = request.getOrDefault("description", "");
         if (name == null || (descriptionRequired && description == null)) {
             putMessage(logInfo, response, "insufficient or undefined input");
             return null;
@@ -737,7 +737,7 @@ public class CustomerController{
 
     private Integer[] extractPlaylistIdAndMovieId(JSONObject logInfo, JSONObject response, JSONObject request, boolean movieIdRequired) {
         Object playlistId = request.get("playlistId");
-        Object movieId = request.get("movieId");
+        Object movieId = request.getOrDefault("movieId", "");
         if (playlistId == null || (movieIdRequired && movieId == null)) {
             putMessage(logInfo, response, "insufficient or undefined input");
             return null;
