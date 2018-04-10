@@ -23,3 +23,22 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### More ###
+*.class
+*.o
+*.pyc
+*.jar
+*.tar
+*.zip
+*.rar
+*.iso
+*.log
+*.iml
+*.gz
+.idea
+.settings
+.DS_Store
+.DS_Store?
+/${sys:LOG_PATH}/
+/.metadata/
