@@ -1,84 +1,59 @@
 
-<div style="padding-bottom:5%" class="wraper">
+<div style="padding-bottom: 5%" class="wraper">
 	<div class="container">
+		<div class="homePage">
+			<section class="movie-section">
+				<h2 class="section-title">
+					<i class="glyphicon glyphicon-film"></i> New
+				</h2>
+				<ul class="new_movies movies">
+					<li class="item" ng-repeat="movie in model.newMovies"><a
+						href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
+							class="cover img-responsive" ng-src="{{movie.poster}}">
+							<h5>
+								<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+							</h5></a></li>
+				</ul>
+				<a href="" class="more new-movies">View More</a>
+			</section>
 
-		<section class="movie-section">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> New
-				<span class="more">View More</span>
-			</h2>
+			<section class="movie-section">
+				<h2 class="section-title">
+					<i class="glyphicon glyphicon-film"></i> Hot
+				</h2>
+				<ul class="hot_movies movies">
+					<li class="item" ng-repeat="movie in model.hotMovies"><a
+						href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
+							class="cover img-responsive" ng-src="{{movie.poster}}">
+							<h5>
+								<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+							</h5></a></li>
+				</ul>
+				<a href="" class="more hot-movies">View More</a>
+			</section>
 
-			<ul class="movies">
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-			</ul>
-		</section>
+			<section class="movie-section">
+				<h2 class="section-title">
+					<i class="glyphicon glyphicon-film"></i> Recommend Movies
+				</h2>
 
-		<section class="movie-section">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Top Rated
-				<span class="more">View More</span>
-			</h2>
-
-			<ul class="movies">
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-			</ul>
-		</section>
-
-		<section class="movie-section">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Hot
-				<span class="more">View More</span>
-			</h2>
-
-			<ul class="movies">
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name <span class="grade">4.0</span></h5>
-				</li>
-				<li class="item">
-					<img class="cover img-responsive" src="../../assets/images/Death_Note.jpg" alt="">
-					<h5 class="movie-title">Movie Name</h5>
-				</li>
-			</ul>
-		</section>
-
+				<ul class="recom_movies movies">
+					<li class="item" ng-repeat="movie in model.recomMovies"><a
+						href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
+							class="cover img-responsive" ng-src="{{movie.poster}}">
+							<h5>
+								<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+							</h5></a></li>
+				</ul>
+				<!-- <ul class="recom_movies" ng-repeat="movie in model.recomMovies">
+					<li class="item"><a href="#!/movie/{{model.movie.id}}"><img
+							class="cover img-responsive" ng-src="{{movie.poster}}">
+							<h5>
+								<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
+							</h5></a></li>
+				</ul> -->
+				<a href="" class="more recom-movies">View More</a>
+			</section>
+		</div>
 	</div>
 </div>
