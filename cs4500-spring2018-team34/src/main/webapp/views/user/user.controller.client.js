@@ -324,6 +324,8 @@
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
+		vm.createPlayList = createPlayList;
+		vm.updateUserProfile = updateUserProfile;
 		// control capacity of each list
 		// vm.viewMore = viewMore;
 		// vm.capacity = 40;
@@ -389,6 +391,54 @@
 				}
 			});
 		});
+
+
+		function updateUserProfile(email, phone) {
+			var url = "/api/updateUser"
+			var newProfile = {
+                loggedInUserId : vm.currentUserId,
+                userId: vm.currentUserId,
+                email : email,
+                phone: phone
+			};
+
+			$http.post(url, newProfile).then(response, error);
+
+			function response(res) {
+                initProfile();
+			}
+
+			function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+			}
+		}
+
+		function createPlayList(name, description) {
+            var url = "/api/createPlaylist";
+            var playList = {
+                loggedInUserId : vm.currentUserId,
+				userId: vm.currentUserId,
+                name : name,
+                description: description
+            };
+
+            $http.post(url, playList).then(response, error);
+
+            function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
+			}
+
+			function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+			}
+
+		}
 		
 		function dividePages(type, data, sum) {
 			// Make page tabs

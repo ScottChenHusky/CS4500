@@ -21,6 +21,11 @@
 		vm.cutString = cutString;
 		// get similar movie
         vm.initsimilar = initsimilar;
+        // show modal
+        vm.showModal = showModal;
+        // recommend this movie To a Friend
+        vm.recommend = recommend;
+
 		vm.len = 28;
 
 		vm.comments = [];
@@ -43,6 +48,63 @@
 		function getUrl() {
 			var url = "https://www.youtube.com/embed/" + vm.trailerId;
 			return $sce.trustAsResourceUrl(url);
+		}
+
+		function recommend(toUserId) {
+			var url = "/api/user/recommendToFriends";
+			var ob = {
+				fromUserId: vm.userId,
+				toUserId: toUserId,
+				movieId: vm.movieId
+			};
+			$http.post(url, ob)
+				.then(response, error);
+
+			function response(res) {
+                vm.error = null;
+                vm.success = "Success";
+                return;
+			}
+
+			function error(err) {
+                vm.success = null;
+                vm.error = "Error";
+                return;
+			}
+        }
+
+		function showModal() {
+            // get followers info
+            var url = '/api/user/followers/' + vm.userId;
+            $http.get(url).then(followers_response);
+
+            function followers_response(res) {
+                vm.follower = res.data.result;
+            }
+            var modal = document.getElementById('myModal');
+
+			// Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+			// When the user clicks the button, open the modal
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+			// When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+			// When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
 		}
 
 		function initMovie() {
