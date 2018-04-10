@@ -27,6 +27,9 @@
         vm.recommend = recommend;
         // add a movie to a playlist
         vm.addToPlaylist = addToPlaylist;
+        
+        vm.updateNavPosition = updateNavPosition;
+        vm.stopDefault = stopDefault;
 
 		vm.len = 28;
 
@@ -148,11 +151,11 @@
 		function initMovie() {
 			// init current movie
 			var url = '/api/movie/get';
-			var package = {
+			var sendPackage = {
 				userId : vm.userId,
 				movieId : vm.movieId
 			};
-			return $http.post(url, package).then(response, error);
+			return $http.post(url, sendPackage).then(response, error);
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
@@ -251,5 +254,72 @@
 			}
 			return s;
 		}
+		
+		$(".slide").thumbnailImg({
+			small_elem : ".small_list",
+			left_btn : ".slide_left",
+			right_btn : ".slide_right"
+		});
+		var viewSwiper, previewSwiper;
+		$(document).ready(function() {
+			var stepW = 30;
+			var stars = $(".stars > li");
+			$(".showb").css("width", 0);
+			stars.each(function(i) {
+				$(stars[i]).click(function(e) {
+					var n = i + 1;
+					$(".showb").css({
+						"width" : stepW * n
+					});
+					$(this).find('a').blur();
+					return stopDefault(e);
+					return descriptionTemp;
+				});
+			});
+
+			viewSwiper = new Swiper('.view .swiper-container', {
+				// autoplay : 3000,
+				loop : true,
+				onSlideChangeStart : function() {
+					updateNavPosition()
+				}
+			});
+
+			previewSwiper = new Swiper('.preview .swiper-container', {
+				visibilityFullFit : true,
+				slidesPerView : 'auto',
+				onlyExternal : true,
+				onSlideClick : function() {
+					viewSwiper.swipeTo(previewSwiper.clickedSlideIndex)
+				}
+
+			});
+		});
+
+		function updateNavPosition() {
+			$('.preview .active-nav').removeClass('active-nav')
+			var activeNav = $('.preview .swiper-slide').eq(
+					viewSwiper.activeIndex - 1).addClass('active-nav')
+			if (!activeNav.hasClass('swiper-slide-visible')) {
+				if (activeNav.index() > previewSwiper.activeIndex) {
+					var thumbsPerNav = Math.floor(previewSwiper.width
+							/ activeNav.width()) - 1
+					previewSwiper.swipeTo(activeNav.index() - thumbsPerNav)
+				} else {
+					previewSwiper.swipeTo(activeNav.index())
+				}
+			}
+
+		}
+
+		function stopDefault(e) {
+			if (e && e.preventDefault)
+				e.preventDefault();
+			else
+				window.event.returnValue = false;
+			return false;
+		};
 	}
+	
+	
 })();
