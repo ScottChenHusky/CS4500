@@ -1,0 +1,106 @@
+/* resset.css start */
+* {
+  box-sizing: border-box;
+}
+body,ul,ol,li,dl,dt,dd,p,h1,h2,h3,h4,h5,h6,form,fieldset,img,div{
+  margin:0px;
+  padding:0px;
+  border:none;
+}
+
+h1,h2,h3,h4,h5,h6, b, strong {
+  font-weight: normal;
+}
+
+ul,dl,li{
+  list-style-type:none;
+}
+select,input{
+  vertical-align:middle;
+}
+i {
+  font-style: normal;
+}
+
+a:link,a:visited,a:hover,a:active {
+  text-decoration: none;
+}
+
+.container {
+    width: 100%;
+}
+
+/* reset.css end */
+
+/* base.css start */
+body{
+    font-size:14px;
+    font-family: "Microsoft YaHei", Helvetica;
+}
+body,
+html{
+    width:100%;
+    min-height:100%;
+}
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}
+
+[hidden], .hide{
+  display: none;
+}
+
+.cf{
+  padding: 15px;
+  background: #fff;
+}
+.gray-color{
+  color: #bdbdbd;
+}
+/* base.css end */
+.fr{ float: right;}
+.fl{ float: left;}
+.tc{ text-align: center; }
+
+/* 边距*/
+.m0{ margin:0;}
+.mt5{ margin-top: 5px;}
+.mt10{ margin-top: 10px;}
+.mt15{ margin-top: 15px;}
+.mt20{ margin-top: 20px;}
+.mb5{ margin-bottom: 5px;}
+.mb10{ margin-bottom: 10px;}
+.mb15{ margin-bottom: 15px;}
+.mb20{ margin-bottom:20px;}
+.ml5{ margin-left: 5px;}
+.ml10{ margin-left: 10px;}
+.ml15{ margin-left: 15px;}
+.ml20{ margin-left:20px;}
+.mr5{ margin-right: 5px;}
+.mr10{ margin-right: 10px;}
+.mr15{ margin-right: 15px;}
+.mr20{ margin-right: 20px;}
+
+.p0{ padding: 0;}
+.pt5{ padding-top: 5px;}
+.pt10{ padding-top: 10px;}
+.pt15{ padding-top: 15px;}
+.pt20{ padding-top: 20px;}
+.pb5{ padding-bottom: 5px;}
+.pb10{ padding-bottom: 10px;}
+.pb15{ padding-bottom: 15px;}
+.pb20{ padding-bottom:20px;}
+.pl5{ padding-left: 5px;}
+.pl10{ padding-left: 10px;}
+.pl15{ padding-left: 15px;}
+.pl20{ padding-left:20px;}
+.pr5{ padding-right: 5px;}
+.pr10{ padding-right: 10px;}
+.pr15{ padding-right: 15px;}
+.pr20{ padding-right: 20px;}

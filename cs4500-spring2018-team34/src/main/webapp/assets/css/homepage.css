@@ -1,0 +1,96 @@
+.searchbar {
+	margin: 20px 0;
+}
+
+.searchbox {
+	vertical-align: middle;
+	display: inline-block;
+	width: 90%;
+}
+
+.searchbox .searchinput {
+	height: 33px;
+	width: 100%;
+	padding-left: 10px;
+}
+
+.homePage .section-title {
+	font-size: 20px;
+	font-weight: 500;
+	color: #2d7788;
+	margin-top: 0;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #2d7788;
+}
+
+.homePage .section-title .glyphicon {
+	width: 30px;
+	height: 30px;
+	margin-right: 4px;
+	display: inline-block;
+	color: #fff;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-ms-border-radius: 50%;
+	-o-border-radius: 50%;
+	border-radius: 50%;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	background: #2d7788;
+	text-align: center;
+	padding-top: 8px;
+	font-size: 16px;
+	position: relative;
+}
+
+.homePage .movie-section .more {
+	float: right;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.homePage .movie-section {
+	margin-bottom: 15px;
+}
+
+.homePage .movie-section .new_movies {
+	height: 250px;
+	overflow: hidden;
+}
+
+.homePage .movie-section .hot_movies {
+	height: 250px;
+	overflow: hidden;
+}
+
+.homePage .movie-section .recom_movies {
+	height: 250px;
+	overflow: hidden;
+}
+
+.homePage .movie-section ul .item {
+	display: inline-block;
+	padding: 0 8px;
+}
+
+.homePage .movie-section ul .item h5 {
+	margin-top: 5px;
+	margin-bottom: 10px;
+	font-size: 18px;
+	font-weight: 400;
+	color: #2d7788;
+	text-align: center;
+	width: 140px;
+	height: 39px;
+	overflow: hidden;
+/* 	white-space:nowrap;
+	text-overflow:ellipsis; */
+}
+
+.homePage .movie-section ul .item h5 span{
+	font-size: 16px;
+	color: #e09015;
+	float: right;
+}

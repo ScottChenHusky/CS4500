@@ -1,0 +1,65 @@
+<div class="container">
+    <div ng-if="model.error" class="alert alert-danger">
+        {{model.error}}
+    </div>
+    <h1>Register</h1>
+
+    <form name="registerForm" id="registerForm" novalidate>
+
+        <div class="form-group">
+            <input ng-model="username"
+                   class="form-control"
+                   placeholder="username"
+                   type="text"
+                   required/>
+        </div>
+        
+        <div class="form-group">
+            <input ng-model="email"
+                   class="form-control"
+                   placeholder="email"
+                   type="text"
+                   required/>
+        </div>
+        
+        <div class="form-group">
+            <input ng-model="phone"
+                   class="form-control"
+                   placeholder="Phone: 123-123-1234"
+                   type="text"
+                   required/>
+        </div>        
+
+        <div class="form-group">
+            <input ng-model="password1"
+                   class="form-control"
+                   placeholder="password"
+                   type="password"
+                   required/>
+        </div>
+
+        <div class="form-group">
+            <input ng-model="password2"
+                   class="form-control"
+                   placeholder="verify password"
+                   type="password"
+                   required/>
+        </div>
+
+        <div class="form-group">
+            <input ng-model="adminCode"
+                   class="form-control"
+                   placeholder="Optional: Enter the admin code to be an admin user"
+                   type="test"/>
+        </div>
+
+
+
+        <button ng-click="model.register(username, email, phone, password1, password2, adminCode)"
+                type="submit"
+                class="btn btn-primary btn-block">Register</button>
+
+        <a class="btn btn-danger btn-block"
+           href="#">Cancel</a>
+    </form>
+</div>
