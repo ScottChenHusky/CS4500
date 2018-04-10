@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: cs4500-spring2018-team34
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: tburg
+Implementation-Vendor-Id: edu.northeastern.cs4500
+Build-Jdk: 1.8.0_162
+Implementation-URL: http://projects.spring.io/spring-boot/cs4500-sprin
+ g2018-team34/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
