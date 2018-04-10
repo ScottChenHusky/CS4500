@@ -23,6 +23,8 @@ public class CustomerService {
     @Autowired
     private CustomerPlaylistRepository customerPlaylistRepository;
     @Autowired
+    private CustomerPlaylistDetailRepository customerPlaylistDetailRepository;
+    @Autowired
     private AdminCodeRepository adminCodeRepository;
 
     @PostConstruct
@@ -274,7 +276,17 @@ public class CustomerService {
         }
     }
 
-    public void createPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+    public Map<CustomerPlaylist, List<CustomerPlaylistDetail>> getPlaylists(Integer customerId) {
+        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = new HashMap<>();
+        List<CustomerPlaylist> playlists = customerPlaylistRepository.findAllByCustomerId(customerId);
+        for (CustomerPlaylist playlist : playlists) {
+            List<CustomerPlaylistDetail> playlistDetails = customerPlaylistDetailRepository.findAllByPlaylistId(playlist.getId());
+            result.put(playlist, playlistDetails);
+        }
+        return result;
+    }
+
+    public Integer createPlaylist(Integer executor, Integer target, String name, String description) throws Exception {
         ensureAccess(executor, target);
         if (customerPlaylistRepository.existsByNameAndCustomerId(name, target)) {
             throw new IllegalArgumentException("existed");
@@ -282,33 +294,37 @@ public class CustomerService {
         CustomerPlaylist customerPlaylist = new CustomerPlaylist()
                 .withName(name)
                 .withCustomerId(target)
-                .withMovieId(movieId);
+                .withDescription(description);
         customerPlaylistRepository.save(customerPlaylist);
+        return customerPlaylist.getId();
     }
 
-    public void addMovieToPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+    public void addMovieToPlaylist(Integer executor, Integer target, Integer playlistId, Integer movieId) throws Exception {
         ensureAccess(executor, target);
-        if (! customerPlaylistRepository.existsByNameAndCustomerId(name, target)) {
+        if (! customerPlaylistRepository.exists(playlistId)) {
             throw new IllegalArgumentException("none");
         }
-        if (customerPlaylistRepository.existsByNameAndCustomerIdAndMovieId(name, target, movieId)) {
+        if (customerPlaylistDetailRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)) {
             throw new IllegalArgumentException("duplicated");
         }
-        CustomerPlaylist customerPlaylist = new CustomerPlaylist()
-                .withName(name)
-                .withCustomerId(target)
+        CustomerPlaylistDetail customerPlaylistDetail = new CustomerPlaylistDetail()
+                .withPlaylistId(playlistId)
                 .withMovieId(movieId);
-        customerPlaylistRepository.save(customerPlaylist);
+        customerPlaylistDetailRepository.save(customerPlaylistDetail);
     }
 
-    public void removeMovieFromPlaylist(Integer executor, Integer target, String name, Integer movieId) throws Exception {
+    public void removeMovieFromPlaylist(Integer executor, Integer target, Integer playlistId, Integer movieId) throws Exception {
         ensureAccess(executor, target);
-        customerPlaylistRepository.deleteAllByNameAndCustomerIdAndMovieId(name, target, movieId);
+        if (! customerPlaylistRepository.exists(playlistId)) {
+            throw new IllegalArgumentException("none");
+        }
+        customerPlaylistDetailRepository.deleteByPlaylistIdAndMovieId(playlistId, movieId);
     }
 
-    public void deletePlaylist(Integer executor, Integer target, String name) throws Exception {
+    public void deletePlaylist(Integer executor, Integer target, Integer playlistId) throws Exception {
         ensureAccess(executor, target);
-        customerPlaylistRepository.deleteAllByNameAndCustomerId(name, target);
+        customerPlaylistRepository.delete(playlistId);
+        customerPlaylistDetailRepository.deleteAllByPlaylistId(playlistId);
     }
 
 }

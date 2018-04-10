@@ -13,7 +13,7 @@ public class CustomerPlaylist {
     private Integer id;
     private String name;
     private Integer customerId;
-    private Integer movieId;
+    private String description;
 
     public Integer getId() {
         return id;
@@ -54,16 +54,36 @@ public class CustomerPlaylist {
         return this;
     }
 
-    public Integer getMovieId() {
-        return movieId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public CustomerPlaylist withMovieId(Integer movieId) {
-        this.setMovieId(movieId);
+    public CustomerPlaylist withDescription(String description) {
+        this.setDescription(description);
         return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (! (obj instanceof CustomerPlaylist)) {
+            return false;
+        }
+        CustomerPlaylist that = (CustomerPlaylist) obj;
+        return this.id.equals(that.id)
+                && this.name.equals(that.name)
+                && this.customerId.equals(that.customerId)
+                && this.description.equals(that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
     }
 }

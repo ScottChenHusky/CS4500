@@ -1,6 +1,8 @@
 package edu.northeastern.cs4500.controllers.customer;
 
 import edu.northeastern.cs4500.repositories.Customer;
+import edu.northeastern.cs4500.repositories.CustomerPlaylist;
+import edu.northeastern.cs4500.repositories.CustomerPlaylistDetail;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -555,6 +558,40 @@ public class CustomerController{
         return new Integer[]{executorId, fromId, toId};
     }
 
+    @RequestMapping(path = "/api/getPlaylists/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getPlaylists(@PathVariable(name = "userId") String userId) {
+        JSONObject logInfo = new JSONObject();
+        logInfo.put("Task", "getPlaylists");
+        logInfo.put("userId", userId);
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        json.put("result", array);
+        Integer userIdInt = myParseInt(userId);
+        if (userIdInt == null) {
+            putMessage(logInfo, json, "insufficient or undefined input");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(json);
+        }
+        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = customerService.getPlaylists(userIdInt);
+        for (Map.Entry<CustomerPlaylist, List<CustomerPlaylistDetail>> entry : result.entrySet()) {
+            CustomerPlaylist customerPlaylist = entry.getKey();
+            List<CustomerPlaylistDetail> customerPlaylistDetails = entry.getValue();
+            JSONObject playlist = new JSONObject();
+            playlist.put("id", customerPlaylist.getId());
+            playlist.put("name", customerPlaylist.getName());
+            playlist.put("description", customerPlaylist.getDescription());
+            JSONArray playlistDetail = new JSONArray();
+            for (CustomerPlaylistDetail detail : customerPlaylistDetails) {
+                playlistDetail.add(detail.getMovieId());
+            }
+            playlist.put("movieIds", playlistDetail);
+            array.add(playlist);
+        }
+        putMessage(logInfo, json, "results fetched");
+        CustomerController.log.finest(logInfo.toString());
+        return ResponseEntity.ok().body(json);
+    }
+
     @RequestMapping(path = "/api/createPlaylist", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> createPlaylist(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
@@ -565,13 +602,14 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
-        Object[] playlist = extractNameAndMovieId(logInfo, response, request, true);
+        String[] playlist = extractNameAndDescription(logInfo, response, request, false);
         if (playlist == null) {
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            customerService.createPlaylist(ids[0], ids[1], (String) playlist[0], (Integer) playlist[1]);
+            Integer id = customerService.createPlaylist(ids[0], ids[1], playlist[0], playlist[1]);
+            response.put("playlistId", id);
             putMessage(logInfo, response, "playlist created");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);
@@ -599,13 +637,13 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
-        Object[] playlist = extractNameAndMovieId(logInfo, response, request, true);
-        if (playlist == null) {
+        Integer[] playlistDetail = extractPlaylistIdAndMovieId(logInfo, response, request, true);
+        if (playlistDetail == null) {
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            customerService.addMovieToPlaylist(ids[0], ids[1], (String) playlist[0], (Integer) playlist[1]);
+            customerService.addMovieToPlaylist(ids[0], ids[1], playlistDetail[0], playlistDetail[1]);
             putMessage(logInfo, response, "movie added to playlist");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);
@@ -635,13 +673,13 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
-        Object[] playlist = extractNameAndMovieId(logInfo, response, request, true);
-        if (playlist == null) {
+        Integer[] playlistDetail = extractPlaylistIdAndMovieId(logInfo, response, request, true);
+        if (playlistDetail == null) {
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            customerService.removeMovieFromPlaylist(ids[0], ids[1], (String) playlist[0], (Integer) playlist[1]);
+            customerService.removeMovieFromPlaylist(ids[0], ids[1], playlistDetail[0], playlistDetail[1]);
             putMessage(logInfo, response, "movie removed from playlist");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);
@@ -663,13 +701,13 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
-        Object[] playlist = extractNameAndMovieId(logInfo, response, request, false);
+        Integer[] playlist = extractPlaylistIdAndMovieId(logInfo, response, request, false);
         if (playlist == null) {
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            customerService.deletePlaylist(ids[0], ids[1], (String) playlist[0]);
+            customerService.deletePlaylist(ids[0], ids[1], playlist[0]);
             putMessage(logInfo, response, "playlist deleted");
             CustomerController.log.finest(logInfo.toString());
             return ResponseEntity.ok().body(response);
@@ -681,20 +719,36 @@ public class CustomerController{
         }
     }
 
-    private Object[] extractNameAndMovieId(JSONObject logInfo, JSONObject response, JSONObject request, boolean movieIdWanted) {
+    private String[] extractNameAndDescription(JSONObject logInfo, JSONObject response, JSONObject request, boolean descriptionRequired) {
         Object name = request.get("name");
-        Object movieId = request.get("movieId");
-        if (name == null || (movieIdWanted && movieId == null)) {
+        Object description = request.get("description");
+        if (name == null || (descriptionRequired && description == null)) {
             putMessage(logInfo, response, "insufficient or undefined input");
             return null;
         }
         String nameStr = name.toString();
-        Integer movieIdInt = myParseInt(movieId.toString());
-        if (nameStr.equals("") || (movieIdWanted && movieIdInt == null)) {
+        String descriptionStr = description.toString();
+        if (nameStr.equals("") || (descriptionRequired && descriptionStr.equals(""))) {
             putMessage(logInfo, response, "request not complete");
             return null;
         }
-        return new Object[]{nameStr, movieIdInt};
+        return new String[]{nameStr, descriptionStr};
+    }
+
+    private Integer[] extractPlaylistIdAndMovieId(JSONObject logInfo, JSONObject response, JSONObject request, boolean movieIdRequired) {
+        Object playlistId = request.get("playlistId");
+        Object movieId = request.get("movieId");
+        if (playlistId == null || (movieIdRequired && movieId == null)) {
+            putMessage(logInfo, response, "insufficient or undefined input");
+            return null;
+        }
+        Integer playlistIdInt = myParseInt(playlistId.toString());
+        Integer movieIdInt = myParseInt(movieId.toString());
+        if (playlistIdInt == null || (movieIdRequired && movieIdInt == null)) {
+            putMessage(logInfo, response, "request not complete");
+            return null;
+        }
+        return new Integer[]{playlistIdInt, movieIdInt};
     }
 
 }
