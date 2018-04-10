@@ -150,12 +150,8 @@
 
 		function initMovie() {
 			// init current movie
-			var url = '/api/movie/get';
-			var sendPackage = {
-				userId : vm.userId,
-				movieId : vm.movieId
-			};
-			return $http.post(url, sendPackage).then(response, error);
+			var url = '/api/movie/get?userId=' + vm.userId + '&movieId=' + vm.movieId;
+			return $http.get(url).then(response, error);
 			function response(res) {
 				vm.movie = res.data.movie;
 				vm.comments = res.data.comment;
