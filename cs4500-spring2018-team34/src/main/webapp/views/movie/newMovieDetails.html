@@ -7,6 +7,63 @@ body {
 <link rel="stylesheet" href="assets/css/swiper.min.css">
 <div class="content">
 	<div class="dy_main">
+		<!-- The Modal -->
+		<div id="recommendToFriends" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div ng-if="model.success"
+					 class="alert alert-success alert-dismissible" role="alert">
+					{{model.success}}
+				</div>
+				<span class="close closeRecommend">&times;</span>
+				<ul class="list-ul clearfix">
+					<li ng-repeat="follower in model.follower">
+						<dl class="clearfix">
+							<dt>
+								<a href="#!/user/{{follower.follower}}"><img
+										src="../../assets/img/head.png"></a>
+							</dt>
+							<button ng-click="model.recommend(follower.follower)"
+									style="float: right"
+									class="btn btn-primary">
+								Recommend
+							</button>
+							<dd>
+								<a href="#!/user/{{follower.follower}}">
+									<p class="tit">
+										Name: {{follower.user_name}}
+									</p>
+								</a>
+								<a href="#!/user/{{follower.follower}}"><p
+									class="tit">ID: {{follower.follower}}</p></a>
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+		<div id="addToPlayLists" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div ng-if="model.success"
+					 class="alert alert-success alert-dismissible" role="alert">
+					{{model.success}}
+				</div>
+				<span class="close closePlaylists">&times;</span>
+				<ul class="list-ul clearfix">
+					<li ng-repeat="playList in model.playLists">
+						<button ng-click="model.addToPlaylist(playList.id)"
+								style="float: right"
+								class="btn btn-primary btn-block">
+							{{playList.name}}
+						</button>
+					</li>
+				</ul>
+			</div>
+
+		</div>
 		<div class="name">
 			<span>{{model.movie.name}}</span> <label>{{model.movie.score}}</label>
 		</div>
@@ -22,9 +79,13 @@ body {
 				<div class="clear"></div>
 			</div>
 			<div class="botn">
-				<a href=""><img src="../../assets/img/add.png">Add to
-					favorite</a> <a href=""><img src="../../assets/img/add.png">Add
-					to playlist</a> <a href="">Recommend to Friend</a>
+				<a id="playListsBtn" ng-click="model.showModal('addToPlayLists', 'playListsBtn', 'closePlaylists')">
+					<img src="../../assets/img/add.png">
+					Add to playlist
+				</a>
+				<a id="recommendBtn" ng-click="model.showModal('recommendToFriends', 'recommendBtn', 'closeRecommend')">
+					Recommend To Friends
+				</a>
 			</div>
 		</div>
 

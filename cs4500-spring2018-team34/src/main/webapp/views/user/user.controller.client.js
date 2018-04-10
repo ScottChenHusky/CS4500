@@ -324,6 +324,8 @@
 		vm.follow = follow;
 		vm.unfollow = unfollow;
 		vm.updatePassword = updatePassword;
+		vm.createPlayList = createPlayList;
+		vm.updateUserProfile = updateUserProfile;
 		// control capacity of each list
 		// vm.viewMore = viewMore;
 		// vm.capacity = 40;
@@ -389,6 +391,57 @@
 				}
 			});
 		});
+
+
+		function updateUserProfile(email, phone) {
+			var url = "/api/updateUser"
+			var newProfile = {
+                loggedInUserId : vm.currentUserId,
+                userId: vm.currentUserId,
+                email : email,
+                phone: phone
+			};
+
+			$http.post(url, newProfile).then(response, error);
+
+			function response(res) {
+                initProfile();
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
+			}
+
+			function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+			}
+		}
+
+		function createPlayList(name, description) {
+            var url = "/api/createPlaylist";
+            var playList = {
+                loggedInUserId : vm.currentUserId,
+				userId: vm.currentUserId,
+                name : name,
+                description: description
+            };
+
+            $http.post(url, playList).then(response, error);
+
+            function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
+			}
+
+			function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+			}
+
+		}
 		
 		function dividePages(type, data, sum) {
 			// Make page tabs
@@ -648,7 +701,7 @@
 			
 			// get recommend movie list
 			var fri_url = 'api/movie/search?name=don';
-//			var recom_url = '/api/movies/recomMovies';
+			// var recom_url = '/api/movies/recomMovies';
 			$http.get(fri_url).then(function(res) {
 				if (res.data != undefined) {
 					for (m in res.data) {
@@ -659,6 +712,27 @@
 					}
 				}
 			});
+
+			// get userPlayLists:
+            var url = "/api/getPlaylists/" + vm.userId;
+            $http.get(url).then(function(res) {
+            	if (res.data != undefined) {
+            		vm.playLists = res.data.result;
+
+            		for (var i = 0; i < res.data.result.length; i ++) {
+                    	for (var j = 0; j < res.data.result[i].movieIds.length; j++) {
+                    		var tempId = res.data.result[i].movieIds[j];
+                            res.data.result[i].movieIds[j] = {
+                            	id: tempId
+							}
+						}
+					}
+
+				}
+			});
+
+
+
 		}
 		initMovieLists();
 		//======================== ENDS INITIAL ==========================//
