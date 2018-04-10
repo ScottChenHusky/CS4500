@@ -26,6 +26,8 @@
 
 		vm.recomMovies = [];
 		vm.numberOfRecomMovies = 0;
+		
+		vm.currentUserId = sessionStorage.getItem("currentUserId");
 
 		function search(searchTerm) {
 			SearchController.search(searchTerm);
@@ -359,8 +361,8 @@
 
 		$("ul li.user_man").click(function() {
 			// get All users
-			var uUrl = "api/user?username=t";
-			// var uUrl = "api/user/allUser";
+//			var uUrl = "api/user?username=t";
+		    var uUrl = "api/getAllUsers/" + vm.userId;
 			$http.get(uUrl).then(function(response) {
 				if (response.data != undefined) {
 					vm.allUser = response.data.result;
@@ -374,18 +376,13 @@
 		
 		$("ul li.movie_man").click(function() {
 			// get all movies
-			var mUrl = "api/movie/search?name=th";
-			// var mUrl = "api/movie/allMovie";
+//			var mUrl = "api/movie/search?name=th";
+		    var mUrl = "/api/movie/init?name=all";
 			$http.get(mUrl).then(function(response) {
 				if (response.data != undefined) {
-					for (m in response.data) {
-						if (m == "Name") {
-							vm.allMovie = response.data.Name;
-							$scope.sumM = vm.allMovie.length;
-							
-							dividePages('movie', vm.allMovie, $scope.sumM);
-						}
-					}
+					vm.allMovie = response.data.all;
+					$scope.sumM = vm.allMovie.length;
+					dividePages('movie', vm.allMovie, $scope.sumM);
 				}
 			});
 		});
@@ -634,7 +631,7 @@
 
 			// get favorite movie list
 			var wan_url = 'api/movie/search?name=th';
-//			var new_url = '/api/movies/newMovies';
+//			var new_url = 'api/getAllUsers/' + vm.userId;
 			$http.get(wan_url).then(function(res) {
 				if (res.data != undefined) {
 					for (m in res.data) {
@@ -647,16 +644,12 @@
 			});
 			
 			// get recommend movie list
-			var fri_url = 'api/movie/search?name=don';
-//			var recom_url = '/api/movies/recomMovies';
+//			var fri_url = 'api/movie/search?name=don';
+			var fri_url = '/api/getUserRecommendationOfMovies/' + vm.userId;
 			$http.get(fri_url).then(function(res) {
-				if (res.data != undefined) {
-					for (m in res.data) {
-						if (m == "Name") {
-							vm.friendRecomMovies = res.data.Name;
-							vm.friendRecomMoviesNum = vm.friendRecomMovies.length;
-						}
-					}
+				if (res.data.result != undefined) {
+					vm.friendRecomMovies = res.data.result;
+					vm.friendRecomMoviesNum = vm.friendRecomMovies.length;	
 				}
 			});
 		}
