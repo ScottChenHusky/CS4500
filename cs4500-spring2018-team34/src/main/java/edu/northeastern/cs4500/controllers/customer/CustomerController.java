@@ -1,6 +1,8 @@
 package edu.northeastern.cs4500.controllers.customer;
 
 import edu.northeastern.cs4500.repositories.Customer;
+import edu.northeastern.cs4500.repositories.CustomerPlaylist;
+import edu.northeastern.cs4500.repositories.CustomerPlaylistDetail;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -25,6 +28,11 @@ public class CustomerController{
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    private void logRequest(JSONObject logInfo, JSONObject request, String task) {
+        logInfo.put("Task", task);
+        logInfo.put("request", request.toString());
     }
 
     private void putMessage(JSONObject logInfo, JSONObject response, String message) {
@@ -54,7 +62,11 @@ public class CustomerController{
         return new Integer[]{executorId, targetId};
     }
 
-    private void processAccessException(JSONObject logInfo, JSONObject response, String message) {
+    private void processCommonException(JSONObject logInfo, JSONObject response, String message) {
+        if (message == null) {
+            putMessage(logInfo, response, "unknown error");
+            return;
+        }
         switch (message) {
             case "executor":
                 putMessage(logInfo, response, "loggedInUserId not logged in");
@@ -68,14 +80,16 @@ public class CustomerController{
             case "admin":
                 putMessage(logInfo, response, "admin access not granted");
                 break;
+            default:
+                putMessage(logInfo, response, "unknown error");
+                break;
         }
     }
 
     @RequestMapping(path = "/api/keepAlive", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> keepAlive(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "keepAlive");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "keepAlive");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
         if (ids == null) {
@@ -89,10 +103,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "executor";
-            }
-            processAccessException(logInfo, response, message);
+            processCommonException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -101,8 +112,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/login", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> login(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "login");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "login");
         JSONObject response = new JSONObject();
         Object username = request.get("username");
         Object password = request.get("password");
@@ -127,19 +137,14 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (IllegalArgumentException e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "unknown";
-            }
-            switch (message) {
-                case "username":
-                    putMessage(logInfo, response, "username not found");
-                    break;
-                case "password":
-                    putMessage(logInfo, response, "password not matched");
-                    break;
-                default:
-                    putMessage(logInfo, response, "unknown error");
-                    break;
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("username".equals(message)) {
+                putMessage(logInfo, response, "username not found");
+            } else if ("password".equals(message)) {
+                putMessage(logInfo, response, "password not matched");
+            } else {
+                processCommonException(logInfo, response, message);
             }
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -149,8 +154,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/logout", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> logout(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "logout");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "logout");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
         if (ids == null) {
@@ -164,10 +168,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "target";
-            }
-            processAccessException(logInfo, response, message);
+            processCommonException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -176,8 +177,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/register", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> register(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "register");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "register");
         JSONObject response = new JSONObject();
         Object username = request.get("username");
         Object password = request.get("password");
@@ -208,19 +208,14 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "unknown";
-            }
-            switch (message) {
-                case "username":
-                    putMessage(logInfo, response, "username already exists");
-                    break;
-                case "code":
-                    putMessage(logInfo, response, "invalid admin code");
-                    break;
-                default:
-                    putMessage(logInfo, response, "unknown error");
-                    break;
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("username".equals(message)) {
+                putMessage(logInfo, response, "username already exists");
+            } else if ("code".equals(message)) {
+                putMessage(logInfo, response, "invalid admin code");
+            } else {
+                processCommonException(logInfo, response, message);
             }
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -230,8 +225,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/applyAdminCode", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> applyAdminCode(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "applyAdminCode");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "applyAdminCode");
         JSONObject response = new JSONObject();
         Object username = request.get("username");
         Object email = request.get("email");
@@ -256,19 +250,14 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "unknown";
-            }
-            switch (message) {
-                case "username":
-                    putMessage(logInfo, response, "username already exists");
-                    break;
-                case "code":
-                    putMessage(logInfo, response, "admin code temporary unavailable");
-                    break;
-                default:
-                    putMessage(logInfo, response, "unknown error");
-                    break;
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("username".equals(message)) {
+                putMessage(logInfo, response, "username already exists");
+            } else if ("code".equals(message)) {
+                putMessage(logInfo, response, "admin code temporary unavailable");
+            } else {
+                processCommonException(logInfo, response, message);
             }
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -278,8 +267,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/updateUserPassword", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> changePassword(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "changePassword");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "updateUserPassword");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
         if (ids == null) {
@@ -307,17 +295,12 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            if(message == null) {
-            	message = "admin";
-            }
-            processAccessException(logInfo, response, message);
-            switch (message) {
-                case "oldPassword":
-                    putMessage(logInfo, response, "old password not matched");
-                    break;
-                default:
-                    putMessage(logInfo, response, "unknown error");
-                    break;
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("oldPassword".equals(message)) {
+                putMessage(logInfo, response, "old password not matched");
+            } else {
+                processCommonException(logInfo, response, message);
             }
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -368,7 +351,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(json);
         } catch (Exception e) {
             String message = e.getMessage();
-            processAccessException(logInfo, json, message);
+            processCommonException(logInfo, json, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(json);
         }
@@ -399,8 +382,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/updateUser", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> updateCustomer(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "updateCustomer");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "updateUser");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
         if (ids == null) {
@@ -416,17 +398,14 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            processAccessException(logInfo, response, message);
-            switch (message) {
-                case "key":
-                    putMessage(logInfo, response, "invalid key-value update");
-                    break;
-                case "value":
-                    putMessage(logInfo, response, "value of invalid type exists");
-                    break;
-                default:
-                    putMessage(logInfo, response, "unknown error");
-                    break;
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("key".equals(message)) {
+                putMessage(logInfo, response, "invalid key-value update");
+            } else if ("value".equals(message)) {
+                putMessage(logInfo, response, "value of invalid type exists");
+            } else {
+                processCommonException(logInfo, response, message);
             }
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
@@ -436,8 +415,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/deleteUser", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> deleteCustomer(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "deleteCustomer");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "deleteUser");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
         if (ids == null) {
@@ -451,7 +429,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            processAccessException(logInfo, response, message);
+            processCommonException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -512,8 +490,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/user/follow", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> follow(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "follow");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "follow");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndFromIdAndToId(logInfo, response, request);
         if (ids == null) {
@@ -527,7 +504,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            processAccessException(logInfo, response, message);
+            processCommonException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -536,8 +513,7 @@ public class CustomerController{
     @RequestMapping(path = "/api/user/un-follow", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> unFollow(@RequestBody JSONObject request) {
         JSONObject logInfo = new JSONObject();
-        logInfo.put("Task", "unFollow");
-        logInfo.put("request", request.toString());
+        logRequest(logInfo, request, "un-follow");
         JSONObject response = new JSONObject();
         Integer[] ids = extractExecutorIdAndFromIdAndToId(logInfo, response, request);
         if (ids == null) {
@@ -551,7 +527,7 @@ public class CustomerController{
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             String message = e.getMessage();
-            processAccessException(logInfo, response, message);
+            processCommonException(logInfo, response, message);
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(response);
         }
@@ -580,6 +556,199 @@ public class CustomerController{
             return null;
         }
         return new Integer[]{executorId, fromId, toId};
+    }
+
+    @RequestMapping(path = "/api/getPlaylists/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getPlaylists(@PathVariable(name = "userId") String userId) {
+        JSONObject logInfo = new JSONObject();
+        logInfo.put("Task", "getPlaylists");
+        logInfo.put("userId", userId);
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        json.put("result", array);
+        Integer userIdInt = myParseInt(userId);
+        if (userIdInt == null) {
+            putMessage(logInfo, json, "insufficient or undefined input");
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(json);
+        }
+        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = customerService.getPlaylists(userIdInt);
+        for (Map.Entry<CustomerPlaylist, List<CustomerPlaylistDetail>> entry : result.entrySet()) {
+            CustomerPlaylist customerPlaylist = entry.getKey();
+            List<CustomerPlaylistDetail> customerPlaylistDetails = entry.getValue();
+            JSONObject playlist = new JSONObject();
+            playlist.put("id", customerPlaylist.getId());
+            playlist.put("name", customerPlaylist.getName());
+            playlist.put("description", customerPlaylist.getDescription());
+            JSONArray playlistDetail = new JSONArray();
+            for (CustomerPlaylistDetail detail : customerPlaylistDetails) {
+                playlistDetail.add(detail.getMovieId());
+            }
+            playlist.put("movieIds", playlistDetail);
+            array.add(playlist);
+        }
+        putMessage(logInfo, json, "results fetched");
+        CustomerController.log.finest(logInfo.toString());
+        return ResponseEntity.ok().body(json);
+    }
+
+    @RequestMapping(path = "/api/createPlaylist", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> createPlaylist(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logRequest(logInfo, request, "createPlaylist");
+        JSONObject response = new JSONObject();
+        Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
+        if (ids == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        String[] playlist = extractNameAndDescription(logInfo, response, request, false);
+        if (playlist == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            Integer id = customerService.createPlaylist(ids[0], ids[1], playlist[0], playlist[1]);
+            response.put("playlistId", id);
+            putMessage(logInfo, response, "playlist created");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("existed".equals(message)) {
+                putMessage(logInfo, response, "playlist already exists");
+            } else {
+                processCommonException(logInfo, response, message);
+            }
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @RequestMapping(path = "/api/addMovieToPlaylist", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> addMovieToPlaylist(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logRequest(logInfo, request, "addMovieToPlaylist");
+        JSONObject response = new JSONObject();
+        Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
+        if (ids == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        Integer[] playlistDetail = extractPlaylistIdAndMovieId(logInfo, response, request, true);
+        if (playlistDetail == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            customerService.addMovieToPlaylist(ids[0], ids[1], playlistDetail[0], playlistDetail[1]);
+            putMessage(logInfo, response, "movie added to playlist");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            if (message == null) {
+                putMessage(logInfo, response, "unknown error");
+            } else if ("none".equals(message)) {
+                putMessage(logInfo, response, "playlist does not exist");
+            } else if ("duplicated".equals(message)) {
+                putMessage(logInfo, response, "movie already in playlist");
+            } else {
+                processCommonException(logInfo, response, message);
+            }
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @RequestMapping(path = "/api/removeMovieFromPlaylist", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> removeMovieFromPlaylist(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logRequest(logInfo, request, "removeMovieFromPlaylist");
+        JSONObject response = new JSONObject();
+        Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
+        if (ids == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        Integer[] playlistDetail = extractPlaylistIdAndMovieId(logInfo, response, request, true);
+        if (playlistDetail == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            customerService.removeMovieFromPlaylist(ids[0], ids[1], playlistDetail[0], playlistDetail[1]);
+            putMessage(logInfo, response, "movie removed from playlist");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            processCommonException(logInfo, response, message);
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @RequestMapping(path = "/api/deletePlaylist", method = RequestMethod.POST)
+    public ResponseEntity<JSONObject> deletePlaylist(@RequestBody JSONObject request) {
+        JSONObject logInfo = new JSONObject();
+        logRequest(logInfo, request, "deletePlaylist");
+        JSONObject response = new JSONObject();
+        Integer[] ids = extractExecutorIdAndTargetId(logInfo, response, request);
+        if (ids == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        Integer[] playlist = extractPlaylistIdAndMovieId(logInfo, response, request, false);
+        if (playlist == null) {
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+        try {
+            customerService.deletePlaylist(ids[0], ids[1], playlist[0]);
+            putMessage(logInfo, response, "playlist deleted");
+            CustomerController.log.finest(logInfo.toString());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            processCommonException(logInfo, response, message);
+            CustomerController.log.warning(logInfo.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    private String[] extractNameAndDescription(JSONObject logInfo, JSONObject response, JSONObject request, boolean descriptionRequired) {
+        Object name = request.get("name");
+        Object description = request.getOrDefault("description", "");
+        if (name == null || (descriptionRequired && description == null)) {
+            putMessage(logInfo, response, "insufficient or undefined input");
+            return null;
+        }
+        String nameStr = name.toString();
+        String descriptionStr = description.toString();
+        if (nameStr.equals("") || (descriptionRequired && descriptionStr.equals(""))) {
+            putMessage(logInfo, response, "request not complete");
+            return null;
+        }
+        return new String[]{nameStr, descriptionStr};
+    }
+
+    private Integer[] extractPlaylistIdAndMovieId(JSONObject logInfo, JSONObject response, JSONObject request, boolean movieIdRequired) {
+        Object playlistId = request.get("playlistId");
+        Object movieId = request.getOrDefault("movieId", "");
+        if (playlistId == null || (movieIdRequired && movieId == null)) {
+            putMessage(logInfo, response, "insufficient or undefined input");
+            return null;
+        }
+        Integer playlistIdInt = myParseInt(playlistId.toString());
+        Integer movieIdInt = myParseInt(movieId.toString());
+        if (playlistIdInt == null || (movieIdRequired && movieIdInt == null)) {
+            putMessage(logInfo, response, "request not complete");
+            return null;
+        }
+        return new Integer[]{playlistIdInt, movieIdInt};
     }
 
 }

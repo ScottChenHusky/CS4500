@@ -21,6 +21,10 @@ public class CustomerService {
     @Autowired
     private CustomerFollowingRepository customerFollowingRepository;
     @Autowired
+    private CustomerPlaylistRepository customerPlaylistRepository;
+    @Autowired
+    private CustomerPlaylistDetailRepository customerPlaylistDetailRepository;
+    @Autowired
     private AdminCodeRepository adminCodeRepository;
 
     @PostConstruct
@@ -270,6 +274,57 @@ public class CustomerService {
         if (! result.isEmpty()) {
             customerFollowingRepository.delete(result.get(0).getId());
         }
+    }
+
+    public Map<CustomerPlaylist, List<CustomerPlaylistDetail>> getPlaylists(Integer customerId) {
+        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = new HashMap<>();
+        List<CustomerPlaylist> playlists = customerPlaylistRepository.findAllByCustomerId(customerId);
+        for (CustomerPlaylist playlist : playlists) {
+            List<CustomerPlaylistDetail> playlistDetails = customerPlaylistDetailRepository.findAllByPlaylistId(playlist.getId());
+            result.put(playlist, playlistDetails);
+        }
+        return result;
+    }
+
+    public Integer createPlaylist(Integer executor, Integer target, String name, String description) throws Exception {
+        ensureAccess(executor, target);
+        if (customerPlaylistRepository.existsByNameAndCustomerId(name, target)) {
+            throw new IllegalArgumentException("existed");
+        }
+        CustomerPlaylist customerPlaylist = new CustomerPlaylist()
+                .withName(name)
+                .withCustomerId(target)
+                .withDescription(description);
+        customerPlaylistRepository.save(customerPlaylist);
+        return customerPlaylist.getId();
+    }
+
+    public void addMovieToPlaylist(Integer executor, Integer target, Integer playlistId, Integer movieId) throws Exception {
+        ensureAccess(executor, target);
+        if (! customerPlaylistRepository.exists(playlistId)) {
+            throw new IllegalArgumentException("none");
+        }
+        if (customerPlaylistDetailRepository.existsByPlaylistIdAndMovieId(playlistId, movieId)) {
+            throw new IllegalArgumentException("duplicated");
+        }
+        CustomerPlaylistDetail customerPlaylistDetail = new CustomerPlaylistDetail()
+                .withPlaylistId(playlistId)
+                .withMovieId(movieId);
+        customerPlaylistDetailRepository.save(customerPlaylistDetail);
+    }
+
+    public void removeMovieFromPlaylist(Integer executor, Integer target, Integer playlistId, Integer movieId) throws Exception {
+        ensureAccess(executor, target);
+        if (! customerPlaylistRepository.exists(playlistId)) {
+            throw new IllegalArgumentException("none");
+        }
+        customerPlaylistDetailRepository.deleteByPlaylistIdAndMovieId(playlistId, movieId);
+    }
+
+    public void deletePlaylist(Integer executor, Integer target, Integer playlistId) throws Exception {
+        ensureAccess(executor, target);
+        customerPlaylistRepository.delete(playlistId);
+        customerPlaylistDetailRepository.deleteAllByPlaylistId(playlistId);
     }
 
 }
