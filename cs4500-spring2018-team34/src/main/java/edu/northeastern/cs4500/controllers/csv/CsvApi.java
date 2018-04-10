@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class CsvApi {
   private final Map<Integer, String> map = new HashMap<>();
@@ -26,14 +29,19 @@ public class CsvApi {
         String[] ss = scanner1.nextLine().split(",");
         int last = ss.length - 1;
         String name = ss[last];
-        if(name.length() > 20){
-          name = name.substring(0, 20);
+        String[] s = name.split("\\|");
+        if(s.length >= 2){
+          name = s[0] + "|" + s[1];
         }
         List<String> temp = new ArrayList<>();
         if(tagsMap.containsKey(name)){
           temp = tagsMap.get(name);
         }
-        temp.add(ss[1]);
+        String movie = ss[1];
+        if(movie.contains("(") && movie.length() > 7){
+          movie = movie.substring(0, movie.length()-7);
+        }
+        temp.add(movie);
         tagsMap.put(name, temp);
 
       }
@@ -72,13 +80,17 @@ public class CsvApi {
 
 
   public List<String> recommendMovieIds(String name, int want) {
-    if(name.length() > 20){
-      name = name.substring(0, 20);
+    String[] ss = name.split("\\|");
+    if(ss.length >= 2){
+      name = ss[0] + "|" + ss[1];
     }
-    List<String> result = tagsMap.get(name);
-    while(result.size() > want){
-      result.remove(result.size() - 1);
+    List<String> result = new ArrayList<>(tagsMap.get(name));
+
+    Set<String> finalL = new HashSet<>();
+    for(int i = 0; i < want; i++){
+      Random r = new Random();
+      finalL.add(result.get(r.nextInt(result.size() + 1)));
     }
-    return result;
+    return new ArrayList<>(finalL);
   }
 }

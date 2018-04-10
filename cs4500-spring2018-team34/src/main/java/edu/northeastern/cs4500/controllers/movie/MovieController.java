@@ -256,7 +256,12 @@ public class MovieController{
   }
   public String getTag(String omdbId) throws FileNotFoundException, NullPointerException {
     String id = csvApi.search(omdbId.substring(2, 9), "links")[0];
-    return csvApi.search(id, "movies")[2];
+    String result = csvApi.search(id, "movies")[2];
+    String[] ss = result.split("\\|");
+    if(ss.length >= 2){
+      result = ss[0] + "|" + ss[1];
+    };
+    return result;
   }
   @RequestMapping(path = "/api/movie/addComment", method = RequestMethod.POST)
   public ResponseEntity<JSONObject> addComment(@RequestBody JSONObject source) {
@@ -377,16 +382,11 @@ public class MovieController{
   public ResponseEntity<JSONObject> recommendMovie(@RequestBody JSONObject source){
     String userId = source.get("userId").toString();
     List<MovieRecommend> mrs = movieRecommendRepository.findTop2ByCustomerIdOrderByWeightsDesc(Integer.parseInt(userId));
-    String userTag = "";
-    String userTag1 = "";
-    int size = mrs.size();
-    int wantedResult = 5;
-    for(int i = 0; i < size; i++){
-      userTag = userTag + mrs.get(i).getTag() + "|";
-      userTag1 = userTag1 + mrs.get(size - 1 - i).getTag() + "|";
-    }
-    userTag = userTag.substring(0, userTag.length()-1);
-    userTag1 = userTag1.substring(0, userTag1.length() - 1);
+
+    int wantedResult = 3;
+    String userTag = mrs.get(0).getTag() + "|" + mrs.get(1).getTag();
+    String userTag1 = mrs.get(1).getTag() + "|" + mrs.get(0).getTag();
+
     JSONArray array = new JSONArray();
     List<String> movieNames = new ArrayList<>();
       try{
@@ -398,7 +398,7 @@ public class MovieController{
       try{
 
         if(movieNames.size() != wantedResult){
-          movieNames.addAll(csvApi.recommendMovieIds(userTag1, wantedResult - movieNames.size()));
+          movieNames.addAll(csvApi.recommendMovieIds(userTag1, wantedResult));
         }
       } catch(NullPointerException ignore){
 
