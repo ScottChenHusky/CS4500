@@ -7,17 +7,15 @@ body {
 <link rel="stylesheet" href="assets/css/swiper.min.css">
 <div class="content">
 	<div class="dy_main">
-		<div ng-if="model.error" class="alert alert-danger">
-			{{model.error}}</div>
-		<div ng-if="model.success"
-			 class="alert alert-success alert-dismissible" role="alert">
-			{{model.success}}</div>
 		<!-- The Modal -->
-		<div id="myModal" class="modal">
-
+		<div id="recommendToFriends" class="modal">
 			<!-- Modal content -->
 			<div class="modal-content">
-				<span class="close">&times;</span>
+				<div ng-if="model.success"
+					 class="alert alert-success alert-dismissible" role="alert">
+					{{model.success}}
+				</div>
+				<span class="close closeRecommend">&times;</span>
 				<ul class="list-ul clearfix">
 					<li ng-repeat="follower in model.follower">
 						<dl class="clearfix">
@@ -45,6 +43,27 @@ body {
 			</div>
 
 		</div>
+
+		<div id="addToPlayLists" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div ng-if="model.success"
+					 class="alert alert-success alert-dismissible" role="alert">
+					{{model.success}}
+				</div>
+				<span class="close closePlaylists">&times;</span>
+				<ul class="list-ul clearfix">
+					<li ng-repeat="playList in model.playLists">
+						<button ng-click="model.addToPlaylist(playList.id)"
+								style="float: right"
+								class="btn btn-primary btn-block">
+							{{playList.name}}
+						</button>
+					</li>
+				</ul>
+			</div>
+
+		</div>
 		<div class="name">
 			<span>{{model.movie.name}}</span> <label>{{model.movie.score}}</label>
 		</div>
@@ -60,15 +79,11 @@ body {
 				<div class="clear"></div>
 			</div>
 			<div class="botn">
-				<a>
-					<img src="../../assets/img/add.png">
-					Add to favorite
-				</a>
-				<a>
+				<a id="playListsBtn" ng-click="model.showModal('addToPlayLists', 'playListsBtn', 'closePlaylists')">
 					<img src="../../assets/img/add.png">
 					Add to playlist
 				</a>
-				<a id="myBtn" ng-click="model.showModal()">
+				<a id="recommendBtn" ng-click="model.showModal('recommendToFriends', 'recommendBtn', 'closeRecommend')">
 					Recommend To Friends
 				</a>
 			</div>

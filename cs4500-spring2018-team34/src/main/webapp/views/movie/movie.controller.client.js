@@ -25,6 +25,8 @@
         vm.showModal = showModal;
         // recommend this movie To a Friend
         vm.recommend = recommend;
+        // add a movie to a playlist
+        vm.addToPlaylist = addToPlaylist;
 
 		vm.len = 28;
 
@@ -50,44 +52,80 @@
 			return $sce.trustAsResourceUrl(url);
 		}
 
+		function addToPlaylist(playListId) {
+		    var url = "/api/addMovieToPlaylist";
+		    var ob = {
+                loggedInUserId: vm.userId,
+                userId: vm.userId,
+                playlistId: playListId,
+                movieId: vm.movieId
+            }
+
+            $http.post(url, ob).then(response, error);
+
+		    function response(res) {
+                vm.error = null;
+                vm.success = res.data.message;
+                return;
+            }
+
+            function error(err) {
+                vm.success = null;
+                vm.error = err.data.message;
+                return;
+            }
+
+        }
+
 		function recommend(toUserId) {
-			var url = "/api/user/recommendToFriends";
+			var url = "/api/recommendMovieToUser";
 			var ob = {
-				fromUserId: vm.userId,
-				toUserId: toUserId,
-				movieId: vm.movieId
+                loggedInUserId: vm.userId,
+				from: vm.userId,
+				to: toUserId,
+                movieId: vm.movieId
 			};
 			$http.post(url, ob)
 				.then(response, error);
 
 			function response(res) {
                 vm.error = null;
-                vm.success = "Success";
+                vm.success = res.data.message;
                 return;
 			}
 
 			function error(err) {
                 vm.success = null;
-                vm.error = "Error";
+                vm.error = err.data.message;
                 return;
 			}
         }
 
-		function showModal() {
+		function showModal(tag, btn, closeBtn) {
             // get followers info
-            var url = '/api/user/followers/' + vm.userId;
-            $http.get(url).then(followers_response);
+			if (tag === "recommendToFriends") {
+                var url = '/api/user/followers/' + vm.userId;
+                $http.get(url).then(followers_response);
 
-            function followers_response(res) {
-                vm.follower = res.data.result;
+                function followers_response(res) {
+                    vm.follower = res.data.result;
+                }
+			} else if (tag === "addToPlayLists") {
+				var url = "/api/getPlaylists/" + vm.userId;
+				$http.get(url).then(playLists_response);
+
+				function playLists_response(res) {
+					vm.playLists = res.data.result;
+				}
             }
-            var modal = document.getElementById('myModal');
+
+            var modal = document.getElementById(tag);
 
 			// Get the button that opens the modal
-            var btn = document.getElementById("myBtn");
+            var btn = document.getElementById(btn);
 
             // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
+            var span = document.getElementsByClassName(closeBtn)[0];
 
 			// When the user clicks the button, open the modal
             btn.onclick = function() {
