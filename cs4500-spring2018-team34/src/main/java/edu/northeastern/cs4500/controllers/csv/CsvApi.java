@@ -14,9 +14,11 @@ import java.util.Set;
 public class CsvApi {
   private final Map<Integer, String> map = new HashMap<>();
   private Map<String, List<String>> tagsMap = new HashMap<>();
-  public CsvApi(){
+  private File linksFile = new File("src/main/java/edu/northeastern/cs4500/controllers/csv/links.csv" );
+  private File moviesFile = new File( "src/main/java/edu/northeastern/cs4500/controllers/csv/movies.csv" );
+  public CsvApi() {
     try {
-      Scanner scanner = new Scanner(new File("links.csv"));
+      Scanner scanner = new Scanner(linksFile);
       scanner.nextLine();
       while(scanner.hasNext()){
         String[] ss = scanner.nextLine().split(",");
@@ -24,7 +26,7 @@ public class CsvApi {
       }
       scanner.close();
 
-      Scanner scanner1 = new Scanner(new File("movies.csv"));
+      Scanner scanner1 = new Scanner(moviesFile);
       while(scanner1.hasNext()){
         String[] ss = scanner1.nextLine().split(",");
         int last = ss.length - 1;
@@ -63,8 +65,7 @@ public class CsvApi {
       }
 
     } else {
-      String csvFile = fileName+".csv";
-      Scanner scanner = new Scanner(new File(csvFile));
+      Scanner scanner = new Scanner(moviesFile);
       while(scanner.hasNext()){
         String[] line = scanner.nextLine().split(",");
         if(line[0].equals(searchBy)){
