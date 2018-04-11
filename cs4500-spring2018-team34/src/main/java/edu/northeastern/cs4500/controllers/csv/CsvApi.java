@@ -14,9 +14,19 @@ import java.util.Set;
 public class CsvApi {
   private final Map<Integer, String> map = new HashMap<>();
   private Map<String, List<String>> tagsMap = new HashMap<>();
-  private File linksFile = new File(getClass().getClassLoader().getResource("links.csv").getFile());
-  private File moviesFile = new File(getClass().getClassLoader().getResource("movies.csv").getFile());
+  private File linksFile;
+  private File moviesFile;
   public CsvApi() {
+    linksFile = new File(getClass().getClassLoader().getResource("links.csv").getFile());
+    if(!linksFile.exists()){
+      linksFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/links.csv" );
+    }
+
+    moviesFile = new File(getClass().getClassLoader().getResource("movies.csv").getFile());
+    if(!moviesFile.exists()){
+      moviesFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/movies.csv" );
+    }
+
     try {
       Scanner scanner = new Scanner(linksFile);
       scanner.nextLine();
