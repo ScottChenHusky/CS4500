@@ -14,10 +14,8 @@ import java.util.Set;
 public class CsvApi {
   private final Map<Integer, String> map = new HashMap<>();
   private Map<String, List<String>> tagsMap = new HashMap<>();
-  // private File linksFile = new File("src/main/java/edu/northeastern/cs4500/controllers/csv/links.csv" );
-  // private File moviesFile = new File( "src/main/java/edu/northeastern/cs4500/controllers/csv/movies.csv" );
-  private File linksFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/links.csv" );
-  private File moviesFile = new File( "/home/ec2-user/app/cs4500-spring2018-team34/target/movies.csv" );
+  private File linksFile = new File(getClass().getClassLoader().getResource("links.csv").getFile());
+  private File moviesFile = new File(getClass().getClassLoader().getResource("movies.csv").getFile());
   public CsvApi() {
     try {
       Scanner scanner = new Scanner(linksFile);

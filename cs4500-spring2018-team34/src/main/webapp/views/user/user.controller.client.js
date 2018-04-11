@@ -27,6 +27,12 @@
 		vm.recomMovies = [];
 		vm.numberOfRecomMovies = 0;
 
+		vm.currentUserId = getUserId();
+
+		function getUserId(){
+            return sessionStorage.getItem("currentUserId");
+		}
+
 		function search(searchTerm) {
 			SearchController.search(searchTerm);
 		}
