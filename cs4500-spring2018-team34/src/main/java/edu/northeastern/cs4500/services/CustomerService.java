@@ -1,5 +1,7 @@
 package edu.northeastern.cs4500.services;
 
+import edu.northeastern.cs4500.controllers.movie.Movie;
+import edu.northeastern.cs4500.controllers.movie.MovieRepository;
 import edu.northeastern.cs4500.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class CustomerService {
     private CustomerRecommendRepository customerRecommendRepository;
     @Autowired
     private AdminCodeRepository adminCodeRepository;
+    @Autowired
+    private MovieRepository movieRepository;
 
     @PostConstruct
     private void background() {
@@ -278,12 +282,17 @@ public class CustomerService {
         }
     }
 
-    public Map<CustomerPlaylist, List<CustomerPlaylistDetail>> getPlaylists(Integer customerId) {
-        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = new HashMap<>();
+    public Map<CustomerPlaylist, List<Movie>> getPlaylists(Integer customerId) {
+        Map<CustomerPlaylist, List<Movie>> result = new HashMap<>();
         List<CustomerPlaylist> playlists = customerPlaylistRepository.findAllByCustomerId(customerId);
         for (CustomerPlaylist playlist : playlists) {
             List<CustomerPlaylistDetail> playlistDetails = customerPlaylistDetailRepository.findAllByPlaylistId(playlist.getId());
-            result.put(playlist, playlistDetails);
+            List<Integer> movieIds = new ArrayList<>();
+            for (CustomerPlaylistDetail detail : playlistDetails) {
+                movieIds.add(detail.getMovieId());
+            }
+            List<Movie> movies = movieRepository.findByIdIn(movieIds);
+            result.put(playlist, movies);
         }
         return result;
     }
@@ -329,14 +338,19 @@ public class CustomerService {
         customerPlaylistDetailRepository.deleteAllByPlaylistId(playlistId);
     }
 
-    public List<CustomerRecommend> getCustomerRecommendationOfMovies(Integer customerId) {
-        List<CustomerRecommend> result = customerRecommendRepository.findAllByCustomerTo(customerId);
-        result.sort(new Comparator<CustomerRecommend>() {
+    public Map<CustomerRecommend, Movie> getCustomerRecommendationOfMovies(Integer customerId) {
+        List<CustomerRecommend> temp = customerRecommendRepository.findAllByCustomerTo(customerId);
+        temp.sort(new Comparator<CustomerRecommend>() {
             @Override
             public int compare(CustomerRecommend o1, CustomerRecommend o2) {
                 return - o1.getCreateDate().compareTo(o2.getCreateDate());
             }
         });
+        Map<CustomerRecommend, Movie> result = new HashMap<>();
+        for (CustomerRecommend recommend : temp) {
+            Movie movie = movieRepository.findById(recommend.getMovieId());
+            result.put(recommend, movie);
+        }
         return result;
     }
 

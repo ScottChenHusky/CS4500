@@ -81,4 +81,25 @@ public class CustomerRecommend {
         this.setCreateDate(createDate);
         return this;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (! (obj instanceof CustomerRecommend)) {
+            return false;
+        }
+        CustomerRecommend that = (CustomerRecommend) obj;
+        return this.id.equals(that.id)
+                && this.customerFrom.equals(that.customerFrom)
+                && this.customerTo.equals(that.customerTo)
+                && this.movieId.equals(that.movieId)
+                && this.createDate.equals(that.createDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
 }

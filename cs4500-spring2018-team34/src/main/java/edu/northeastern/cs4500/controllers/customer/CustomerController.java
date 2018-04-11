@@ -1,8 +1,8 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import edu.northeastern.cs4500.controllers.movie.Movie;
 import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerPlaylist;
-import edu.northeastern.cs4500.repositories.CustomerPlaylistDetail;
 import edu.northeastern.cs4500.repositories.CustomerRecommend;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONArray;
@@ -573,19 +573,23 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(json);
         }
-        Map<CustomerPlaylist, List<CustomerPlaylistDetail>> result = customerService.getPlaylists(userIdInt);
-        for (Map.Entry<CustomerPlaylist, List<CustomerPlaylistDetail>> entry : result.entrySet()) {
+        Map<CustomerPlaylist, List<Movie>> result = customerService.getPlaylists(userIdInt);
+        for (Map.Entry<CustomerPlaylist, List<Movie>> entry : result.entrySet()) {
             CustomerPlaylist customerPlaylist = entry.getKey();
-            List<CustomerPlaylistDetail> customerPlaylistDetails = entry.getValue();
+            List<Movie> movies = entry.getValue();
             JSONObject playlist = new JSONObject();
             playlist.put("id", customerPlaylist.getId());
             playlist.put("name", customerPlaylist.getName());
             playlist.put("description", customerPlaylist.getDescription());
             JSONArray playlistDetail = new JSONArray();
-            for (CustomerPlaylistDetail detail : customerPlaylistDetails) {
-                playlistDetail.add(detail.getMovieId());
+            for (Movie movie : movies) {
+                JSONObject object = new JSONObject();
+                object.put("movieId", movie.getId());
+                object.put("name", movie.getName());
+                object.put("poster", movie.getPoster());
+                playlistDetail.add(object);
             }
-            playlist.put("movieIds", playlistDetail);
+            playlist.put("movies", playlistDetail);
             array.add(playlist);
         }
         putMessage(logInfo, json, "results fetched");
@@ -766,12 +770,18 @@ public class CustomerController{
             CustomerController.log.warning(logInfo.toString());
             return ResponseEntity.badRequest().body(json);
         }
-        List<CustomerRecommend> result = customerService.getCustomerRecommendationOfMovies(userIdInt);
-        for (CustomerRecommend recommendation : result) {
+        Map<CustomerRecommend, Movie> result = customerService.getCustomerRecommendationOfMovies(userIdInt);
+        for (Map.Entry<CustomerRecommend, Movie> recommendation : result.entrySet()) {
+            CustomerRecommend recommend = recommendation.getKey();
+            Movie movie = recommendation.getValue();
             JSONObject object = new JSONObject();
-            object.put("from", recommendation.getCustomerFrom());
-            object.put("movieId", recommendation.getMovieId());
-            object.put("date", recommendation.getCreateDate().toString());
+            object.put("from", recommend.getCustomerFrom());
+            JSONObject movieObj = new JSONObject();
+            movieObj.put("movieId", movie.getId());
+            movieObj.put("name", movie.getName());
+            movieObj.put("poster", movie.getPoster());
+            object.put("movie", movieObj);
+            object.put("date", recommend.getCreateDate().toString());
             array.add(object);
         }
         putMessage(logInfo, json, "results fetched");

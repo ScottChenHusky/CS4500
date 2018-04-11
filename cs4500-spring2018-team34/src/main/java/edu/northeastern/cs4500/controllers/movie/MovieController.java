@@ -198,10 +198,9 @@ public class MovieController{
   }
 
 
-  @RequestMapping(path = "/api/movie/get", method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> getMovie(@RequestBody JSONObject source) throws FileNotFoundException {
-    String searchId = source.get("movieId").toString();
-    Integer userId = Integer.parseInt(source.get("userId").toString());
+  @RequestMapping(path = "/api/movie/get", method = RequestMethod.GET)
+  public ResponseEntity<JSONObject> getMovie(@RequestParam(name = "userId") String user, @RequestParam(name="movieId") String searchId) throws FileNotFoundException {
+    Integer userId = Integer.parseInt(user);
     JSONObject logInfo = new JSONObject();
     Movie movie = movieRepository.findById(Integer.parseInt(searchId));
     JSONObject json = new JSONObject();

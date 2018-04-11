@@ -55,33 +55,18 @@
 				</ul></li>
 
 			<li class="block"><input type="checkbox" name="item" id="item2" />
-				<label for="item2">
-					<i aria-hidden="true"></i>
-					My Movie Lists
-					<a href="#tab8"></a>
-				</label>
+				<label for="item2"> <i aria-hidden="true"></i> My Movie
+					Lists <a href="#tab8"></a>
+			</label>
 				<ul class="options tabs">
-					<li ng-show="model.isOwner">
-						<a href="#addlist">
-							<i aria-hidden="true"></i>
-							<i class="glyphicon glyphicon-plus"></i>
+					<li ng-show="model.isOwner"><a href="#addlist"> <i
+							aria-hidden="true"></i> <i class="glyphicon glyphicon-plus"></i>
 							Add New List
-						</a>
-					</li>
-					<li>
-						<a href="#movie3">
-							<i aria-hidden="true"></i>
-							Friends Recommended Movies
-						</a>
-					</li>
-					<li ng-repeat="playList in model.playLists">
-						<a href="#movie3">
-							<i aria-hidden="true"></i>
-							{{playList.name}}
-						</a>
-					</li>
-				</ul>
-			</li>
+					</a></li>
+					<li><a href=""><i aria-hidden="true"></i> Friends Recommended Movies</a></li>
+					<li ng-repeat="playList in model.playLists"><a href=""><i
+						aria-hidden="true"></i> {{playList.name}}</a></li>
+				</ul></li>
 		</ul>
 	</div>
 	<!-- side-wrapper -->
@@ -361,73 +346,45 @@
 
 		<!-- Movie Section Starts -->
 		<!-- Summary Section Starts -->
-		<section class="movieSummary-section">
-			{{model.playLists}}
-			<li class="item" ng-repeat="playList in model.playLists">
-				<ul class="tabs">
-					<li>
-						<a href="#movie1">
-							<h2 class="section-title">
-								<i class="glyphicon glyphicon-film"></i>
-								{{playList.name}}
-							</h2>
-						</a>
-					</li>
-				</ul>
-				<ul class="movies">
-					<li class="item" ng-repeat="movie in playList.movieIds">
-						<a href="#!/movie/{{movie.id}}"
-						   onclick="window.scrollTo(0,0)">
-							<img class="cover img-responsive" ng-src="{{movie.poster}}" />
-							<h5 class="movie-title">
-								<span>{{movie.score}}</span>
-								{{model.cutString(movie.name)}}
-							</h5>
-						</a>
-					</li>
-				</ul>
-			</li>
-
-		</section>
-		<section class="movieSummary-section">
+		<section class="movieSummary-section"
+			ng-repeat="playList in model.playLists">
 			<ul class="tabs">
-				<li><a href="#movie2"><h2 class="section-title">
-							<i class="glyphicon glyphicon-film"></i> Want to See Movies
-							<p>
-								Total: <span>{{model.wantToSeeMoviesNum}}</span>
-							</p>
-						</h2></a></li>
+				<li>
+					<h2 class="section-title">
+						<i class="glyphicon glyphicon-film"></i>
+						{{playList.name}}
+						<button ng-show="model.isOwner"
+								style="float: right" class="btn btn-danger"
+								ng-click="model.deletePlaylist(playList.id)">
+							Delete Playlist
+						</button>
+					</h2>
+				</li>
 			</ul>
-			<ul class="movies" ng-show="model.wantToSeeMoviesNum != 0">
-				<li class="item" ng-repeat="movie in model.wantToSeeMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
+			<ul class="movies">
+				<li class="item" ng-repeat="movie in playList.movies"><a
+					href="#!/movie/{{movie.movieId}}" onclick="window.scrollTo(0,0)"> <img
 						class="cover img-responsive" ng-src="{{movie.poster}}" />
 						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-						</h5></a></li>
+							<span>{{movie.score}}</span> {{model.cutString(movie.name)}}
+						</h5>
+				</a></li>
 			</ul>
-			<div class="movies empty" ng-show="model.wantToSeeMoviesNum == 0">Empty
-				list.</div>
 		</section>
-
-		<div class="bottom"></div>
 
 		<section class="movieSummary-section">
 			<ul class="tabs">
-				<li><a href="#movie3"><h2 class="section-title">
+				<li><h2 class="section-title">
 							<i class="glyphicon glyphicon-film"></i> Friends Recommended
 							Movies
-							<p>
-								Total: <span>{{model.friendRecomMoviesNum}}</span>
-							</p>
-						</h2></a></li>
+						</h2></li>
 			</ul>
 			<ul class="movies" ng-show="model.friendRecomMoviesNum != 0">
 				<li class="item" ng-repeat="movie in model.friendRecomMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
+					href="#!/movie/{{movie.movie.movieId}}" onclick="window.scrollTo(0,0)"><img
+						class="cover img-responsive" ng-src="{{movie.movie.poster}}" />
 						<h5 class="movie-title">
-							<span>{{mocie.score}}</span>{{model.cutString(movie.name)}}
+							<span>{{movie.movie.score}}</span>{{model.cutString(movie.movie.name)}}
 						</h5></a></li>
 			</ul>
 			<div class="movies empty" ng-show="model.friendRecomMoviesNum == 0">Empty
@@ -435,104 +392,29 @@
 		</section>
 		<!-- Summary Section Ends -->
 
-		<section class="movie-section" id="movie1">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> My Favorite Movies
-				<p>
-					Total: <span>{{model.favoriteMoviesNum}}</span>
-				</p>
-			</h2>
-			<ul class="movies" ng-show="model.favoriteMoviesNum != 0">
-				<li class="item" ng-repeat="movie in model.favoriteMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
-						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-						</h5></a></li>
-			</ul>
-			<div class="movies empty" ng-show="model.favoriteMoviesNum == 0">Empty
-				list.</div>
-			<button ng-show="model.currentUserLevel == '0'"
-					style="float: right" class="btn btn-danger"
-					ng-click="model.deleteMovie(movie.id)">
-				Delete Playlist
-			</button>
-
-		</section>
-		<!--//section-->
-
-		<div class="bottom"></div>
-
-		<section class="movie-section" id="movie2">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Want to See Movies
-				<p>
-					Total: <span>{{model.wantToSeeMoviesNum}}</span>
-				</p>
-			</h2>
-			<ul class="movies" ng-show="model.wantToSeeMoviesNum != 0">
-				<li class="item" ng-repeat="movie in model.wantToSeeMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
-						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-						</h5></a></li>
-			</ul>
-			<div class="movies empty" ng-show="model.wantToSeeMoviesNum == 0">Empty
-				list.</div>
-		</section>
-
-		<div class="bottom"></div>
-
-		<section class="movie-section" id="movie3">
-			<h2 class="section-title">
-				<i class="glyphicon glyphicon-film"></i> Friends Recommended Movies
-				<p>
-					Total: <span>{{model.friendRecomMoviesNum}}</span>
-				</p>
-			</h2>
-			<ul class="movies" ng-show="model.friendRecomMoviesNum != 0">
-				<li class="item" ng-repeat="movie in model.friendRecomMovies"><a
-					href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img
-						class="cover img-responsive" ng-src="{{movie.poster}}" />
-						<h5 class="movie-title">
-							<span>{{movie.score}}</span>{{model.cutString(movie.name)}}
-						</h5></a></li>
-			</ul>
-			<div class="movies empty" ng-show="model.friendRecomMoviesNum == 0">Empty list.</div>
-		</section>
-
 		<!-- Action Section Starts -->
 		<section class="action-section" id="addlist">
 			<h2 class="section-title">Add New List</h2>
 			<div ng-if="model.error" class="alert alert-danger">
 				{{model.error}}</div>
 			<div ng-if="model.success"
-				 class="alert alert-success alert-dismissible" role="alert">
+				class="alert alert-success alert-dismissible" role="alert">
 				{{model.success}}</div>
 			<div class="form-group">
 				<h4 class="title">
-					Name:
-					<input ng-model="name"
-						   class="form-control"
-						   type="text" />
+					Name: <input ng-model="name" class="form-control" type="text" />
 				</h4>
 			</div>
 
 			<div class="form-group">
 				<h4 class="title">
-					Description
-					<input ng-model="description"
-						   class="form-control"
-						   type="text"
-						   placeholder="something to say about your new list..."/>
+					Description <input ng-model="description" class="form-control"
+						type="text" placeholder="something to say about your new list..." />
 				</h4>
 			</div>
 
 			<button ng-click="model.createPlayList(name, description)"
-					type="submit" class="btn btn-primary btn-block">
-				Submit
-			</button>
+				type="submit" class="btn btn-primary btn-block">Submit</button>
 			<button class="btn btn-danger btn-block cancel">Cancel</button>
 		</section>
 		<!-- Movie Section Ends -->
@@ -543,7 +425,7 @@
 			<div ng-if="model.error" class="alert alert-danger">
 				{{model.error}}</div>
 			<div ng-if="model.success"
-				 class="alert alert-success alert-dismissible" role="alert">
+				class="alert alert-success alert-dismissible" role="alert">
 				{{model.success}}</div>
 			<div class="form-group">
 				<h4 class="title">
@@ -561,27 +443,19 @@
 
 			<div class="form-group">
 				<h4 class="title">
-					Email:
-					<input ng-model = "newEmail"
-						   class="form-control"
-						   type="email" />
+					Email: <input ng-model="newEmail" class="form-control" type="email" />
 				</h4>
 			</div>
 
 			<div class="form-group">
 				<h4 class="title">
-					Phone:
-					<input ng-model = "newPhone"
-						   class="form-control"
-						   type="tel" />
+					Phone: <input ng-model="newPhone" class="form-control" type="tel" />
 				</h4>
 			</div>
 
-			<button
-				ng-click="model.updateUserProfile(newEmail, newPhone)"
-				type="submit" class="btn btn-primary btn-block">
-				Submit Changes
-			</button>
+			<button ng-click="model.updateUserProfile(newEmail, newPhone)"
+				type="submit" class="btn btn-primary btn-block">Submit
+				Changes</button>
 			<button class="btn btn-danger btn-block cancel">Cancel</button>
 		</section>
 

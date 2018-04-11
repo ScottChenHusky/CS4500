@@ -113,9 +113,9 @@ public class MoiveControllerTest {
 	public void testGetMovie() throws Exception{
 		MovieController mc = new MovieController(mR, cR, mCR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
-		mock.perform(get("/api/movie/get/").param("id", "1")).andExpect(status().isOk());
-		mock.perform(get("/api/movie/get/").param("id", "0")).andExpect(status().isOk());
-		//assertEquals(ResponseEntity.ok().body(new JSONObject()), 
+		mock.perform(get("/api/movie/get/").param("userId", "16").param("movieId", "186")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/get/").param("userId", "16").param("movieId","240")).andExpect(status().isOk());
+		//assertEquals(ResponseEntity.ok().body(new JSONObject()),
 		//		mock.perform(get("api/movie/search?name=test")).andExpect(status().isOk()));
 	}
 	
