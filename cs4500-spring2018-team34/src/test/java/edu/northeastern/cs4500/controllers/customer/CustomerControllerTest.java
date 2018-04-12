@@ -1,6 +1,9 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import edu.northeastern.cs4500.controllers.movie.Movie;
 import edu.northeastern.cs4500.repositories.Customer;
+import edu.northeastern.cs4500.repositories.CustomerPlaylist;
+import edu.northeastern.cs4500.repositories.CustomerRecommend;
 import edu.northeastern.cs4500.services.CustomerService;
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -15,7 +18,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -130,6 +136,33 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isBadRequest());
+        
+        Mockito.when(customerService.login("2", "2"))
+	    	.thenThrow(new IllegalArgumentException("username"));
+        request.put("username", "2");
+        request.put("password", "2");
+	    mockMvc.perform(post("/api/login")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+	    
+	    Mockito.when(customerService.login("3", "3"))
+	    	.thenThrow(new IllegalArgumentException("password"));
+	    request.put("username", "3");
+        request.put("password", "3");
+	    mockMvc.perform(post("/api/login")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+	    
+	    Mockito.when(customerService.login("4", "4"))
+	    	.thenThrow(new IllegalArgumentException("idk"));
+	    request.put("username", "4");
+        request.put("password", "4");
+	    mockMvc.perform(post("/api/login")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -222,6 +255,30 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isBadRequest());
+        
+        Mockito.when(customerService.register("1", password, email, phone, code))
+	    	.thenThrow(new IllegalArgumentException("username"));
+        request.put("username", "1");
+	    mockMvc.perform(post("/api/register")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+    
+	    Mockito.when(customerService.register("2", password, email, phone, code))
+			.thenThrow(new IllegalArgumentException("code"));
+	    request.put("username", "2");
+		mockMvc.perform(post("/api/register")
+		        .contentType(MediaType.APPLICATION_JSON_UTF8)
+		        .content(request.toJSONString()))
+		.andExpect(status().isBadRequest());
+
+		Mockito.when(customerService.register("3", password, email, phone, code))
+			.thenThrow(new IllegalArgumentException("c"));
+		request.put("username", "3");
+		mockMvc.perform(post("/api/register")
+		    .contentType(MediaType.APPLICATION_JSON_UTF8)
+		    .content(request.toJSONString()))
+		.andExpect(status().isBadRequest());
     }
 
     @Test
@@ -264,6 +321,27 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isBadRequest());
+        
+        Mockito.doThrow(new IllegalArgumentException("username")).when(customerService).applyAdminCode("1", email, phone);
+	    request.put("username", "1");
+	    mockMvc.perform(post("/api/applyAdminCode")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+	
+	    Mockito.doThrow(new IllegalArgumentException("code")).when(customerService).applyAdminCode("2", email, phone);
+	    request.put("username", "2");
+		mockMvc.perform(post("/api/applyAdminCode")
+		        .contentType(MediaType.APPLICATION_JSON_UTF8)
+		        .content(request.toJSONString()))
+		.andExpect(status().isBadRequest());
+	
+		Mockito.doThrow(new IllegalArgumentException("c")).when(customerService).applyAdminCode("3", email, phone);
+		request.put("username", "3");
+		mockMvc.perform(post("/api/applyAdminCode")
+		    .contentType(MediaType.APPLICATION_JSON_UTF8)
+		    .content(request.toJSONString()))
+		.andExpect(status().isBadRequest());
     }
 
     @Test
@@ -299,6 +377,22 @@ public class CustomerControllerTest {
                 .content(request.toJSONString()))
         .andExpect(status().isBadRequest());
         
+        Mockito.doThrow(new IllegalArgumentException("oldPassword")).when(customerService)
+	    	.changePassword(loggedInUserId, userId, oldPassword, newPassword);
+	    
+	    mockMvc.perform(post("/api/updateUserPassword")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+	    
+	    Mockito.doThrow(new IllegalArgumentException("idk")).when(customerService)
+	    	.changePassword(loggedInUserId, userId, oldPassword, newPassword);
+	    
+	    mockMvc.perform(post("/api/updateUserPassword")
+	            .contentType(MediaType.APPLICATION_JSON_UTF8)
+	            .content(request.toJSONString()))
+	    .andExpect(status().isBadRequest());
+        
         request.put("oldPassword", null);
         request.put("newPassword", null);
         mockMvc.perform(post("/api/updateUserPassword")
@@ -319,18 +413,32 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isBadRequest());
+        
     }
     
     @Test
     public void testGetCustomers() throws Exception {
     	//Mockito.doNothing().when(customerService).getCustomers(1, "");
     	mockMvc.perform(get("/api/user").param("id", "1")).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/user").param("id", "")).andExpect(status().isBadRequest());
     }
     
     @Test
     public void testGetAllUsers() throws Exception {
-    	//Mockito.doNothing().when(customerService).getCustomers(1, "");
+    	Customer c = new Customer();
+    	c.setCreateDate(new Date());
+    	c.setLastLogin(new Date());
+    	c.setPrivacyLevel(2);
+    	c.setScore(2);
+    	
+    	Object[] o = new Object[] {c, true};
+    	List<Object[]> l = new ArrayList<Object[]>();
+    	l.add(o);
+    	Mockito.when(customerService.getAllCustomers(1)).thenReturn(l);
+    	Mockito.doThrow(Exception.class).when(customerService).getAllCustomers(2);
     	mockMvc.perform(get("/api/getAllUsers/{adminId}", 1)).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/getAllUsers/{adminId}", "h*ck")).andExpect(status().isBadRequest());
+    	mockMvc.perform(get("/api/getAllUsers/{adminId}", 2)).andExpect(status().isBadRequest());
     }
     
     @Test
@@ -349,6 +457,34 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(Exception.class).when(customerService).updateCustomer(1, 1, new JSONObject());
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("key")).when(customerService).updateCustomer(1, 1, new JSONObject());
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("value")).when(customerService).updateCustomer(1, 1, new JSONObject());
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("sumbs")).when(customerService).updateCustomer(1, 1, new JSONObject());
+    	
+    	mockMvc.perform(post("/api/updateUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -367,6 +503,13 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("executor")).when(customerService).deleteCustomer(1, 1);
+    	
+    	mockMvc.perform(post("/api/deleteUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     	
     	request.put("loggedInUserId", "");
     	request.put("userId", "");
@@ -391,6 +534,7 @@ public class CustomerControllerTest {
     	l1.add(new Customer());
     	Mockito.when(customerService.getFollowing(1)).thenReturn(l1);
     	mockMvc.perform(get("/api/user/following/{id}", 1)).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/user/following/{id}", "$$")).andExpect(status().isBadRequest());
     }
     
     @Test
@@ -399,6 +543,7 @@ public class CustomerControllerTest {
     	l1.add(new Customer());
     	Mockito.when(customerService.getFollowers(1)).thenReturn(l1);
     	mockMvc.perform(get("/api/user/followers/{id}", 1)).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/user/followers/{id}", "$$")).andExpect(status().isBadRequest());
     }
     
     @Test
@@ -418,6 +563,31 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("target")).when(customerService).follow(1, 1, 2);
+    	
+    	mockMvc.perform(post("/api/user/follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "");
+    	request.put("from", "");
+    	request.put("to", "");
+    	
+    	mockMvc.perform(post("/api/user/follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "$$");
+    	request.put("from", "$$");
+    	request.put("to", "$$");
+    	
+    	mockMvc.perform(post("/api/user/follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
     
     @Test
@@ -437,5 +607,249 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request.toJSONString()))
         .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("id")).when(customerService).unFollow(1, 1, 2);
+    	
+    	mockMvc.perform(post("/api/user/un-follow")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void getPlaylists() throws Exception {
+    	List<Movie> l1 = new ArrayList<Movie>();
+    	l1.add(new Movie());
+    	CustomerPlaylist c = new CustomerPlaylist().withId(2);
+    	Map<CustomerPlaylist, List<Movie>> m = new HashMap<CustomerPlaylist, List<Movie>>();
+    	m.put(c, l1);
+    	Mockito.when(customerService.getPlaylists(1)).thenReturn(m);
+    	mockMvc.perform(get("/api/getPlaylists/{userId}", 1)).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/getPlaylists/{userId}", "$$")).andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void createPlaylist() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("name", "test");
+    	request.put("description", "test");
+    	
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	request.put("name", "ntest");
+    	Mockito.when(customerService.createPlaylist(1, 1, "ntest", "test")).thenThrow(new IllegalArgumentException());
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("name", "mtest");
+    	Mockito.when(customerService.createPlaylist(1, 1, "mtest", "test"))
+    		.thenThrow(new IllegalArgumentException("existed"));
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("name", "ltest");
+    	Mockito.when(customerService.createPlaylist(1, 1, "ltest", "test"))
+    		.thenThrow(new IllegalArgumentException("h*ck"));
+    	mockMvc.perform(post("/api/createPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testAddMovieToPlaylist() throws Exception{
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("playlistId", "1");
+    	request.put("movieId", "1");
+    	
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException()).when(customerService).addMovieToPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("none")).when(customerService).addMovieToPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("duplicated")).when(customerService).addMovieToPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("idk")).when(customerService).addMovieToPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/addMovieToPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testRemoveFromPlaylist() throws Exception{
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("playlistId", "1");
+    	request.put("movieId", "1");
+    	
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException()).when(customerService).removeMovieFromPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("none")).when(customerService).removeMovieFromPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("duplicated")).when(customerService).removeMovieFromPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("idk")).when(customerService).removeMovieFromPlaylist(1, 1, 1, 1);
+    	mockMvc.perform(post("/api/removeMovieFromPlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testDeletePlaylist() throws Exception {
+    	JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/deletePlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("userId", "1");
+    	
+    	mockMvc.perform(post("/api/deletePlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("playlistId", "1");
+    	request.put("movieId", "1");
+    	
+    	mockMvc.perform(post("/api/deletePlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("admin")).when(customerService).deletePlaylist(1, 1, 1);
+    	mockMvc.perform(post("/api/deletePlaylist")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testGetUserRec() throws Exception {
+    	Map<CustomerRecommend, Movie> m = new HashMap<CustomerRecommend, Movie>();
+    	m.put(new CustomerRecommend().withId(2).withCreateDate(new Date()), new Movie());
+    	Mockito.when(customerService.getCustomerRecommendationOfMovies(1)).thenReturn(m);
+    	mockMvc.perform(get("/api/getUserRecommendationOfMovies/{userId}", 1)).andExpect(status().isOk());
+    	mockMvc.perform(get("/api/getUserRecommendationOfMovies/{userId}", "$$")).andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    public void testRecommendMovieToUser() throws Exception {
+JSONObject request = new JSONObject();
+    	
+    	mockMvc.perform(post("/api/recommendMovieToUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("loggedInUserId", "1");
+    	request.put("from", "1");
+    	request.put("to", "2");
+    	
+    	mockMvc.perform(post("/api/recommendMovieToUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("movieId", "$$");
+    	
+    	mockMvc.perform(post("/api/recommendMovieToUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
+    	
+    	request.put("movieId", "1");
+    	
+    	mockMvc.perform(post("/api/recommendMovieToUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isOk());
+    	
+    	Mockito.doThrow(new IllegalArgumentException("admin")).when(customerService).recommendMovieToCustomer(1, 1, 2, 1);
     }
 }
