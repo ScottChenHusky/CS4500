@@ -34,7 +34,7 @@ public class MovieController{
   String[] filterList = {
           "arse", "asshole", "bitch", "cunt", "fuck", "nigga", "nigger", " ass ", "ass hole"
   };
-  private final CsvApi csvApi = new CsvApi();
+  private CsvApi csvApi = new CsvApi();
   
   @Autowired
   private MovieRepository movieRepository;
@@ -47,10 +47,13 @@ public class MovieController{
   @Autowired
   private MovieRecommendRepository movieRecommendRepository;
   
-  public MovieController(MovieRepository m, CustomerRepository c, MovieCommentRepository mcr) {
+  public MovieController(MovieRepository m, CustomerRepository c, MovieCommentRepository mcr, CsvApi cA, 
+		  MovieRecommendRepository mrr) {
 	  this.movieRepository = m;
 	  this.customerRepository = c;
 	  this.movieCommentRepository = mcr;
+	  this.csvApi = cA;
+	  this.movieRecommendRepository = mrr;
   }
   
   public MovieController() {
@@ -468,6 +471,7 @@ public class MovieController{
       trailers.add("");
     }
     try {
+    	System.out.println(imdbId);
       movie.withName(tmdb.get("title").toString())
               .withDate(tmdb.get("release_date").toString())
               .withScore(tmdb.get("vote_average").toString())
