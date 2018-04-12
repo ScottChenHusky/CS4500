@@ -26,17 +26,17 @@ public class CsvApi {
     if(!moviesFile.exists()){
       moviesFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/movies.csv" );
     }
-
+    Scanner scanner = null;
+    Scanner scanner1 = null;
     try {
-      Scanner scanner = new Scanner(linksFile);
+      scanner = new Scanner(linksFile);
       scanner.nextLine();
       while(scanner.hasNext()){
         String[] ss = scanner.nextLine().split(",");
         map.put(Integer.parseInt(ss[1]), ss[0]);
       }
-      scanner.close();
 
-      Scanner scanner1 = new Scanner(moviesFile);
+      scanner1 = new Scanner(moviesFile);
       while(scanner1.hasNext()){
         String[] ss = scanner1.nextLine().split(",");
         int last = ss.length - 1;
@@ -58,9 +58,16 @@ public class CsvApi {
 
       }
 
-      scanner1.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally{
+      if (scanner != null) {
+        scanner.close();
+      }
+      if (scanner1 != null) {
+        scanner1.close();
+      }
+
     }
   }
   public String[] search(String searchBy, String fileName) throws FileNotFoundException {
