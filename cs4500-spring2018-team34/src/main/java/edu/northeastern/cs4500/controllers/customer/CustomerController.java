@@ -290,7 +290,6 @@ public class CustomerController{
             return ResponseEntity.badRequest().body(response);
         }
         try {
-        	System.out.println(oldPasswordStr);
             customerService.changePassword(ids[0], ids[1], oldPasswordStr, newPasswordStr);
             putMessage(logInfo, response, "password changed");
             CustomerController.log.finest(logInfo.toString());
