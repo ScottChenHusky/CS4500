@@ -1,5 +1,6 @@
 package edu.northeastern.cs4500.controllers.customer;
 
+import edu.northeastern.cs4500.controllers.customer.CustomerController;
 import edu.northeastern.cs4500.controllers.movie.Movie;
 import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerPlaylist;
@@ -820,7 +821,7 @@ public class CustomerControllerTest {
     
     @Test
     public void testRecommendMovieToUser() throws Exception {
-JSONObject request = new JSONObject();
+    	JSONObject request = new JSONObject();
     	
     	mockMvc.perform(post("/api/recommendMovieToUser")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -851,5 +852,10 @@ JSONObject request = new JSONObject();
         .andExpect(status().isOk());
     	
     	Mockito.doThrow(new IllegalArgumentException("admin")).when(customerService).recommendMovieToCustomer(1, 1, 2, 1);
+    	
+    	mockMvc.perform(post("/api/recommendMovieToUser")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request.toJSONString()))
+        .andExpect(status().isBadRequest());
     }
 }
