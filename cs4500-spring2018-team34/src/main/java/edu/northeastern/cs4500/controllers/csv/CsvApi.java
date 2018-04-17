@@ -14,17 +14,29 @@ import java.util.Set;
 public class CsvApi {
   private final Map<Integer, String> map = new HashMap<>();
   private Map<String, List<String>> tagsMap = new HashMap<>();
-  public CsvApi(){
+  private File linksFile;
+  private File moviesFile;
+  public CsvApi() {
+    linksFile = new File(getClass().getClassLoader().getResource("links.csv").getFile());
+    if(!linksFile.exists()){
+      linksFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/links.csv" );
+    }
+
+    moviesFile = new File(getClass().getClassLoader().getResource("movies.csv").getFile());
+    if(!moviesFile.exists()){
+      moviesFile = new File("/home/ec2-user/app/cs4500-spring2018-team34/target/movies.csv" );
+    }
+    Scanner scanner = null;
+    Scanner scanner1 = null;
     try {
-      Scanner scanner = new Scanner(new File("links.csv"));
+      scanner = new Scanner(linksFile);
       scanner.nextLine();
       while(scanner.hasNext()){
         String[] ss = scanner.nextLine().split(",");
         map.put(Integer.parseInt(ss[1]), ss[0]);
       }
-      scanner.close();
 
-      Scanner scanner1 = new Scanner(new File("movies.csv"));
+      scanner1 = new Scanner(moviesFile);
       while(scanner1.hasNext()){
         String[] ss = scanner1.nextLine().split(",");
         int last = ss.length - 1;
@@ -46,9 +58,16 @@ public class CsvApi {
 
       }
 
-      scanner1.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } finally{
+      if (scanner != null) {
+        scanner.close();
+      }
+      if (scanner1 != null) {
+        scanner1.close();
+      }
+
     }
   }
   public String[] search(String searchBy, String fileName) throws FileNotFoundException {
@@ -63,8 +82,7 @@ public class CsvApi {
       }
 
     } else {
-      String csvFile = fileName+".csv";
-      Scanner scanner = new Scanner(new File(csvFile));
+      Scanner scanner = new Scanner(moviesFile);
       while(scanner.hasNext()){
         String[] line = scanner.nextLine().split(",");
         if(line[0].equals(searchBy)){

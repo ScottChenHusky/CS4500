@@ -31,12 +31,10 @@
 				</ul>
 				<a href="" class="more hot-movies">View More</a>
 			</section>
-
 			<section class="movie-section" ng-show="model.currentUserId != null">
 				<h2 class="section-title">
 					<i class="glyphicon glyphicon-film"></i> Recommend Movies
 				</h2>
-
 				<ul class="recom_movies movies" >
 					<li class="item" ng-repeat="movie in model.recomMovies"><a
 						href="#!/movie/{{movie.id}}" onclick="window.scrollTo(0,0)"><img

@@ -10,9 +10,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.northeastern.cs4500.controllers.csv.CsvApi;
 import edu.northeastern.cs4500.repositories.Customer;
 import edu.northeastern.cs4500.repositories.CustomerRepository;
 
@@ -31,10 +33,11 @@ public class MoiveControllerTest {
 	//MovieRepository mR1;
 	CustomerRepository cR;
 	MovieCommentRepository mCR;
-	
+	CsvApi cA;
+	MovieRecommendRepository mRR;
 	
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		mR = mock(MovieRepository.class);
 		List lN = new ArrayList<Movie>();
 		lN.add(new Movie());
@@ -43,7 +46,9 @@ public class MoiveControllerTest {
 		when(mR.findByLanguageContaining("test")).thenReturn(lN);
 		when(mR.findByActorsContaining("test")).thenReturn(lN);
 		when(mR.findByCountryContaining("test")).thenReturn(lN);
-		when(mR.findById(1)).thenReturn(new Movie());
+		Movie oMM = new Movie();
+		oMM.setOmdbreference("1111111111111111");
+		when(mR.findById(1)).thenReturn(oMM);
 		when(mR.findById(0)).thenReturn(null);
 		when(mR.existsById(1)).thenReturn(true);
 		when(mR.existsById(0)).thenReturn(false);
@@ -59,8 +64,9 @@ public class MoiveControllerTest {
 		when(mR.findByLanguageContaining("t")).thenReturn(lN1);
 		when(mR.findByActorsContaining("t")).thenReturn(lN1);
 		when(mR.findByCountryContaining("t")).thenReturn(lN1);
-		when(mR.existsByOmdbreference("tt0349047")).thenThrow(NullPointerException.class);
-		when(mR.findByOmdbreference("tt0349047")).thenReturn(lN2);
+		when(mR.existsByOmdbreference("tt0051047")).thenThrow(NullPointerException.class);
+		when(mR.findByOmdbreference("tt0051047")).thenReturn(lN2);
+		when(mR.findAll()).thenReturn(lN);
 		
 		cR = mock(CustomerRepository.class);
 		Customer c = new Customer();
@@ -75,6 +81,26 @@ public class MoiveControllerTest {
 		when(mCR.getOne(0)).thenReturn(null);
 		when(mCR.existsMovieCommentByCustomerIdAndMovieId(1, 1)).thenReturn(true);
 		when(mCR.findMovieCommentByMovieIdOrderByDate(1)).thenReturn(lC);
+		
+		cA = mock(CsvApi.class);
+		String[] sA = {"1", "test", "test|ntest"};
+		when(cA.search("1111111", "links")).thenReturn(sA);
+		when(cA.search("1", "movies")).thenReturn(sA);
+		List<String> nms = new ArrayList();
+		nms.add("Captain America: Civil War");
+		when(cA.recommendMovieIds("null|null", 3)).thenReturn(nms);
+		when(cA.recommendMovieIds("test|ntest", 5)).thenReturn(nms);
+		
+		mRR = mock(MovieRecommendRepository.class);
+		when(mRR.existsMovieRecommendByCustomerIdAndAndTag(16, "test")).thenReturn(true);
+		when(mRR.findMovieRecommendByCustomerIdAndTag(16, "test")).thenReturn(new MovieRecommend());
+		when(mRR.existsMovieRecommendByCustomerIdAndAndTag(17, "test")).thenReturn(false);
+		
+		List<MovieRecommend> mrs = new ArrayList();
+		mrs.add(new MovieRecommend());
+		mrs.add(new MovieRecommend());
+		when(mRR.findTop2ByCustomerIdOrderByWeightsDesc(1)).thenReturn(mrs);
+		
 	}
 	
 	@Test
@@ -95,7 +121,7 @@ public class MoiveControllerTest {
 	
 	@Test
 	public void testSearchMovies() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		mock.perform(get("/api/movie/search/").param("name", "test")).andExpect(status().isOk());
 		mock.perform(get("/api/movie/search/").param("name", "t")).andExpect(status().isOk());
@@ -111,17 +137,19 @@ public class MoiveControllerTest {
 	
 	@Test
 	public void testGetMovie() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
-		mock.perform(get("/api/movie/get/").param("id", "1")).andExpect(status().isOk());
-		mock.perform(get("/api/movie/get/").param("id", "0")).andExpect(status().isOk());
-		//assertEquals(ResponseEntity.ok().body(new JSONObject()), 
+		mock.perform(get("/api/movie/get/").param("userId", "16").param("movieId", "168")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/get/").param("userId", "16").param("movieId", "1")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/get/").param("userId", "17").param("movieId", "1")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/get/").param("userId", "16").param("movieId","0")).andExpect(status().isOk());
+		//assertEquals(ResponseEntity.ok().body(new JSONObject()),
 		//		mock.perform(get("api/movie/search?name=test")).andExpect(status().isOk()));
 	}
 	
 	@Test
 	public void testAddComment() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		JSONObject json = new JSONObject();
 		json.put("customerId", "1");
@@ -159,7 +187,7 @@ public class MoiveControllerTest {
 	
 	@Test
 	public void testDeleteComment() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		JSONObject json = new JSONObject();
 		json.put("customerId", "1");
@@ -181,7 +209,7 @@ public class MoiveControllerTest {
 	
 	@Test
 	public void testUpdateComment() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		JSONObject json = new JSONObject();
 		json.put("id", "1");
@@ -206,7 +234,7 @@ public class MoiveControllerTest {
 	
 	@Test
 	public void testDeleteMovie() throws Exception{
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
 		JSONObject json = new JSONObject();
 		json.put("movieId", "1");
@@ -230,7 +258,7 @@ public class MoiveControllerTest {
 
 	@Test
 	public void testMainSearch() {
-		MovieController mc = new MovieController(mR, cR, mCR);
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
 		JSONObject item = new JSONObject();
 		JSONObject results = new JSONObject();
 		item.put("date","2013-06-29");
@@ -263,9 +291,38 @@ public class MoiveControllerTest {
 		
 		assertEquals(false, mc.mainSearch("Captain America: Civil War").isEmpty());
 		assertEquals(nF, mc.mainSearch("qiu3rb[q[54pu9nbpiebv9qp34bp9gqb3uvyboiqrubvoiqbgybviyrbi"));
+	}
+	
+	@Test
+	public void testMovieList() throws Exception {
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
+		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
+		mock.perform(get("/api/movie/init/").param("name", "new")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/init/").param("name", "top")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/init/").param("name", "all")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/init/").param("name", "h*ck")).andExpect(status().isOk());
+	}
+	
+	@Test
+	public void testRecommendMovie() throws Exception {
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
+		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
+		JSONObject json = new JSONObject();
+		json.put("userId", "1");
 		
+		mock.perform(post("/api/movie/recommend/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json.toJSONString())
+				).andExpect(status().isOk());
 	}
 
+	@Test
+	public void getSimilarMovie() throws Exception {
+		MovieController mc = new MovieController(mR, cR, mCR, cA, mRR);
+		MockMvc mock = MockMvcBuilders.standaloneSetup(mc).build();
+		mock.perform(get("/api/movie/similar/").param("id", "1")).andExpect(status().isOk());
+		mock.perform(get("/api/movie/similar/").param("id", "0")).andExpect(status().isOk());
+	}
 }
 
 

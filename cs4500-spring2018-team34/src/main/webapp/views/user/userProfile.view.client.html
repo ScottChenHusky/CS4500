@@ -351,7 +351,13 @@
 			<ul class="tabs">
 				<li>
 					<h2 class="section-title">
-						<i class="glyphicon glyphicon-film"></i> {{playList.name}}
+						<i class="glyphicon glyphicon-film"></i>
+						{{playList.name}}
+						<button ng-show="model.isOwner"
+								style="float: right" class="btn btn-danger"
+								ng-click="model.deletePlaylist(playList.id)">
+							Delete Playlist
+						</button>
 					</h2>
 				</li>
 			</ul>
@@ -371,9 +377,6 @@
 				<li><h2 class="section-title">
 							<i class="glyphicon glyphicon-film"></i> Friends Recommended
 							Movies
-							<p>
-								Total: <span>{{model.friendRecomMoviesNum}}</span>
-							</p>
 						</h2></li>
 			</ul>
 			<ul class="movies" ng-show="model.friendRecomMoviesNum != 0">
