@@ -66,7 +66,7 @@
 //			var hot_url = '/api/movies/hotMovies';
 			$http.get(hot_url).then(function(res) {
 				if (res.data != undefined) {
-					for (m in res.data) {
+					for (var m in res.data) {
 						if (m == "top") {
 							vm.hotMovies = res.data.top;
 							vm.numberOfHotMovies = vm.hotMovies.length;
@@ -80,7 +80,7 @@
 //			var new_url = '/api/movies/newMovies';
 			$http.get(new_url).then(function(res) {
 				if (res.data != undefined) {
-					for (m in res.data) {
+					for (var m in res.data) {
 						if (m == "new") {
 							vm.newMovies = res.data.new;
 							vm.numberOfNewMovies = vm.newMovies.length;
