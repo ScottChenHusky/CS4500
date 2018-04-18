@@ -3,11 +3,11 @@
 ## Team 34:
 
 <b> 
-1. Zewei Chen
-2. Xuanyu Li
-3. Ranran He
-4. Qiye Chen
-5. Travis Bergmann
+1. Zewei Chen <br>
+2. Xuanyu Li <br>
+3. Ranran He <br>
+4. Qiye Chen <br>
+5. Travis Bergmann <br>
 
 </b>
 
@@ -18,7 +18,7 @@
 [Web App](http://ec2-54-187-141-143.us-west-2.compute.amazonaws.com:8080/)
 
 
-## Systems:
+## Videos:
 
 [System Demo](https://www.youtube.com/watch?v=LACA_U_R5VQ)
 
