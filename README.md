@@ -22,6 +22,6 @@
 
 [System Demo](https://www.youtube.com/watch?v=LACA_U_R5VQ)
 
-[System Setup]()
+[System Setup](https://www.youtube.com/watch?v=IL6tN7EmYmc&feature=youtu.be)
 
 [Final Presentation](https://www.youtube.com/watch?v=YDb6_iCa-oc&feature=youtu.be)
